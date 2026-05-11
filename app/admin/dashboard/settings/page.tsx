@@ -8,10 +8,6 @@ export default function SettingsAdminPage() {
     email:    "nitinmonga14@gmail.com",
     location: "Punjab, India",
     bio:      "Graphic Designer, 3D Artist & Full-Stack Developer with 10+ years of experience.",
-    twitter:  "https://twitter.com/nitinmonga",
-    linkedin: "https://linkedin.com/in/nitinmonga",
-    instagram:"https://instagram.com/nitinmonga",
-    github:   "https://github.com/nitinmonga",
   });
   const [saved, setSaved] = useState(false);
 
@@ -50,15 +46,6 @@ export default function SettingsAdminPage() {
               onChange={(e) => setProfile((p) => ({ ...p, bio: e.target.value }))}
             />
           </Field>
-        </Section>
-
-        {/* Social Links */}
-        <Section title="Social Links">
-          {(["twitter", "linkedin", "instagram", "github"] as const).map((key) => (
-            <Field key={key} label={key.charAt(0).toUpperCase() + key.slice(1)}>
-              <Input value={profile[key]} onChange={(v) => setProfile((p) => ({ ...p, [key]: v }))} placeholder={`https://${key}.com/...`} />
-            </Field>
-          ))}
         </Section>
 
         {/* Admin Password */}
