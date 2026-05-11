@@ -452,30 +452,22 @@ export default function ContentEditorPage() {
             </SectionCard>
 
             <SectionCard title="Services Grid" onSave={() => save("content.services.grid")} saveState={saveStates["content.services.grid"] ?? "idle"}>
-              {(get<{ services: Array<{ id: string; title: string; price: string; description: string; includes: string[] }> }>("content.services.grid", { services: [] }).services).map((svc, i) => (
+              {(get<{ services: Array<{ id: string; title: string; description: string; includes: string[] }> }>("content.services.grid", { services: [] }).services).map((svc, i) => (
                 <div key={i} className="flex flex-col gap-3 p-3 rounded-lg" style={{ background: "rgba(255,255,255,0.03)" }}>
-                  <div className="grid grid-cols-2 gap-3">
-                    <TextField label="Title" value={svc.title} onChange={(v) => {
-                      const next = { ...get<{ services: Array<{ id: string; title: string; price: string; description: string; includes: string[] }> }>("content.services.grid", { services: [] }) };
-                      next.services = [...next.services];
-                      next.services[i] = { ...next.services[i], title: v };
-                      update("content.services.grid", next);
-                    }} />
-                    <TextField label="Price" value={svc.price} onChange={(v) => {
-                      const next = { ...get<{ services: Array<{ id: string; title: string; price: string; description: string; includes: string[] }> }>("content.services.grid", { services: [] }) };
-                      next.services = [...next.services];
-                      next.services[i] = { ...next.services[i], price: v };
-                      update("content.services.grid", next);
-                    }} />
-                  </div>
+                  <TextField label="Title" value={svc.title} onChange={(v) => {
+                    const next = { ...get<{ services: Array<{ id: string; title: string; description: string; includes: string[] }> }>("content.services.grid", { services: [] }) };
+                    next.services = [...next.services];
+                    next.services[i] = { ...next.services[i], title: v };
+                    update("content.services.grid", next);
+                  }} />
                   <TextareaField label="Description" rows={2} value={svc.description} onChange={(v) => {
-                    const next = { ...get<{ services: Array<{ id: string; title: string; price: string; description: string; includes: string[] }> }>("content.services.grid", { services: [] }) };
+                    const next = { ...get<{ services: Array<{ id: string; title: string; description: string; includes: string[] }> }>("content.services.grid", { services: [] }) };
                     next.services = [...next.services];
                     next.services[i] = { ...next.services[i], description: v };
                     update("content.services.grid", next);
                   }} />
                   <ArrayField label="Includes" value={svc.includes} onChange={(v) => {
-                    const next = { ...get<{ services: Array<{ id: string; title: string; price: string; description: string; includes: string[] }> }>("content.services.grid", { services: [] }) };
+                    const next = { ...get<{ services: Array<{ id: string; title: string; description: string; includes: string[] }> }>("content.services.grid", { services: [] }) };
                     next.services = [...next.services];
                     next.services[i] = { ...next.services[i], includes: v };
                     update("content.services.grid", next);

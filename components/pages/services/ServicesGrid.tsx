@@ -8,18 +8,17 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 export interface ServiceCard {
   id: string;
   title: string;
-  price: string;
   description: string;
   includes: string[];
 }
 
 const DEFAULT_SERVICES: ServiceCard[] = [
-  { id: "web-design", title: "Web Design", price: "From ₹15,000", description: "Conversion-focused designs delivered as pixel-perfect Figma mockups before a single line of code is written.", includes: ["Wireframing & UX flow", "High-fidelity Figma mockups", "Mobile-first responsive design", "Design system & style guide", "2 rounds of revisions"] },
-  { id: "wordpress-dev", title: "WordPress Development", price: "From ₹20,000", description: "Fast, SEO-ready WordPress sites with custom themes. Hand-coded — zero page-builder bloat.", includes: ["Custom theme development", "WooCommerce / LMS support", "Performance optimisation", "On-page SEO setup", "12 months of support"] },
-  { id: "nextjs-dev", title: "Next.js Development", price: "From ₹40,000", description: "Modern web applications with Next.js 14 App Router, TypeScript, Prisma and Tailwind — SSR, SSG and API routes included.", includes: ["Next.js 14 App Router", "TypeScript + Tailwind CSS", "MySQL / Prisma ORM", "Authentication & dashboard", "Deployment & CI/CD setup"] },
-  { id: "branding", title: "Branding & Identity", price: "From ₹12,000", description: "Logo design, brand guidelines, colour systems and typography that make you instantly recognizable.", includes: ["Logo design (3 concepts)", "Brand guidelines PDF", "Colour & type system", "Business card / stationery", "Social media kit"] },
-  { id: "3d-cgi", title: "3D & CGI Production", price: "From ₹8,000", description: "Product visualization, CGI ads and 3D motion graphics. 40+ campaigns delivered using Blender and Cinema 4D.", includes: ["Product 3D modelling", "Photorealistic rendering", "CGI ad compositing", "Motion graphics & animation", "Final export in all formats"] },
-  { id: "seo", title: "SEO & Monetization", price: "From ₹10,000", description: "Technical SEO audits, content strategy, AdSense and affiliate setup. My platforms hit 75K+ monthly impressions.", includes: ["Full technical SEO audit", "Keyword research & strategy", "Google AdSense setup", "Site speed optimisation", "Monthly reporting"] },
+  { id: "web-design", title: "Web Design", description: "Conversion-focused designs delivered as pixel-perfect Figma mockups before a single line of code is written.", includes: ["Wireframing & UX flow", "High-fidelity Figma mockups", "Mobile-first responsive design", "Design system & style guide", "2 rounds of revisions"] },
+  { id: "wordpress-dev", title: "WordPress Development", description: "Fast, SEO-ready WordPress sites with custom themes. Hand-coded — zero page-builder bloat.", includes: ["Custom theme development", "WooCommerce / LMS support", "Performance optimisation", "On-page SEO setup", "12 months of support"] },
+  { id: "nextjs-dev", title: "Next.js Development", description: "Modern web applications with Next.js 14 App Router, TypeScript, Prisma and Tailwind — SSR, SSG and API routes included.", includes: ["Next.js 14 App Router", "TypeScript + Tailwind CSS", "MySQL / Prisma ORM", "Authentication & dashboard", "Deployment & CI/CD setup"] },
+  { id: "branding", title: "Branding & Identity", description: "Logo design, brand guidelines, colour systems and typography that make you instantly recognizable.", includes: ["Logo design (3 concepts)", "Brand guidelines PDF", "Colour & type system", "Business card / stationery", "Social media kit"] },
+  { id: "3d-cgi", title: "3D & CGI Production", description: "Product visualization, CGI ads and 3D motion graphics. 40+ campaigns delivered using Blender and Cinema 4D.", includes: ["Product 3D modelling", "Photorealistic rendering", "CGI ad compositing", "Motion graphics & animation", "Final export in all formats"] },
+  { id: "seo", title: "SEO & Monetization", description: "Technical SEO audits, content strategy, AdSense and affiliate setup. My platforms hit 75K+ monthly impressions.", includes: ["Full technical SEO audit", "Keyword research & strategy", "Google AdSense setup", "Site speed optimisation", "Monthly reporting"] },
 ];
 
 // Icons matched by index
@@ -69,7 +68,7 @@ export function ServicesGrid({ content }: { content?: { services: ServiceCard[] 
     <section ref={ref} className="py-16 bg-[var(--color-bg)]" aria-label="All Services">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {services.map(({ id, title, price, description, includes }, idx) => (
+          {services.map(({ id, title, description, includes }, idx) => (
             <div key={id} className="sg-card card p-7 flex flex-col gap-5 group">
               {/* Icon */}
               <div
@@ -79,15 +78,10 @@ export function ServicesGrid({ content }: { content?: { services: ServiceCard[] 
                 {SERVICE_ICONS[idx] ?? SERVICE_ICONS[0]}
               </div>
 
-              {/* Title + Price */}
-              <div>
-                <h2 className="font-display font-bold text-[var(--color-ink)] text-[19px] leading-tight mb-1 group-hover:text-[var(--color-accent)] transition-colors duration-200">
-                  {title}
-                </h2>
-                <span className="font-body text-[12px] font-semibold text-[var(--color-accent)] uppercase tracking-[1.5px]">
-                  {price}
-                </span>
-              </div>
+              {/* Title */}
+              <h2 className="font-display font-bold text-[var(--color-ink)] text-[19px] leading-tight group-hover:text-[var(--color-accent)] transition-colors duration-200">
+                {title}
+              </h2>
 
               {/* Description */}
               <p className="font-body text-[var(--color-muted)] text-[14px] leading-relaxed">
