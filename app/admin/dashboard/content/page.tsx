@@ -126,6 +126,7 @@ const TABS = [
   { id: "work",     label: "Work" },
   { id: "blog",     label: "Blog" },
   { id: "contact",  label: "Contact" },
+  { id: "footer",   label: "Footer" },
   { id: "meta",     label: "Meta / SEO" },
 ];
 
@@ -605,6 +606,26 @@ export default function ContentEditorPage() {
               />
             </SectionCard>
           </>
+        )}
+
+        {/* FOOTER */}
+        {activeTab === "footer" && (
+          <SectionCard title="Footer Social Links" onSave={() => save("content.footer.social")} saveState={saveStates["content.footer.social"] ?? "idle"}>
+            <p className="font-body text-[12px]" style={{ color: "rgba(255,255,255,0.35)" }}>
+              Enter full URLs (e.g. https://instagram.com/yourhandle). Leave blank to hide the icon.
+            </p>
+            {(["instagram", "linkedin", "youtube", "twitter", "facebook", "behance"] as const).map((platform) => (
+              <TextField
+                key={platform}
+                label={platform.charAt(0).toUpperCase() + platform.slice(1) + " URL"}
+                value={get<Record<string, string>>("content.footer.social", {})[platform] ?? ""}
+                onChange={(v) => update("content.footer.social", {
+                  ...get("content.footer.social", {}),
+                  [platform]: v,
+                })}
+              />
+            ))}
+          </SectionCard>
         )}
 
         {/* META / SEO */}

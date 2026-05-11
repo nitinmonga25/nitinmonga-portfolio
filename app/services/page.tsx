@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import type { Metadata } from "next";
 import { getContent } from "@/lib/content";
 import { ServicesHero }    from "@/components/pages/services/ServicesHero";

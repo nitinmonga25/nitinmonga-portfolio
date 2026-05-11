@@ -219,6 +219,14 @@ export const CONTENT_DEFAULTS: Record<string, unknown> = {
     title: "Contact",
     description: "Get in touch with Nitin Monga for web design, development, branding and 3D CGI projects. Based in Punjab, India.",
   },
+  "content.footer.social": {
+    instagram: "",
+    linkedin: "",
+    youtube: "",
+    twitter: "",
+    facebook: "",
+    behance: "",
+  },
 };
 
 // ─── Fetchers ─────────────────────────────────────────────────────────────────

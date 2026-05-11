@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { bricolage } from "@/lib/fonts";
 import { SiteLayout } from "@/components/ui/SiteLayout";
+import { Footer } from "@/components/ui/Footer";
+import { FooterWrapper } from "@/components/ui/FooterWrapper";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -55,6 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="antialiased" suppressHydrationWarning>
         <SiteLayout>{children}</SiteLayout>
+        <FooterWrapper><Footer /></FooterWrapper>
       </body>
     </html>
   );

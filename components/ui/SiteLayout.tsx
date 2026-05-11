@@ -2,7 +2,6 @@
 
 import { usePathname } from "next/navigation";
 import { Navbar } from "./Navbar";
-import { Footer } from "./Footer";
 import { CustomCursor } from "./CustomCursor";
 import { LenisProvider } from "./LenisProvider";
 
@@ -17,7 +16,6 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
       <CustomCursor />
       <Navbar />
       <main>{children}</main>
-      <Footer />
     </LenisProvider>
   );
 }
