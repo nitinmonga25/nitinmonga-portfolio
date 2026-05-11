@@ -185,6 +185,78 @@ body {
   box-shadow: 0 4px 14px rgba(255,61,0,0.15);
 }
 
+/* ─── Blog prose styles ──────────────────────────────────────────────────── */
+.prose-nm {
+  font-family: var(--font-body);
+  font-size: clamp(15px, 1.05vw, 17px);
+  color: var(--color-ink);
+  line-height: 1.85;
+}
+.prose-nm h1, .prose-nm h2, .prose-nm h3, .prose-nm h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-ink);
+  margin: 2em 0 0.6em;
+  line-height: 1.25;
+}
+.prose-nm h1 { font-size: clamp(24px, 3vw, 38px); }
+.prose-nm h2 { font-size: clamp(20px, 2.4vw, 30px); }
+.prose-nm h3 { font-size: clamp(17px, 1.8vw, 22px); }
+.prose-nm h4 { font-size: 17px; }
+.prose-nm p  { margin: 1.2em 0; color: var(--color-muted); }
+.prose-nm a  { color: var(--color-accent); text-decoration: underline; text-underline-offset: 3px; }
+.prose-nm a:hover { color: var(--color-accent-dark); }
+.prose-nm strong { color: var(--color-ink); font-weight: 700; }
+.prose-nm em { font-style: italic; }
+.prose-nm ul, .prose-nm ol { margin: 1.2em 0; padding-left: 1.5em; color: var(--color-muted); }
+.prose-nm li { margin: 0.4em 0; }
+.prose-nm ul li { list-style: disc; }
+.prose-nm ol li { list-style: decimal; }
+.prose-nm blockquote {
+  border-left: 3px solid var(--color-accent);
+  padding: 0.6em 1.2em;
+  margin: 1.5em 0;
+  background: var(--color-accent-light);
+  border-radius: 0 8px 8px 0;
+  color: var(--color-ink);
+  font-style: italic;
+}
+.prose-nm code {
+  background: var(--color-border);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88em;
+  font-family: 'Courier New', monospace;
+  color: var(--color-accent-dark);
+}
+.prose-nm pre {
+  background: #1a1a1a;
+  color: #e8e8e8;
+  padding: 1.2em 1.5em;
+  border-radius: 12px;
+  overflow-x: auto;
+  margin: 1.5em 0;
+  font-size: 14px;
+  line-height: 1.65;
+}
+.prose-nm pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+.prose-nm img { max-width: 100%; border-radius: 12px; margin: 1.5em 0; }
+.prose-nm hr { border: none; border-top: 1px solid var(--color-border); margin: 2em 0; }
+.prose-nm table { width: 100%; border-collapse: collapse; margin: 1.5em 0; font-size: 14px; }
+.prose-nm th { background: var(--color-accent-light); color: var(--color-ink); font-weight: 700; padding: 10px 14px; text-align: left; border: 1px solid var(--color-border); }
+.prose-nm td { padding: 9px 14px; border: 1px solid var(--color-border); color: var(--color-muted); }
+
+/* Drop cap — first letter of first paragraph */
+.drop-cap > p:first-of-type::first-letter {
+  font-family: var(--font-display);
+  font-size: 4.4em;
+  font-weight: 800;
+  float: left;
+  line-height: 0.8;
+  margin: 0.06em 0.12em 0 0;
+  color: var(--color-accent);
+}
+
 /* ─── Animation helpers ──────────────────────────────────────────────────── */
 .animate-fade-up   { animation: fadeUp 0.6s ease forwards; }
 .animate-fade-in   { animation: fadeIn 0.5s ease forwards; }
@@ -194,3 +266,15 @@ body {
 .animate-float-rev { animation: floatReverse 3.5s ease-in-out infinite; }
 .animate-spin-badge { animation: spinBadge 18s linear infinite; }
 .animate-spin-slow  { animation: spinBadge 24s linear infinite; }
+
+/* Simon Says game — shake on wrong answer */
+@keyframes simonShake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  15%  { transform: translateX(-7px) rotate(-1.5deg); }
+  30%  { transform: translateX(7px)  rotate(1.5deg);  }
+  45%  { transform: translateX(-5px) rotate(-0.8deg); }
+  60%  { transform: translateX(5px)  rotate(0.8deg);  }
+  75%  { transform: translateX(-3px); }
+  90%  { transform: translateX(3px);  }
+}
+.simon-shake { animation: simonShake 0.55s ease; }

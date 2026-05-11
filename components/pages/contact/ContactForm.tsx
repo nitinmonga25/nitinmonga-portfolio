@@ -38,7 +38,7 @@ export function ContactForm({ content }: { content?: ContactFormContent }) {
   const ref = useRef<HTMLElement>(null);
   const [formState, setFormState] = useState<FormState>("idle");
   const [values, setValues] = useState({
-    name: "", email: "", service: "", budget: "", message: "",
+    name: "", email: "", phone: "", service: "", budget: "", message: "",
   });
 
   useEffect(() => {
@@ -123,16 +123,28 @@ export function ContactForm({ content }: { content?: ContactFormContent }) {
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label className="font-body text-[12px] font-semibold uppercase tracking-[1.5px] text-[var(--color-muted)]" htmlFor="email">
-                      Email Address *
+                    <label className="font-body text-[12px] font-semibold uppercase tracking-[1.5px] text-[var(--color-muted)]" htmlFor="phone">
+                      Phone Number *
                     </label>
                     <input
-                      id="email" name="email" type="email" required
-                      placeholder="you@example.com"
-                      value={values.email} onChange={handleChange}
+                      id="phone" name="phone" type="tel" required
+                      placeholder="+91 98765 43210"
+                      value={values.phone} onChange={handleChange}
                       className={inputClass}
                     />
                   </div>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="font-body text-[12px] font-semibold uppercase tracking-[1.5px] text-[var(--color-muted)]" htmlFor="email">
+                    Email Address *
+                  </label>
+                  <input
+                    id="email" name="email" type="email" required
+                    placeholder="you@example.com"
+                    value={values.email} onChange={handleChange}
+                    className={inputClass}
+                  />
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-5">

@@ -15,6 +15,7 @@ export const CONTENT_DEFAULTS: Record<string, unknown> = {
   ],
   "content.home.about": {
     heading: "Designer, Developer &\n3D Artist",
+    photo: "",
     bioParagraphs: [
       "I'm Nitin Monga — a graphic designer, 3D artist and full-stack developer based in Punjab, India.",
       "Over the past decade I've built 400+ websites, produced 40+ CGI ad campaigns, and grown a network of live platforms to 84K+ followers and 75K+ monthly impressions.",

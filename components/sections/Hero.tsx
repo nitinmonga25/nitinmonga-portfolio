@@ -63,19 +63,15 @@ export function Hero({ content }: { content?: HeroContent }) {
       className="min-h-screen bg-[var(--color-bg)] flex flex-col pt-[72px] pb-5"
     >
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12 flex-1 flex flex-col w-full">
-        {/* ── White boxed card ──────────────────────────────────────────── */}
         <div
           ref={contentRef}
           className="flex-1 relative bg-[var(--color-surface)] flex flex-col overflow-hidden"
           style={{ borderRadius: "24px", border: "1px solid var(--color-border)", boxShadow: "var(--shadow-card)" }}
         >
-          {/* Subtle dot grid inside card */}
+          {/* Dot grid */}
           <div
             className="absolute inset-0 pointer-events-none opacity-[0.3]"
-            style={{
-              backgroundImage: "radial-gradient(circle, rgba(0,0,0,0.07) 1px, transparent 1px)",
-              backgroundSize: "28px 28px",
-            }}
+            style={{ backgroundImage: "radial-gradient(circle, rgba(0,0,0,0.07) 1px, transparent 1px)", backgroundSize: "28px 28px" }}
             aria-hidden="true"
           />
 
@@ -94,10 +90,8 @@ export function Hero({ content }: { content?: HeroContent }) {
           <div className="relative z-10 flex-1 flex items-center px-8 lg:px-14 py-4">
             <div className="w-full flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10 lg:gap-8">
 
-              {/* ── Left: Typography + CTAs ─────────────────────────────── */}
+              {/* Left: text */}
               <div className="flex flex-col max-w-[580px]">
-
-                {/* Nitin — filled black */}
                 <div className="overflow-hidden" style={{ lineHeight: "0.88" }}>
                   <h1
                     className="h-nitin font-display font-bold text-[var(--color-ink)] block"
@@ -107,8 +101,6 @@ export function Hero({ content }: { content?: HeroContent }) {
                     Nitin
                   </h1>
                 </div>
-
-                {/* Monga — filled accent, with paddingBottom so "g" descender is never clipped */}
                 <div className="overflow-hidden" style={{ lineHeight: "0.88", paddingBottom: "0.22em" }}>
                   <h1
                     className="h-monga font-display font-bold block text-[var(--color-accent)]"
@@ -118,16 +110,12 @@ export function Hero({ content }: { content?: HeroContent }) {
                     Monga
                   </h1>
                 </div>
-
-                {/* Red rule */}
                 <div
                   ref={lineRef}
                   className="h-px bg-[var(--color-accent)] mt-4 mb-5"
                   style={{ width: "clamp(100px, 14vw, 220px)" }}
                   aria-hidden="true"
                 />
-
-                {/* Typewriter */}
                 <div className="h-sub flex items-center gap-2 mb-4" style={{ minHeight: "26px" }}>
                   <span
                     className="font-body font-medium text-[var(--color-ink)]"
@@ -142,16 +130,12 @@ export function Hero({ content }: { content?: HeroContent }) {
                     aria-hidden="true"
                   />
                 </div>
-
-                {/* Body */}
                 <p
                   className="h-body font-body text-[var(--color-muted)] leading-relaxed mb-7 max-w-[380px]"
                   style={{ fontSize: "clamp(13px, 0.85vw, 15px)" }}
                 >
                   {c.bio}
                 </p>
-
-                {/* CTAs */}
                 <div className="h-ctas flex flex-wrap items-center gap-3">
                   <Link href="/work/" className="btn-primary group">
                     View My Work
@@ -168,26 +152,25 @@ export function Hero({ content }: { content?: HeroContent }) {
                 </div>
               </div>
 
-              {/* ── Right: CSS 3D scene + floating tags ───────────────────── */}
+              {/* Right: game panel */}
               <div
                 className="hidden lg:block relative flex-shrink-0"
                 style={{ width: "clamp(320px, 32vw, 480px)", height: "clamp(400px, 48vh, 580px)" }}
               >
-                {/* 3D panel */}
                 <div
                   className="h-3d-panel absolute"
                   style={{
-                    left: "52px", right: 0, top: 0, bottom: "44px",
-                    background: "var(--color-accent-light)",
+                    left: "52px", right: 0, top: 0, bottom: "8px",
+                    background: "#0F0F0F",
                     borderRadius: "16px",
-                    border: "1px solid rgba(255,61,0,0.12)",
+                    border: "1px solid rgba(255,255,255,0.07)",
                     overflow: "hidden",
                   }}
                 >
-                  <HeroVisual />
+                  <SimonGame />
                 </div>
 
-                {/* Tag: Web Design */}
+                {/* Floating tags */}
                 <div
                   className="h-tag absolute flex items-center gap-2.5 animate-float"
                   style={{ left: 0, top: "17%", background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "10px", boxShadow: "var(--shadow-card)", padding: "9px 13px", zIndex: 2 }}
@@ -205,7 +188,6 @@ export function Hero({ content }: { content?: HeroContent }) {
                   </div>
                 </div>
 
-                {/* Tag: 3D Art */}
                 <div
                   className="h-tag absolute flex items-center gap-2.5 animate-float-rev"
                   style={{ right: "-10px", top: "37%", background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "10px", boxShadow: "var(--shadow-card)", padding: "9px 13px", zIndex: 2 }}
@@ -222,7 +204,6 @@ export function Hero({ content }: { content?: HeroContent }) {
                   </div>
                 </div>
 
-                {/* Tag: Full-Stack */}
                 <div
                   className="h-tag absolute flex items-center gap-2.5 animate-float"
                   style={{ left: 0, bottom: "32%", animationDelay: "1.1s", background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "10px", boxShadow: "var(--shadow-card)", padding: "9px 13px", zIndex: 2 }}
@@ -237,240 +218,289 @@ export function Hero({ content }: { content?: HeroContent }) {
                     <p className="font-body text-[9.5px] text-[var(--color-muted)] leading-none">Next.js · React</p>
                   </div>
                 </div>
-
               </div>
 
             </div>
           </div>
-
-
         </div>
       </div>
     </section>
   );
 }
 
-/* ─── Creative CSS 3D scene (mouse-draggable cube) ───────────────────────── */
-function HeroVisual() {
-  const cubeRef    = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const state = useRef({
-    rotX: -18, rotY: 28,
-    velX: 0,   velY: 0.35,
-    dragging: false,
-    lastX: 0,  lastY: 0,
-    rafId: 0,
-  });
+/* ─── Simon Says game ────────────────────────────────────────────────────── */
+
+const COLORS = [
+  { hex: "#FF3D00", glow: "255,61,0"   },
+  { hex: "#06B6D4", glow: "6,182,212"  },
+  { hex: "#10B981", glow: "16,185,129" },
+  { hex: "#8B5CF6", glow: "139,92,246" },
+];
+
+type Phase = "idle" | "showing" | "input" | "over";
+
+function SimonGame() {
+  /* UI state — only for rendering */
+  const [phase,   setPhase]   = useState<Phase>("idle");
+  const [score,   setScore]   = useState(0);
+  const [level,   setLevel]   = useState(0);
+  const [hi,      setHi]      = useState(0);
+  const [shake,   setShake]   = useState(false);
+  const [flashOk, setFlashOk] = useState(false);
+  const [newBest, setNewBest] = useState(false);
+
+  /* Game refs — never stale in event handlers */
+  const seqRef   = useRef<number[]>([]);
+  const posRef   = useRef(0);
+  const scoreRef = useRef(0);
+  const hiRef    = useRef(0);
+  const phaseRef = useRef<string>("idle");
+  const timers   = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const btns     = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
-    const s = state.current;
-
-    const tick = () => {
-      if (!s.dragging) {
-        s.velY += (0.32 - s.velY) * 0.018;
-        s.velX += (0    - s.velX) * 0.03;
-      } else {
-        s.velX *= 0.85;
-        s.velY *= 0.85;
-      }
-      s.rotX = Math.max(-70, Math.min(70, s.rotX + s.velX));
-      s.rotY += s.velY;
-      if (cubeRef.current) {
-        cubeRef.current.style.transform = `rotateX(${s.rotX}deg) rotateY(${s.rotY}deg)`;
-      }
-      s.rafId = requestAnimationFrame(tick);
-    };
-    s.rafId = requestAnimationFrame(tick);
-
-    const onMouseMove = (e: MouseEvent) => {
-      if (!s.dragging) return;
-      const dx = e.clientX - s.lastX;
-      const dy = e.clientY - s.lastY;
-      s.velY = dx * 0.45;
-      s.velX = -dy * 0.45;
-      s.lastX = e.clientX;
-      s.lastY = e.clientY;
-    };
-    const onMouseUp = () => {
-      s.dragging = false;
-      if (containerRef.current) containerRef.current.style.cursor = "grab";
-    };
-    const onTouchMove = (e: TouchEvent) => {
-      if (!s.dragging) return;
-      const t = e.touches[0];
-      const dx = t.clientX - s.lastX;
-      const dy = t.clientY - s.lastY;
-      s.velY = dx * 0.45;
-      s.velX = -dy * 0.45;
-      s.lastX = t.clientX;
-      s.lastY = t.clientY;
-    };
-    const onTouchEnd = () => { s.dragging = false; };
-
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup",   onMouseUp);
-    window.addEventListener("touchmove", onTouchMove, { passive: true });
-    window.addEventListener("touchend",  onTouchEnd);
-
+    try {
+      const saved = parseInt(localStorage.getItem("nm-simon-hs") || "0") || 0;
+      hiRef.current = saved;
+      setHi(saved);
+    } catch {}
+    // Auto-start after a short delay so user sees the buttons before they light up
+    const autoId = setTimeout(() => startGame(), 1200);
     return () => {
-      cancelAnimationFrame(s.rafId);
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup",   onMouseUp);
-      window.removeEventListener("touchmove", onTouchMove);
-      window.removeEventListener("touchend",  onTouchEnd);
+      clearTimeout(autoId);
+      timers.current.forEach(clearTimeout);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onPointerDown = (e: React.PointerEvent) => {
-    const s = state.current;
-    s.dragging = true;
-    s.lastX = e.clientX;
-    s.lastY = e.clientY;
-    s.velX  = 0;
-    s.velY  = 0;
-    if (containerRef.current) containerRef.current.style.cursor = "grabbing";
-    e.preventDefault();
-  };
+  function addTimer(fn: () => void, ms: number) {
+    const id = setTimeout(fn, ms);
+    timers.current.push(id);
+  }
+  function clearTimers() {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+  }
+
+  /* Direct DOM — bypasses React batching for smooth animation */
+  function lightUp(i: number) {
+    const b = btns.current[i];
+    if (!b) return;
+    b.style.opacity   = "1";
+    b.style.transform = "scale(1.08)";
+    b.style.boxShadow = `0 0 40px rgba(${COLORS[i].glow},0.75), 0 0 80px rgba(${COLORS[i].glow},0.4)`;
+  }
+  function dimAll(forInput: boolean) {
+    btns.current.forEach(b => {
+      if (!b) return;
+      b.style.opacity   = forInput ? "0.45" : "0.1";
+      b.style.transform = "scale(1)";
+      b.style.boxShadow = "none";
+    });
+  }
+  function dimOne(i: number) {
+    const b = btns.current[i];
+    if (!b) return;
+    b.style.opacity   = "0.45";
+    b.style.transform = "scale(1)";
+    b.style.boxShadow = "none";
+  }
+
+  function playSequence(seq: number[]) {
+    clearTimers();
+    phaseRef.current = "showing";
+    setPhase("showing");
+    dimAll(false);
+
+    let t = 500;
+    seq.forEach(colorIdx => {
+      addTimer(() => lightUp(colorIdx), t);
+      t += 700;
+      addTimer(() => dimAll(false), t);
+      t += 300;
+    });
+    addTimer(() => {
+      phaseRef.current = "input";
+      setPhase("input");
+      dimAll(true);
+    }, t + 250);
+  }
+
+  function startGame() {
+    clearTimers();
+    const first = [Math.floor(Math.random() * 4)];
+    seqRef.current = first;
+    posRef.current = 0;
+    scoreRef.current = 0;
+    setScore(0);
+    setLevel(1);
+    setNewBest(false);
+    playSequence(first);
+  }
+
+  function handlePress(i: number) {
+    if (phaseRef.current !== "input") return;
+
+    /* flash this button briefly */
+    lightUp(i);
+    addTimer(() => dimOne(i), 200);
+
+    if (i !== seqRef.current[posRef.current]) {
+      /* ── wrong ── */
+      clearTimers();
+      phaseRef.current = "wrong";
+      setShake(true);
+      addTimer(() => {
+        setShake(false);
+        dimAll(false);
+        const hs = Math.max(scoreRef.current, hiRef.current);
+        const isNew = hs > hiRef.current;
+        if (isNew) {
+          hiRef.current = hs;
+          setHi(hs);
+          try { localStorage.setItem("nm-simon-hs", String(hs)); } catch {}
+        }
+        setNewBest(isNew);
+        phaseRef.current = "over";
+        setPhase("over");
+      }, 650);
+      return;
+    }
+
+    posRef.current++;
+
+    if (posRef.current >= seqRef.current.length) {
+      /* ── sequence complete ── */
+      phaseRef.current = "wait";
+      scoreRef.current++;
+      setScore(scoreRef.current);
+      setFlashOk(true);
+      addTimer(() => setFlashOk(false), 480);
+      addTimer(() => {
+        const next = [...seqRef.current, Math.floor(Math.random() * 4)];
+        seqRef.current = next;
+        posRef.current = 0;
+        setLevel(next.length);
+        playSequence(next);
+      }, 900);
+    }
+  }
+
+  const S: React.CSSProperties = { fontFamily: "var(--font-body)" };
+  const D: React.CSSProperties = { fontFamily: "var(--font-display)" };
 
   return (
-    <div className="w-full h-full relative overflow-hidden" aria-hidden="true">
-      {/* Accent dot grid */}
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: "radial-gradient(circle, rgba(255,61,0,0.22) 1px, transparent 1px)",
-          backgroundSize: "22px 22px",
-        }}
-      />
+    <div className="w-full h-full flex flex-col relative" style={{ background: "#0F0F0F" }}>
 
-      {/* ── Draggable CSS 3D cube ── */}
-      <div
-        ref={containerRef}
-        className="absolute select-none"
-        style={{ top: "46%", left: "52%", transform: "translate(-50%, -50%)", perspective: "520px", cursor: "grab" }}
-        onPointerDown={onPointerDown}
-      >
+      {/* Success flash overlay */}
+      {flashOk && (
         <div
-          ref={cubeRef}
-          style={{
-            width: "130px", height: "130px",
-            position: "relative",
-            transformStyle: "preserve-3d",
-            transform: `rotateX(-18deg) rotateY(28deg)`,
-            willChange: "transform",
-          }}
-        >
-          {/* Front */}
-          <div style={{ position: "absolute", inset: 0, background: "#111111", transform: "translateZ(65px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ fontFamily: "var(--font-bricolage), sans-serif", fontSize: "30px", fontWeight: 800, color: "#fff", letterSpacing: "-0.04em" }}>NM</span>
+          className="absolute inset-0 pointer-events-none z-50"
+          style={{ background: "rgba(16,185,129,0.14)", borderRadius: "inherit" }}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* ── Header ── */}
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", padding: "20px 20px 8px" }}>
+        <div>
+          <p style={{ ...S, fontSize: "10px", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase", color: "#FF3D00" }}>
+            Simon Says
+          </p>
+          {phase !== "idle" && (
+            <p style={{ ...S, fontSize: "11px", color: "rgba(255,255,255,0.3)", marginTop: "3px" }}>
+              Level {level}
+            </p>
+          )}
+        </div>
+        {phase !== "idle" && (
+          <div style={{ textAlign: "right" }}>
+            <p style={{ ...D, fontSize: "38px", fontWeight: 800, color: "#fff", lineHeight: 1 }}>
+              {String(score).padStart(2, "0")}
+            </p>
+            <p style={{ ...S, fontSize: "10px", color: "rgba(255,255,255,0.22)", marginTop: "2px" }}>
+              Best: {hi}
+            </p>
           </div>
-          {/* Back */}
-          <div style={{ position: "absolute", inset: 0, background: "#111111", transform: "rotateY(180deg) translateZ(65px)" }} />
-          {/* Top — accent */}
-          <div style={{ position: "absolute", inset: 0, background: "#FF3D00", transform: "rotateX(90deg) translateZ(65px)" }} />
-          {/* Bottom */}
-          <div style={{ position: "absolute", inset: 0, background: "rgba(255,61,0,0.35)", transform: "rotateX(-90deg) translateZ(65px)" }} />
-          {/* Left */}
-          <div style={{ position: "absolute", inset: 0, background: "rgba(17,17,17,0.72)", transform: "rotateY(-90deg) translateZ(65px)" }} />
-          {/* Right */}
-          <div style={{ position: "absolute", inset: 0, background: "rgba(17,17,17,0.50)", transform: "rotateY(90deg) translateZ(65px)" }} />
-        </div>
-
-        {/* Hint label on first hover */}
-        <div
-          className="absolute pointer-events-none"
-          style={{ bottom: "-28px", left: "50%", transform: "translateX(-50%)", whiteSpace: "nowrap" }}
-        >
-          <span style={{ fontSize: "9px", letterSpacing: "2px", textTransform: "uppercase", color: "rgba(255,61,0,0.55)", fontFamily: "var(--font-body)" }}>
-            drag to spin
-          </span>
-        </div>
+        )}
       </div>
 
-      {/* Orbit ring 1 */}
+      {/* ── Button grid ── */}
       <div
-        className="absolute rounded-full"
-        style={{
-          top: "46%", left: "52%",
-          width: "210px", height: "210px",
-          marginTop: "-105px", marginLeft: "-105px",
-          border: "1.5px dashed rgba(255,61,0,0.4)",
-          animation: "spinBadge 16s linear infinite",
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Orbit ring 2 — tilted */}
-      <div
-        className="absolute rounded-full"
-        style={{
-          top: "46%", left: "52%",
-          width: "160px", height: "160px",
-          marginTop: "-80px", marginLeft: "-80px",
-          border: "1px dashed rgba(255,61,0,0.25)",
-          transform: "rotateX(65deg)",
-          animation: "spinBadge 11s linear infinite reverse",
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Small floating cubes */}
-      <MiniCube size={34} color="#FF3D00" top="14%" left="13%" duration="8s" delay="0s"   floatClass="animate-float" />
-      <MiniCube size={22} color="#111111" bottom="16%" right="11%" duration="6s" delay="0.5s" floatClass="animate-float-rev" />
-      <MiniCube size={14} color="#FF3D00" top="24%" right="16%" duration="9s" delay="1.2s"  floatClass="animate-float" />
-
-      {/* Accent dots */}
-      <div className="absolute w-2 h-2 rounded-full bg-[#FF3D00] opacity-60 animate-float" style={{ bottom: "32%", left: "18%", animationDelay: "0.7s" }} />
-      <div className="absolute w-1.5 h-1.5 rounded-full bg-[#111111] opacity-30 animate-float-rev" style={{ top: "38%", right: "22%", animationDelay: "1.8s" }} />
-
-      {/* Label */}
-      <div className="absolute bottom-3 right-3 flex items-center gap-1.5 z-10">
-        <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]" />
-        <span className="font-body text-[10px] uppercase tracking-[2px] text-[var(--color-accent-dark)]">
-          Creative 3D
-        </span>
-      </div>
-    </div>
-  );
-}
-
-/* Mini rotating cube helper */
-function MiniCube({
-  size, color, duration, delay, floatClass,
-  top, left, right, bottom,
-}: {
-  size: number; color: string;
-  duration: string; delay: string; floatClass: string;
-  top?: string; left?: string; right?: string; bottom?: string;
-}) {
-  const half = size / 2;
-  const pos: React.CSSProperties = {};
-  if (top)    pos.top    = top;
-  if (left)   pos.left   = left;
-  if (right)  pos.right  = right;
-  if (bottom) pos.bottom = bottom;
-
-  return (
-    <div className={`absolute ${floatClass}`} style={{ perspective: "180px", animationDelay: delay, ...pos }}>
-      <div
-        style={{
-          width: `${size}px`, height: `${size}px`,
-          position: "relative",
-          transformStyle: "preserve-3d",
-          animation: `rotateCube ${duration} linear infinite`,
-          animationDelay: delay,
-        }}
+        className={shake ? "simon-shake" : ""}
+        style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "0 20px" }}
       >
-        {[
-          { t: `translateZ(${half}px)`,                  bg: color,   op: 1   },
-          { t: `rotateY(180deg) translateZ(${half}px)`,  bg: color,   op: 0.7 },
-          { t: `rotateX(90deg) translateZ(${half}px)`,   bg: color,   op: 0.9 },
-          { t: `rotateX(-90deg) translateZ(${half}px)`,  bg: color,   op: 0.35 },
-          { t: `rotateY(-90deg) translateZ(${half}px)`,  bg: color,   op: 0.8 },
-          { t: `rotateY(90deg) translateZ(${half}px)`,   bg: color,   op: 0.55 },
-        ].map(({ t, bg, op }, i) => (
-          <div key={i} style={{ position: "absolute", inset: 0, background: bg, opacity: op, transform: t }} />
-        ))}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px", width: "100%", maxWidth: "260px" }}>
+          {COLORS.map((c, i) => (
+            <button
+              key={i}
+              ref={el => { btns.current[i] = el; }}
+              onClick={() => handlePress(i)}
+              style={{
+                aspectRatio: "1",
+                borderRadius: "14px",
+                background: c.hex,
+                opacity: 0.1,
+                border: "none",
+                outline: "none",
+                cursor: "pointer",
+                transition: "opacity 0.08s ease, transform 0.08s ease, box-shadow 0.08s ease",
+              }}
+              aria-label={`Button ${i + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* ── Bottom UI ── */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", padding: "12px 20px 22px" }}>
+
+        {/* Level dots */}
+        {phase !== "idle" && (
+          <div style={{ display: "flex", gap: "5px", flexWrap: "wrap", justifyContent: "center", maxWidth: "220px" }}>
+            {Array.from({ length: Math.max(level, 10) }).map((_, i) => (
+              <div key={i} style={{
+                width: i < level ? "7px" : "5px",
+                height: i < level ? "7px" : "5px",
+                borderRadius: "50%",
+                background: i < level ? "#FF3D00" : "rgba(255,255,255,0.1)",
+                transition: "all 0.3s",
+                flexShrink: 0,
+              }} />
+            ))}
+          </div>
+        )}
+
+        {phase === "idle" && (
+          <p style={{ ...S, fontSize: "12px", color: "rgba(255,255,255,0.3)" }}>
+            Starting…
+          </p>
+        )}
+
+        {phase === "showing" && (
+          <p style={{ ...S, fontSize: "12px", color: "rgba(255,255,255,0.3)" }}>Watch carefully…</p>
+        )}
+
+        {phase === "input" && (
+          <p style={{ ...S, fontSize: "12px", fontWeight: 700, color: "rgba(255,255,255,0.85)" }}>Your turn!</p>
+        )}
+
+        {phase === "over" && (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", textAlign: "center" }}>
+            <div>
+              <p style={{ ...D, fontSize: "52px", fontWeight: 800, color: "#fff", lineHeight: 1 }}>{score}</p>
+              <p style={{ ...S, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase", marginTop: "4px", color: newBest ? "#10B981" : "rgba(255,255,255,0.3)" }}>
+                {newBest ? "🎉 New Best!" : `Best: ${hi}`}
+              </p>
+            </div>
+            <button
+              onClick={startGame}
+              style={{ ...S, background: "#FF3D00", color: "#fff", border: "none", borderRadius: "100px", padding: "11px 32px", fontSize: "13px", fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 20px rgba(255,61,0,0.45)" }}
+            >
+              Play Again
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

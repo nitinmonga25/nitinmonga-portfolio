@@ -6,34 +6,20 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export interface WorkProject {
-  title: string;
-  slug: string;
-  category: string;
-  tags: string[];
-  year: string;
+  title:     string;
+  slug:      string;
+  category:  string;
+  tags:      string[];
+  year:      string;
+  thumbnail?: string | null;
 }
 
-const DEFAULT_PROJECTS: WorkProject[] = [
-  { title: "Music Platform", slug: "music-platform", category: "Web Design", tags: ["WordPress", "SEO", "AdSense"], year: "2023" },
-  { title: "Audio Tools Platform", slug: "audio-tools-platform", category: "Next.js Dev", tags: ["Next.js", "MySQL", "Prisma"], year: "2024" },
-  { title: "CGI Product Campaign", slug: "cgi-product-campaign", category: "3D", tags: ["Blender", "CGI", "Motion"], year: "2024" },
-  { title: "Brand Identity — Tech Startup", slug: "brand-identity-tech", category: "Branding", tags: ["Figma", "Illustrator"], year: "2023" },
-  { title: "Templates & Resources Site", slug: "templates-resources", category: "Web Design", tags: ["WordPress", "AdSense"], year: "2022" },
-  { title: "Full-Stack Web Application", slug: "full-stack-app", category: "Next.js Dev", tags: ["Next.js", "TypeScript", "Tailwind"], year: "2024" },
-  { title: "E-commerce Brand Campaign", slug: "ecommerce-campaign", category: "3D", tags: ["C4D", "CGI", "Compositing"], year: "2023" },
-  { title: "Real Estate Landing Page", slug: "real-estate-landing", category: "Web Design", tags: ["WordPress", "Elementor"], year: "2022" },
-  { title: "SaaS Dashboard UI", slug: "saas-dashboard", category: "Next.js Dev", tags: ["Next.js", "Tailwind", "Charts"], year: "2025" },
-  { title: "Fashion Brand Identity", slug: "fashion-branding", category: "Branding", tags: ["Figma", "Photoshop", "Identity"], year: "2023" },
-  { title: "Product Visualization", slug: "product-viz", category: "3D", tags: ["Blender", "Rendering", "eCommerce"], year: "2024" },
-  { title: "Digital Agency Website", slug: "agency-website", category: "Web Design", tags: ["WordPress", "GSAP", "Animation"], year: "2024" },
-];
+const FILTERS = ["All", "Web Design", "Next.js Dev", "Branding", "3D", "WordPress", "Full-Stack"];
 
-const FILTERS = ["All", "Web Design", "Next.js Dev", "Branding", "3D"];
-
-export function WorkGrid({ projects }: { projects?: WorkProject[] }) {
+export function WorkGrid({ projects = [] }: { projects?: WorkProject[] }) {
   const ref = useRef<HTMLElement>(null);
   const [activeFilter, setActiveFilter] = useState("All");
-  const data = projects ?? DEFAULT_PROJECTS;
+  const data = projects;
 
   const filtered = activeFilter === "All" ? data : data.filter((p) => p.category === activeFilter);
 
@@ -89,9 +75,17 @@ export function WorkGrid({ projects }: { projects?: WorkProject[] }) {
           </span>
         </div>
 
+        {/* Empty state */}
+        {filtered.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-24 gap-3">
+            <p className="font-display text-xl font-bold text-[var(--color-ink)]">No projects yet</p>
+            <p className="font-body text-[var(--color-muted)] text-sm">Published projects will appear here.</p>
+          </div>
+        )}
+
         {/* Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filtered.map(({ title, slug, category, tags, year }) => (
+          {filtered.map(({ title, slug, category, tags, year, thumbnail }) => (
             <div
               key={slug}
               className="wg-card group card overflow-hidden cursor-default"
@@ -101,9 +95,14 @@ export function WorkGrid({ projects }: { projects?: WorkProject[] }) {
             >
               {/* Thumbnail */}
               <div className="h-48 relative overflow-hidden flex items-center justify-center" style={{ background: "var(--color-accent-light)" }}>
-                <div className="w-14 h-14 rounded-full border-2 border-[var(--color-accent)]/30 flex items-center justify-center">
-                  <div className="w-5 h-5 rounded-full bg-[var(--color-accent)]/20" />
-                </div>
+                {thumbnail ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={thumbnail} alt={title} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-14 h-14 rounded-full border-2 border-[var(--color-accent)]/30 flex items-center justify-center">
+                    <div className="w-5 h-5 rounded-full bg-[var(--color-accent)]/20" />
+                  </div>
+                )}
                 {/* Hover overlay */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center" style={{ background: "rgba(255,61,0,0.06)" }}>
                   <Link

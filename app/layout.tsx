@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { bricolage } from "@/lib/fonts";
-import { Navbar } from "@/components/ui/Navbar";
-import { Footer } from "@/components/ui/Footer";
-import { CustomCursor } from "@/components/ui/CustomCursor";
-import { LenisProvider } from "@/components/ui/LenisProvider";
+import { SiteLayout } from "@/components/ui/SiteLayout";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -57,12 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={bricolage.variable}
     >
       <body className="antialiased" suppressHydrationWarning>
-        <LenisProvider>
-          <CustomCursor />
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-        </LenisProvider>
+        <SiteLayout>{children}</SiteLayout>
       </body>
     </html>
   );

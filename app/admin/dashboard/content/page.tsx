@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -259,6 +260,12 @@ export default function ContentEditorPage() {
 
             {/* About */}
             <SectionCard title="About Section" onSave={() => save("content.home.about")} saveState={saveStates["content.home.about"] ?? "idle"}>
+              <ImageUpload
+                label="Your Photo"
+                value={get<{ photo: string }>("content.home.about", { photo: "" }).photo}
+                onChange={(url) => update("content.home.about", { ...get("content.home.about", {}), photo: url })}
+                folder="nitinmonga/profile"
+              />
               <TextField
                 label="Heading (use \n for line break)"
                 value={get<{ heading: string; bioParagraphs: string[]; chips: string[]; timeline: unknown[] }>("content.home.about", { heading: "", bioParagraphs: [], chips: [], timeline: [] }).heading}

@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { getContent } from "@/lib/content";
-import { BlogHero } from "@/components/pages/blog/BlogHero";
-import { BlogList } from "@/components/pages/blog/BlogList";
+import { prisma } from "@/lib/prisma";
+import { BlogPageContent } from "@/components/pages/blog/BlogPageContent";
 import type { BlogHeroContent } from "@/components/pages/blog/BlogHero";
+import type { BlogPostItem } from "@/components/pages/blog/BlogPageContent";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   const meta = await getContent<{ title: string; description: string }>("meta.blog");
@@ -10,12 +13,32 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function BlogPage() {
-  const hero = await getContent<BlogHeroContent>("content.blog.hero");
+  const [hero, rawPosts] = await Promise.all([
+    getContent<BlogHeroContent>("content.blog.hero"),
+    prisma.blogPost.findMany({
+      where:   { published: true },
+      orderBy: { publishedAt: "desc" },
+      select:  { slug: true, category: true, title: true, excerpt: true, publishedAt: true, readTime: true, thumbnail: true },
+    }).catch(() => []),
+  ]);
+
+  const posts: BlogPostItem[] = rawPosts.map((p) => ({
+    slug:      p.slug,
+    category:  p.category,
+    title:     p.title,
+    excerpt:   p.excerpt,
+    thumbnail: p.thumbnail,
+    readTime:  `${p.readTime} min`,
+    date:      p.publishedAt
+      ? new Date(p.publishedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
+      : "",
+  }));
 
   return (
-    <>
-      <BlogHero content={hero} />
-      <BlogList />
-    </>
+    <BlogPageContent
+      posts={posts}
+      heroTitle={hero.title}
+      heroSubtitle={hero.subtitle}
+    />
   );
 }

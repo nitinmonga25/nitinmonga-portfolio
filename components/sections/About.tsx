@@ -9,10 +9,12 @@ export interface AboutContent {
   bioParagraphs: string[];
   chips: string[];
   timeline: Array<{ year: string; title: string; desc: string }>;
+  photo?: string;
 }
 
 const DEFAULT: AboutContent = {
   heading: "Designer, Developer &\n3D Artist",
+  photo: "",
   bioParagraphs: [
     "I'm Nitin Monga — a graphic designer, 3D artist and full-stack developer based in Punjab, India.",
     "Over the past decade I've built 400+ websites, produced 40+ CGI ad campaigns, and grown a network of live platforms to 84K+ followers and 75K+ monthly impressions.",
@@ -32,8 +34,14 @@ const DEFAULT: AboutContent = {
 
 export function About({ content }: { content?: AboutContent }) {
   const c = { ...DEFAULT, ...content };
-  const sectionRef = useRef<HTMLElement>(null);
-  const bioRef     = useRef<HTMLDivElement>(null);
+  const sectionRef  = useRef<HTMLElement>(null);
+  const bioRef      = useRef<HTMLDivElement>(null);
+  const photoWrapRef = useRef<HTMLDivElement>(null);
+  const photoCardRef = useRef<HTMLDivElement>(null);
+  const shineRef     = useRef<HTMLDivElement>(null);
+  const dotsRef      = useRef<HTMLDivElement>(null);
+  const badgeRef     = useRef<HTMLDivElement>(null);
+  const circleRef    = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -70,6 +78,47 @@ export function About({ content }: { content?: AboutContent }) {
 
   }, []);
 
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const wrap = photoWrapRef.current;
+    const card = photoCardRef.current;
+    if (!wrap || !card) return;
+
+    const rect = wrap.getBoundingClientRect();
+    const cx = e.clientX - rect.left;
+    const cy = e.clientY - rect.top;
+    const nx = (cx / rect.width  - 0.5) * 2;
+    const ny = (cy / rect.height - 0.5) * 2;
+
+    gsap.to(card, {
+      rotateX: -ny * 13,
+      rotateY:  nx * 13,
+      transformPerspective: 900,
+      duration: 0.25,
+      ease: "power2.out",
+    });
+
+    if (shineRef.current) {
+      const px = (cx / rect.width)  * 100;
+      const py = (cy / rect.height) * 100;
+      shineRef.current.style.background =
+        `radial-gradient(circle at ${px}% ${py}%, rgba(255,255,255,0.22) 0%, transparent 62%)`;
+    }
+
+    if (dotsRef.current)  gsap.to(dotsRef.current,  { x: nx * -14, y: ny * -10, duration: 0.4, ease: "power2.out" });
+    if (circleRef.current) gsap.to(circleRef.current, { x: nx * 18,  y: ny * 14,  duration: 0.45, ease: "power2.out" });
+    if (badgeRef.current)  gsap.to(badgeRef.current,  { x: nx * -22, y: ny * -18, duration: 0.35, ease: "power2.out" });
+  }
+
+  function handleMouseLeave() {
+    const card = photoCardRef.current;
+    if (!card) return;
+    gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.7, ease: "power3.out" });
+    if (shineRef.current)  shineRef.current.style.background = "none";
+    if (dotsRef.current)   gsap.to(dotsRef.current,   { x: 0, y: 0, duration: 0.7, ease: "power3.out" });
+    if (circleRef.current) gsap.to(circleRef.current,  { x: 0, y: 0, duration: 0.7, ease: "power3.out" });
+    if (badgeRef.current)  gsap.to(badgeRef.current,   { x: 0, y: 0, duration: 0.7, ease: "power3.out" });
+  }
+
   // Split heading on \n for line break support
   const headingLines = c.heading.split("\n");
 
@@ -86,39 +135,122 @@ export function About({ content }: { content?: AboutContent }) {
           <div className="lg:sticky lg:top-24 flex flex-col">
             <p className="section-label mb-6">{"// About Me"}</p>
 
-            {/* Photo placeholder — replace with next/image once photo is uploaded */}
+            {/* 3D scene wrapper */}
             <div
-              className="relative w-full aspect-[4/5] max-w-sm rounded-2xl overflow-hidden bg-[var(--color-gold-light)] border border-[var(--color-border)]"
-              aria-label="Nitin Monga portrait"
+              ref={photoWrapRef}
+              className="relative w-full max-w-sm"
+              style={{ perspective: "900px", cursor: "crosshair" }}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
             >
-              <div className="absolute inset-0 flex items-end p-6">
-                <div>
-                  <p className="font-display text-3xl font-bold text-[var(--color-gold-dark)]">NM</p>
-                  <p className="font-body text-[13px] text-[var(--color-muted)] mt-1">
-                    Photo coming soon
-                  </p>
-                </div>
-              </div>
-              <svg
-                className="absolute top-4 right-4 opacity-30"
-                width="80"
-                height="80"
+              {/* Floating dots — layer behind card, moves opposite */}
+              <div
+                ref={dotsRef}
+                className="absolute -top-5 -right-5 pointer-events-none"
+                style={{ zIndex: 0, willChange: "transform" }}
                 aria-hidden="true"
               >
-                {Array.from({ length: 25 }, (_, i) => (
-                  <circle
-                    key={i}
-                    cx={(i % 5) * 18 + 4}
-                    cy={Math.floor(i / 5) * 18 + 4}
-                    r="1.5"
-                    fill="var(--color-gold)"
+                <svg width="88" height="88" viewBox="0 0 88 88">
+                  {Array.from({ length: 25 }, (_, i) => (
+                    <circle
+                      key={i}
+                      cx={(i % 5) * 20 + 4}
+                      cy={Math.floor(i / 5) * 20 + 4}
+                      r="2"
+                      fill="var(--color-accent)"
+                      opacity="0.35"
+                    />
+                  ))}
+                </svg>
+              </div>
+
+              {/* Floating ring — moves forward with cursor */}
+              <div
+                ref={circleRef}
+                className="absolute -bottom-4 -right-4 w-14 h-14 rounded-full pointer-events-none"
+                style={{
+                  border: "2px solid var(--color-accent)",
+                  opacity: 0.5,
+                  zIndex: 10,
+                  willChange: "transform",
+                }}
+                aria-hidden="true"
+              />
+
+              {/* Floating "Available" badge — moves opposite to cursor */}
+              <div
+                ref={badgeRef}
+                className="absolute -top-3 -left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full pointer-events-none"
+                style={{
+                  background: "var(--color-surface)",
+                  border: "1px solid var(--color-border)",
+                  boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+                  zIndex: 10,
+                  willChange: "transform",
+                }}
+                aria-hidden="true"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                <span className="font-body text-[11px] font-semibold text-[var(--color-ink)]">Available for hire</span>
+              </div>
+
+              {/* The card — tilts with mouse */}
+              <div
+                ref={photoCardRef}
+                className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden border border-[var(--color-border)]"
+                style={{
+                  background: c.photo ? "transparent" : "var(--color-gold-light)",
+                  transformStyle: "preserve-3d",
+                  willChange: "transform",
+                  zIndex: 1,
+                }}
+                aria-label="Nitin Monga portrait"
+              >
+                {c.photo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={c.photo}
+                    alt="Nitin Monga"
+                    className="w-full h-full object-cover"
+                    style={{ transform: "translateZ(0)" }}
                   />
-                ))}
-              </svg>
+                ) : (
+                  <>
+                    <div className="absolute inset-0 flex items-end p-6">
+                      <div>
+                        <p className="font-display text-3xl font-bold text-[var(--color-gold-dark)]">NM</p>
+                        <p className="font-body text-[13px] text-[var(--color-muted)] mt-1">Photo coming soon</p>
+                      </div>
+                    </div>
+                    {/* Inner dot grid decoration */}
+                    <svg className="absolute top-4 right-4 opacity-20" width="80" height="80" aria-hidden="true">
+                      {Array.from({ length: 25 }, (_, i) => (
+                        <circle key={i} cx={(i % 5) * 18 + 4} cy={Math.floor(i / 5) * 18 + 4} r="1.5" fill="var(--color-gold)" />
+                      ))}
+                    </svg>
+                  </>
+                )}
+
+                {/* Shine overlay — follows cursor */}
+                <div
+                  ref={shineRef}
+                  className="absolute inset-0 pointer-events-none"
+                  style={{ borderRadius: "inherit", transition: "background 0.05s linear" }}
+                />
+
+                {/* Subtle inner shadow at edges for depth */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    boxShadow: "inset 0 0 40px rgba(0,0,0,0.08)",
+                    borderRadius: "inherit",
+                  }}
+                />
+              </div>
             </div>
 
             {/* Skill tags */}
-            <div className="flex flex-wrap gap-2 mt-6 max-w-sm">
+            <div className="flex flex-wrap gap-2 mt-8 max-w-sm">
               {c.chips.map((tag) => (
                 <span
                   key={tag}

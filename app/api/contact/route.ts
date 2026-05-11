@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, service, budget, message } = await req.json();
+    const { name, email, phone, service, budget, message } = await req.json();
 
-    if (!name?.trim() || !email?.trim() || !message?.trim()) {
+    if (!name?.trim() || !email?.trim() || !phone?.trim() || !message?.trim()) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    // TODO: replace with Nodemailer / Resend when SMTP credentials are set up
-    // For now, log the submission server-side and store in DB when Prisma is configured
-    console.log("[Contact Form]", { name, email, service, budget, message });
+    await prisma.contactMessage.create({
+      data: { name, email, phone, service: service || null, budget: budget || null, message },
+    });
 
     return NextResponse.json({ success: true });
   } catch (err) {

@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { getContent } from "@/lib/content";
+import { prisma } from "@/lib/prisma";
 import { WorkHero } from "@/components/pages/work/WorkHero";
 import { WorkGrid } from "@/components/pages/work/WorkGrid";
 import type { WorkHeroContent } from "@/components/pages/work/WorkHero";
+import type { WorkProject } from "@/components/pages/work/WorkGrid";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   const meta = await getContent<{ title: string; description: string }>("meta.work");
@@ -10,12 +14,28 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function WorkPage() {
-  const hero = await getContent<WorkHeroContent>("content.work.hero");
+  const [hero, rawProjects] = await Promise.all([
+    getContent<WorkHeroContent>("content.work.hero"),
+    prisma.project.findMany({
+      where:   { published: true },
+      orderBy: [{ featured: "desc" }, { order: "asc" }, { createdAt: "desc" }],
+      select:  { title: true, slug: true, category: true, tags: true, thumbnail: true, createdAt: true },
+    }).catch(() => []),
+  ]);
+
+  const projects: WorkProject[] = rawProjects.map((p) => ({
+    title:     p.title,
+    slug:      p.slug,
+    category:  p.category,
+    tags:      p.tags ? JSON.parse(p.tags) : [],
+    thumbnail: p.thumbnail || null,
+    year:      new Date(p.createdAt).getFullYear().toString(),
+  }));
 
   return (
     <>
       <WorkHero content={hero} />
-      <WorkGrid />
+      <WorkGrid projects={projects} />
     </>
   );
 }
