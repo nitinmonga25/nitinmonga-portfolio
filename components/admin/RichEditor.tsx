@@ -41,6 +41,7 @@ function Divider() {
 
 export function RichEditor({ value, onChange, placeholder = "Write content here…", minHeight = 320 }: Props) {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [StarterKit],
     content: value || "",
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
