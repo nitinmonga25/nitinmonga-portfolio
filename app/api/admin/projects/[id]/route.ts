@@ -5,7 +5,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   try {
     const id   = parseInt(params.id, 10);
     const body = await req.json();
-    const { title, slug, description, category, thumbnail, tags, liveUrl, featured, published, order } = body;
+    const { title, slug, description, longDesc, category, thumbnail, tags, techStack, liveUrl, featured, published, order } = body;
 
     const project = await prisma.project.update({
       where: { id },
@@ -13,9 +13,11 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
         title,
         slug,
         description,
+        longDesc: longDesc ?? null,
         category,
         thumbnail: thumbnail ?? "",
         tags: tags ? JSON.stringify(tags) : null,
+        techStack: techStack?.length ? JSON.stringify(techStack) : null,
         liveUrl: liveUrl ?? null,
         featured: featured ?? false,
         published: published ?? false,

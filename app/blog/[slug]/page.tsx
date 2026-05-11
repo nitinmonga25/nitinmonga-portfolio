@@ -10,7 +10,10 @@ import { SocialShareBar } from "@/components/pages/blog/SocialShareBar";
 interface Props { params: { slug: string } }
 
 function buildHtml(content: string): string {
-  const raw = marked(content || "") as string;
+  // TipTap outputs HTML (starts with a tag); legacy posts may be markdown
+  const raw = content.trim().startsWith("<")
+    ? content
+    : (marked(content || "") as string);
   return raw.replace(/<h([23])>(.+?)<\/h\1>/g, (_, level, inner) => {
     const text = inner.replace(/<[^>]+>/g, "");
     const id = text.toLowerCase().replace(/[^\w\s]/g, "").trim().replace(/\s+/g, "-");

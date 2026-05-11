@@ -267,6 +267,61 @@ body {
 .animate-spin-badge { animation: spinBadge 18s linear infinite; }
 .animate-spin-slow  { animation: spinBadge 24s linear infinite; }
 
+/* ─── TipTap admin editor ───────────────────────────────────────────────────── */
+.rich-body {
+  padding: 16px;
+  outline: none;
+  color: rgba(255,255,255,0.85);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.75;
+  caret-color: #FF3D00;
+}
+.rich-body p { margin: 0 0 0.75em; }
+.rich-body h1 { font-size: 22px; font-weight: 700; margin: 1.2em 0 0.5em; color: #fff; }
+.rich-body h2 { font-size: 18px; font-weight: 700; margin: 1.1em 0 0.45em; color: #fff; }
+.rich-body h3 { font-size: 15px; font-weight: 700; margin: 1em 0 0.4em; color: #fff; }
+.rich-body ul, .rich-body ol { padding-left: 1.4em; margin: 0.5em 0 0.75em; }
+.rich-body li { margin: 0.25em 0; }
+.rich-body ul li { list-style: disc; }
+.rich-body ol li { list-style: decimal; }
+.rich-body blockquote {
+  border-left: 3px solid #FF3D00;
+  padding: 0.4em 1em;
+  margin: 0.75em 0;
+  background: rgba(255,61,0,0.08);
+  border-radius: 0 6px 6px 0;
+  color: rgba(255,255,255,0.6);
+  font-style: italic;
+}
+.rich-body code {
+  background: rgba(255,255,255,0.1);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: #FF3D00;
+}
+.rich-body pre {
+  background: #0a0a0a;
+  padding: 12px 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 0.75em 0;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.rich-body pre code { background: none; color: rgba(255,255,255,0.8); padding: 0; }
+.rich-body hr { border: none; border-top: 1px solid rgba(255,255,255,0.12); margin: 1em 0; }
+.rich-body strong { color: #fff; font-weight: 700; }
+.rich-body em { font-style: italic; }
+.rich-body p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: rgba(255,255,255,0.2);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
 /* Simon Says game — shake on wrong answer */
 @keyframes simonShake {
   0%, 100% { transform: translateX(0) rotate(0deg); }

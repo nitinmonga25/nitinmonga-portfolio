@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { ImageUpload } from "@/components/admin/ImageUpload";
+import { RichEditor } from "@/components/admin/RichEditor";
 
 const CATEGORIES = ["Web Design", "Branding", "3D CGI", "Full-Stack", "WordPress"];
 
@@ -18,9 +19,11 @@ interface Project {
   title:       string;
   slug:        string;
   description: string;
+  longDesc:    string;
   category:    string;
   thumbnail:   string;
   tags:        string | null;
+  techStack:   string | null;
   liveUrl:     string | null;
   featured:    boolean;
   published:   boolean;
@@ -31,9 +34,11 @@ const EMPTY_FORM = (): Omit<Project, "id"> => ({
   title:       "",
   slug:        "",
   description: "",
+  longDesc:    "",
   category:    "Web Design",
   thumbnail:   "",
   tags:        "",
+  techStack:   "",
   liveUrl:     "",
   featured:    false,
   published:   false,
@@ -79,9 +84,11 @@ export default function ProjectsAdminPage() {
       title:       p.title,
       slug:        p.slug,
       description: p.description,
+      longDesc:    p.longDesc ?? "",
       category:    p.category,
       thumbnail:   p.thumbnail,
       tags:        p.tags ?? "",
+      techStack:   p.techStack ?? "",
       liveUrl:     p.liveUrl ?? "",
       featured:    p.featured,
       published:   p.published,
@@ -105,8 +112,9 @@ export default function ProjectsAdminPage() {
 
     const payload = {
       ...form,
-      slug:  form.slug || slugify(form.title),
-      tags:  form.tags ? form.tags.split(",").map((t) => t.trim()).filter(Boolean) : [],
+      slug:      form.slug || slugify(form.title),
+      tags:      form.tags      ? form.tags.split(",").map((t) => t.trim()).filter(Boolean) : [],
+      techStack: form.techStack ? form.techStack.split(",").map((t) => t.trim()).filter(Boolean) : [],
     };
 
     try {
@@ -225,7 +233,7 @@ export default function ProjectsAdminPage() {
           <div className="fixed inset-0 z-40" style={{ background: "rgba(0,0,0,0.6)" }} onClick={closePanel} />
           <div
             className="fixed top-0 right-0 h-full z-50 flex flex-col overflow-y-auto"
-            style={{ width: "min(560px, 100vw)", background: "#161616", borderLeft: "1px solid rgba(255,255,255,0.08)" }}
+            style={{ width: "min(820px, 100vw)", background: "#161616", borderLeft: "1px solid rgba(255,255,255,0.08)" }}
           >
             {/* Panel header */}
             <div className="flex items-center justify-between px-6 py-5 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
@@ -283,13 +291,38 @@ export default function ProjectsAdminPage() {
 
               {/* Description */}
               <div className="flex flex-col gap-1.5">
-                <label className="font-body text-[11px] font-semibold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.4)" }}>Description</label>
+                <label className="font-body text-[11px] font-semibold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.4)" }}>Short Description</label>
                 <textarea
-                  rows={3}
+                  rows={2}
                   value={form.description}
                   onChange={(e) => f("description", e.target.value)}
+                  placeholder="One-line summary shown in project listings"
                   className="font-body text-sm px-3 py-2.5 rounded-lg outline-none resize-y"
                   style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff" }}
+                />
+              </div>
+
+              {/* Tech Stack */}
+              <div className="flex flex-col gap-1.5">
+                <label className="font-body text-[11px] font-semibold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.4)" }}>Tech Stack (comma-separated)</label>
+                <input
+                  type="text"
+                  value={form.techStack ?? ""}
+                  onChange={(e) => f("techStack", e.target.value)}
+                  placeholder="Next.js, Tailwind, Prisma, MySQL"
+                  className="font-body text-sm px-3 py-2.5 rounded-lg outline-none"
+                  style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff" }}
+                />
+              </div>
+
+              {/* Case Study Body */}
+              <div className="flex flex-col gap-1.5">
+                <label className="font-body text-[11px] font-semibold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.4)" }}>Case Study Content</label>
+                <RichEditor
+                  value={form.longDesc}
+                  onChange={(html) => f("longDesc", html)}
+                  placeholder="Write the full case study here — overview, challenges, solution, results…"
+                  minHeight={360}
                 />
               </div>
 

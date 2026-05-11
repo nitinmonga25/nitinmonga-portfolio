@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { ImageUpload } from "@/components/admin/ImageUpload";
+import { RichEditor } from "@/components/admin/RichEditor";
 
 const CATEGORIES = ["Design", "Dev", "3D Design", "Business", "SEO"];
 
@@ -221,7 +222,7 @@ export default function BlogAdminPage() {
           <div className="fixed inset-0 z-40" style={{ background: "rgba(0,0,0,0.6)" }} onClick={closePanel} />
           <div
             className="fixed top-0 right-0 h-full z-50 flex flex-col overflow-y-auto"
-            style={{ width: "min(580px, 100vw)", background: "#161616", borderLeft: "1px solid rgba(255,255,255,0.08)" }}
+            style={{ width: "min(800px, 100vw)", background: "#161616", borderLeft: "1px solid rgba(255,255,255,0.08)" }}
           >
             {/* Panel header */}
             <div className="flex items-center justify-between px-6 py-5 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
@@ -306,14 +307,12 @@ export default function BlogAdminPage() {
 
               {/* Content */}
               <div className="flex flex-col gap-1.5">
-                <label className="font-body text-[11px] font-semibold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.4)" }}>Content (Markdown)</label>
-                <textarea
-                  rows={10}
+                <label className="font-body text-[11px] font-semibold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.4)" }}>Content</label>
+                <RichEditor
                   value={form.content}
-                  onChange={(e) => f("content", e.target.value)}
-                  placeholder="Write your post content in Markdown…"
-                  className="font-body text-sm px-3 py-2.5 rounded-lg outline-none resize-y"
-                  style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", fontFamily: "monospace" }}
+                  onChange={(html) => f("content", html)}
+                  placeholder="Write your post content here…"
+                  minHeight={380}
                 />
               </div>
 
