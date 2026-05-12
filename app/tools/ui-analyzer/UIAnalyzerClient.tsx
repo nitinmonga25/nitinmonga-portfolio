@@ -5,14 +5,14 @@ import Link from "next/link";
 import { runAnalysis } from "@/lib/analyzer";
 import type { AnalysisMode, AnalysisResult } from "@/lib/analyzer/types";
 
-// ─── Constants ───────────────────────────────────────────────────────────────
+// ─── Constants ────────────────────────────────────────────────────────────────
 
 const MODES: { id: AnalysisMode; label: string; icon: string }[] = [
-  { id: "web_ui",    label: "Web UI",    icon: "M2 4h20v14H2zM8 22h8M12 18v4"                        },
+  { id: "web_ui",    label: "Web UI",    icon: "M2 4h20v14H2zM8 22h8M12 18v4" },
   { id: "mobile",   label: "Mobile",    icon: "M8 2h8a2 2 0 012 2v16a2 2 0 01-2 2H8a2 2 0 01-2-2V4a2 2 0 012-2zM12 18h.01" },
-  { id: "poster",   label: "Poster",    icon: "M4 2h16v20H4zM8 7h8M8 11h8M8 15h5"                    },
-  { id: "dashboard",label: "Dashboard", icon: "M2 2h9v9H2zM13 2h9v9h-9zM2 13h9v9H2zM13 13h9v9h-9z"  },
-  { id: "logo",     label: "Logo",      icon: "M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"          },
+  { id: "poster",   label: "Poster",    icon: "M4 2h16v20H4zM8 7h8M8 11h8M8 15h5" },
+  { id: "dashboard",label: "Dashboard", icon: "M2 2h9v9H2zM13 2h9v9h-9zM2 13h9v9H2zM13 13h9v9h-9z" },
+  { id: "logo",     label: "Logo",      icon: "M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" },
 ];
 
 const CRITERIA: { key: keyof AnalysisResult & string; label: string; conf: string }[] = [
@@ -73,6 +73,108 @@ function ScoreBar({ score, delay }: { score: number; delay: number }) {
   );
 }
 
+// ─── Scanning Animation ───────────────────────────────────────────────────────
+
+function ScanningOverlay({ preview, step }: { preview: string; step: string }) {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const start = Date.now();
+    const timer = setInterval(() => {
+      const elapsed = Date.now() - start;
+      setProgress(Math.min(92, Math.round((elapsed / 9000) * 92)));
+    }, 120);
+    return () => clearInterval(timer);
+  }, []);
+
+  const SCAN_STEPS = ["Uploading image…", "Extracting color palette…", "Detecting layout shapes…", "Computing hierarchy…", "Analysing typography…", "Computing final score…"];
+  const [fakeStep, setFakeStep] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setFakeStep((s) => Math.min(s + 1, SCAN_STEPS.length - 1)), 1400);
+    return () => clearInterval(t);
+  }, []);
+
+  const displayStep = step || SCAN_STEPS[fakeStep];
+
+  return (
+    <div className="mb-6">
+      <div
+        className="relative rounded-2xl overflow-hidden"
+        style={{ border: "1px solid var(--color-border)", background: "#000", minHeight: 320 }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={preview}
+          alt="Analyzing"
+          className="w-full object-contain"
+          style={{ maxHeight: 480, display: "block", opacity: 0.55 }}
+        />
+
+        {/* Corner brackets */}
+        {(["top-4 left-4", "top-4 right-4", "bottom-4 left-4", "bottom-4 right-4"] as const).map((pos, i) => (
+          <div
+            key={i}
+            className={`absolute ${pos} w-7 h-7 scan-dot`}
+            style={{
+              borderTop:    i < 2  ? "2px solid #FF3D00" : undefined,
+              borderBottom: i >= 2 ? "2px solid #FF3D00" : undefined,
+              borderLeft:   i % 2 === 0 ? "2px solid #FF3D00" : undefined,
+              borderRight:  i % 2 === 1 ? "2px solid #FF3D00" : undefined,
+              animationDelay: `${i * 0.25}s`,
+            }}
+          />
+        ))}
+
+        {/* Scan line */}
+        <div className="scan-line" />
+
+        {/* Grid dots overlay */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: "radial-gradient(circle, rgba(255,61,0,0.15) 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+        }} />
+
+        {/* Bottom status bar */}
+        <div
+          className="absolute bottom-0 inset-x-0 px-5 py-4"
+          style={{ background: "linear-gradient(transparent, rgba(0,0,0,0.85))" }}
+        >
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full scan-dot" style={{ background: "#FF3D00", display: "inline-block" }} />
+              <p className="font-mono text-[11px] text-white/70 uppercase tracking-widest truncate">{displayStep}</p>
+            </div>
+            <p className="font-mono text-[12px] font-bold flex-shrink-0" style={{ color: "#FF3D00" }}>{progress}%</p>
+          </div>
+          <div className="h-[3px] rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.1)" }}>
+            <div
+              className="h-full rounded-full transition-all duration-300"
+              style={{ width: `${progress}%`, background: "linear-gradient(90deg, #FF3D00, #ff7043)" }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Step labels below */}
+      <div className="flex justify-center flex-wrap gap-2 mt-4">
+        {SCAN_STEPS.map((s, i) => (
+          <span
+            key={i}
+            className="font-mono text-[10px] px-2 py-0.5 rounded-full transition-all duration-300"
+            style={{
+              background: i <= fakeStep ? "rgba(255,61,0,0.12)" : "var(--color-surface)",
+              color:      i <= fakeStep ? "#FF3D00"              : "var(--color-muted)",
+              border:     `1px solid ${i <= fakeStep ? "rgba(255,61,0,0.25)" : "var(--color-border)"}`,
+            }}
+          >
+            {i <= fakeStep ? "✓" : `${i + 1}`} {s.replace("…", "")}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Share PNG ────────────────────────────────────────────────────────────────
 
 function generateShareCard(result: AnalysisResult): string {
@@ -83,7 +185,6 @@ function generateShareCard(result: AnalysisResult): string {
   ctx.fillStyle = "#F5F3EF";
   ctx.fillRect(0, 0, 1200, 630);
 
-  // Score circle
   ctx.beginPath();
   ctx.arc(200, 315, 130, 0, Math.PI * 2);
   ctx.fillStyle = "#111111";
@@ -93,16 +194,13 @@ function generateShareCard(result: AnalysisResult): string {
   ctx.font = "bold 88px serif";
   ctx.textAlign = "center";
   ctx.fillText(result.totalScore.toString(), 200, 340);
-
   ctx.fillStyle = "#F5F3EF";
   ctx.font = "24px sans-serif";
   ctx.fillText("/100", 200, 374);
-
   ctx.fillStyle = "#FF3D00";
   ctx.font = "bold 40px sans-serif";
   ctx.fillText(result.grade, 200, 420);
 
-  // Bars
   const labels = ["Color", "Spacing", "Alignment", "Consistency", "Hierarchy", "Typography"];
   const keys: (keyof AnalysisResult)[] = ["color","spacing","alignment","consistency","hierarchy","typography"];
   labels.forEach((label, i) => {
@@ -130,14 +228,12 @@ function generateShareCard(result: AnalysisResult): string {
   ctx.font = "18px sans-serif";
   ctx.textAlign = "right";
   ctx.fillText("nitinmonga.in/tools/ui-analyzer", 1160, 610);
-
   return canvas.toDataURL("image/png");
 }
 
 // ─── Results Card ─────────────────────────────────────────────────────────────
 
 function ResultsCard({ result, uuid }: { result: AnalysisResult; uuid: string | null }) {
-  const [copied, setCopied] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
   function copyLink() {
@@ -159,46 +255,33 @@ function ResultsCard({ result, uuid }: { result: AnalysisResult; uuid: string | 
   };
 
   return (
-    <div className="mt-10 animate-fade-in">
+    <div className="animate-fade-in space-y-5">
       {/* Score Header */}
       <div
-        className="flex flex-col sm:flex-row items-center sm:items-start gap-6 p-6 sm:p-8 rounded-2xl mb-6"
+        className="flex flex-col sm:flex-row items-center sm:items-start gap-5 p-6 rounded-2xl"
         style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", boxShadow: "var(--shadow-card)" }}
       >
-        {/* Circle */}
-        <div className="flex-shrink-0 w-28 h-28 rounded-full flex flex-col items-center justify-center" style={{ background: "#111", boxShadow: "0 8px 32px rgba(0,0,0,0.2)" }}>
+        <div className="flex-shrink-0 w-24 h-24 rounded-full flex flex-col items-center justify-center" style={{ background: "#111", boxShadow: "0 8px 32px rgba(0,0,0,0.2)" }}>
           <span className="font-display font-bold text-4xl" style={{ color: "#C9A84C", lineHeight: 1 }}>
             <AnimatedScore target={result.totalScore} />
           </span>
-          <span className="font-body text-[12px] text-white/50 mt-0.5">/100</span>
+          <span className="font-body text-[11px] text-white/50 mt-0.5">/100</span>
         </div>
 
         <div className="flex-1 text-center sm:text-left">
           <div className="flex items-center justify-center sm:justify-start gap-3 mb-2">
-            <span
-              className="font-display text-5xl font-black drop-shadow-sm"
-              style={{ color: gradeColors[result.grade] ?? "#888", animation: "bounce 0.6s ease 0.3s both" }}
-            >
+            <span className="font-display text-5xl font-black" style={{ color: gradeColors[result.grade] ?? "#888" }}>
               {result.grade}
             </span>
             <div>
-              <p className="font-display text-[16px] font-bold text-[var(--color-ink)]">{result.gradeLabel}</p>
-              <p className="font-body text-[13px] text-[var(--color-muted)]">
+              <p className="font-display text-[15px] font-bold text-[var(--color-ink)]">{result.gradeLabel}</p>
+              <p className="font-body text-[12px] text-[var(--color-muted)]">
                 {result.mode.replace("_", " ").toUpperCase()} · {result.processingMs}ms
               </p>
             </div>
           </div>
-
-          {/* Palette */}
-          <div className="flex items-center gap-1.5 mt-3 justify-center sm:justify-start flex-wrap">
-            <span className="font-body text-[11px] text-[var(--color-muted)] mr-1">Palette:</span>
-            {result.palette.map((hex, i) => (
-              <div key={i} title={hex} className="w-5 h-5 rounded-full border border-white/20 flex-shrink-0" style={{ background: hex }} />
-            ))}
-          </div>
         </div>
 
-        {/* Share actions */}
         <div className="flex gap-2 flex-shrink-0 flex-wrap justify-center">
           {uuid && (
             <button
@@ -223,11 +306,11 @@ function ResultsCard({ result, uuid }: { result: AnalysisResult; uuid: string | 
 
       {/* Criterion Bars */}
       <div
-        className="p-5 sm:p-7 rounded-2xl mb-6"
+        className="p-5 sm:p-6 rounded-2xl"
         style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", boxShadow: "var(--shadow-card)" }}
       >
-        <p className="section-label mb-5">// Breakdown</p>
-        <div className="flex flex-col gap-4">
+        <p className="section-label mb-4">// Breakdown</p>
+        <div className="flex flex-col gap-3.5">
           {CRITERIA.map(({ key, label, conf }, i) => {
             const score = result[key as keyof AnalysisResult] as number;
             const cc = confColor(conf);
@@ -236,7 +319,7 @@ function ResultsCard({ result, uuid }: { result: AnalysisResult; uuid: string | 
                 <div className="w-28 flex-shrink-0">
                   <p className="font-body text-[13px] font-semibold text-[var(--color-ink)]">{label}</p>
                 </div>
-                <ScoreBar score={score} delay={600 + i * 100} />
+                <ScoreBar score={score} delay={500 + i * 100} />
                 <div className="w-10 text-right flex-shrink-0">
                   <span className="font-mono text-[13px] font-bold" style={{ color: barColor(score) }}>{score}</span>
                 </div>
@@ -249,13 +332,13 @@ function ResultsCard({ result, uuid }: { result: AnalysisResult; uuid: string | 
         </div>
       </div>
 
-      {/* Feedback */}
+      {/* Detailed Feedback */}
       <div
-        className="p-5 sm:p-7 rounded-2xl mb-6"
+        className="p-5 sm:p-6 rounded-2xl"
         style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", boxShadow: "var(--shadow-card)" }}
       >
-        <p className="section-label mb-5">// Detailed Feedback</p>
-        <div className="grid sm:grid-cols-2 gap-4">
+        <p className="section-label mb-4">// Detailed Feedback</p>
+        <div className="grid sm:grid-cols-2 gap-3">
           {CRITERIA.map(({ key, label }) => {
             const items = result.feedbackMap[key as keyof typeof result.feedbackMap] ?? [];
             const score = result[key as keyof AnalysisResult] as number;
@@ -282,7 +365,7 @@ function ResultsCard({ result, uuid }: { result: AnalysisResult; uuid: string | 
       {/* Top Improvements */}
       {result.improvements.length > 0 && (
         <div
-          className="p-5 sm:p-7 rounded-2xl mb-6"
+          className="p-5 sm:p-6 rounded-2xl"
           style={{ background: "rgba(255,61,0,0.04)", border: "1px solid rgba(255,61,0,0.15)" }}
         >
           <p className="section-label mb-4">// Top Improvements</p>
@@ -301,7 +384,7 @@ function ResultsCard({ result, uuid }: { result: AnalysisResult; uuid: string | 
 
       {/* CTA */}
       <div
-        className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 sm:p-6 rounded-2xl"
+        className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl"
         style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)" }}
       >
         <div>
@@ -312,10 +395,7 @@ function ResultsCard({ result, uuid }: { result: AnalysisResult; uuid: string | 
             {result.totalScore >= 80 ? "Share your score or start a new project." : "Book a free 15-min review to discuss these improvements."}
           </p>
         </div>
-        <Link
-          href="/contact-us/"
-          className="flex-shrink-0 btn-primary text-sm"
-        >
+        <Link href="/contact-us/" className="flex-shrink-0 btn-primary text-sm">
           {result.totalScore >= 80 ? "Start a project" : "Book a free review"}
         </Link>
       </div>
@@ -329,16 +409,29 @@ export function UIAnalyzerClient({ initialResult, initialUuid }: {
   initialResult?: AnalysisResult | null;
   initialUuid?: string | null;
 }) {
-  const [mode,       setMode]       = useState<AnalysisMode>("web_ui");
-  const [dragOver,   setDragOver]   = useState(false);
-  const [file,       setFile]       = useState<File | null>(null);
-  const [preview,   setPreview]     = useState<string | null>(null);
-  const [step,       setStep]       = useState("");
-  const [analyzing,  setAnalyzing]  = useState(false);
-  const [result,     setResult]     = useState<AnalysisResult | null>(initialResult ?? null);
-  const [uuid,       setUuid]       = useState<string | null>(initialUuid ?? null);
-  const [error,      setError]      = useState("");
+  const [mode,      setMode]      = useState<AnalysisMode>("web_ui");
+  const [dragOver,  setDragOver]  = useState(false);
+  const [file,      setFile]      = useState<File | null>(null);
+  const [preview,   setPreview]   = useState<string | null>(null);
+  const [step,      setStep]      = useState("");
+  const [analyzing, setAnalyzing] = useState(false);
+  const [result,    setResult]    = useState<AnalysisResult | null>(initialResult ?? null);
+  const [uuid,      setUuid]      = useState<string | null>(initialUuid ?? null);
+  const [error,     setError]     = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Silently preload OpenCV.js as soon as a file is selected — it may be ready by analysis time
+  useEffect(() => {
+    if (!file || typeof window === "undefined") return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const w = window as any;
+    if (w.cv || w.cvLoading) return;
+    w.cvLoading = true;
+    const s = document.createElement("script");
+    s.src = "https://docs.opencv.org/4.8.0/opencv.js";
+    s.async = true;
+    document.body.appendChild(s);
+  }, [file]);
 
   function handleFile(f: File) {
     if (!f.type.startsWith("image/")) { setError("Please upload an image file (JPG, PNG, or WebP)."); return; }
@@ -347,8 +440,7 @@ export function UIAnalyzerClient({ initialResult, initialUuid }: {
     setError("");
     setResult(null);
     setUuid(null);
-    const url = URL.createObjectURL(f);
-    setPreview(url);
+    setPreview(URL.createObjectURL(f));
   }
 
   function handleDrop(e: DragEvent<HTMLDivElement>) {
@@ -384,20 +476,20 @@ export function UIAnalyzerClient({ initialResult, initialUuid }: {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          imageUrl:        upload.imageUrl,
+          imageUrl:         upload.imageUrl,
           mode,
-          ipHash:          upload.ipHash,
-          totalScore:      analysis.totalScore,
-          colorScore:      analysis.color,
-          spacingScore:    analysis.spacing,
-          alignmentScore:  analysis.alignment,
-          consistencyScore:analysis.consistency,
-          radiusScore:     analysis.radius,
-          hierarchyScore:  analysis.hierarchy,
-          typographyScore: analysis.typography,
-          feedbackMap:     analysis.feedbackMap,
-          improvements:    analysis.improvements,
-          palette:         analysis.palette,
+          ipHash:           upload.ipHash,
+          totalScore:       analysis.totalScore,
+          colorScore:       analysis.color,
+          spacingScore:     analysis.spacing,
+          alignmentScore:   analysis.alignment,
+          consistencyScore: analysis.consistency,
+          radiusScore:      analysis.radius,
+          hierarchyScore:   analysis.hierarchy,
+          typographyScore:  analysis.typography,
+          feedbackMap:      analysis.feedbackMap,
+          improvements:     analysis.improvements,
+          palette:          analysis.palette,
         }),
       });
       const saved = await saveRes.json() as { ok: boolean; uuid?: string };
@@ -411,9 +503,17 @@ export function UIAnalyzerClient({ initialResult, initialUuid }: {
     }
   }, [file, mode]);
 
+  function reset() {
+    setResult(null); setFile(null); setPreview(null); setUuid(null); setError("");
+  }
+
+  const showForm    = !analyzing && !result;
+  const showScan    = analyzing && !!preview;
+  const showResults = !!result;
+
   return (
     <div className="bg-[var(--color-bg)] min-h-screen">
-      <div className="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-12 pt-28 pb-20">
 
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-8">
@@ -438,8 +538,8 @@ export function UIAnalyzerClient({ initialResult, initialUuid }: {
           </p>
         </div>
 
-        {/* Upload Zone */}
-        {!result && (
+        {/* ── Upload / Mode / Button form ─────────────────────────────────── */}
+        {showForm && (
           <>
             <div
               onClick={() => fileRef.current?.click()}
@@ -456,7 +556,7 @@ export function UIAnalyzerClient({ initialResult, initialUuid }: {
               {preview ? (
                 <div className="relative w-full h-full flex items-center justify-center p-4" style={{ minHeight: 240 }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={preview} alt="Preview" className="max-h-64 max-w-full object-contain rounded-xl" />
+                  <img src={preview} alt="Preview" className="max-h-72 max-w-full object-contain rounded-xl" />
                   <div className="absolute inset-0 bg-black/0 hover:bg-black/30 transition-colors flex items-center justify-center opacity-0 hover:opacity-100 rounded-2xl">
                     <p className="font-body text-white text-sm font-semibold">Click to change image</p>
                   </div>
@@ -480,7 +580,6 @@ export function UIAnalyzerClient({ initialResult, initialUuid }: {
                 onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
             </div>
 
-            {/* Mode selector */}
             <div className="mb-5">
               <p className="font-body text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-muted)] mb-3">Analysis Mode</p>
               <div className="flex flex-wrap gap-2">
@@ -512,42 +611,61 @@ export function UIAnalyzerClient({ initialResult, initialUuid }: {
 
             <button
               onClick={analyze}
-              disabled={!file || analyzing}
+              disabled={!file}
               className="w-full flex items-center justify-center gap-3 py-3.5 font-display text-[15px] font-bold rounded-2xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-[0.99] text-white"
               style={{ background: "var(--color-accent)", boxShadow: "0 6px 20px rgba(255,61,0,0.3)" }}
             >
-              {analyzing ? (
-                <>
-                  <svg className="animate-spin" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <circle cx="9" cy="9" r="7" stroke="rgba(255,255,255,0.3)" strokeWidth="2"/>
-                    <path d="M9 2a7 7 0 017 7" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                  </svg>
-                  {step || "Analyzing…"}
-                </>
-              ) : (
-                <>
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <circle cx="7" cy="7" r="5.5" stroke="currentColor" strokeWidth="1.5"/>
-                    <path d="M11 11l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
-                  {file ? "Analyze Design" : "Upload an image to analyze"}
-                </>
-              )}
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="7" cy="7" r="5.5" stroke="currentColor" strokeWidth="1.5"/>
+                <path d="M11 11l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+              </svg>
+              {file ? "Analyze Design" : "Upload an image to analyze"}
             </button>
           </>
         )}
 
-        {/* Results */}
-        {result && (
-          <>
-            <ResultsCard result={result} uuid={uuid} />
-            <button
-              onClick={() => { setResult(null); setFile(null); setPreview(null); setUuid(null); }}
-              className="mt-6 w-full py-3 font-body text-[14px] text-[var(--color-muted)] hover:text-[var(--color-accent)] transition-colors"
-            >
-              ← Analyze another design
-            </button>
-          </>
+        {/* ── Scanning animation ──────────────────────────────────────────── */}
+        {showScan && <ScanningOverlay preview={preview!} step={step} />}
+
+        {/* ── Results: 2-column layout ────────────────────────────────────── */}
+        {showResults && preview && (
+          <div className="lg:grid lg:grid-cols-[380px_1fr] lg:gap-8 lg:items-start">
+
+            {/* Left: sticky image + palette */}
+            <div className="lg:sticky lg:top-28 space-y-4 mb-6 lg:mb-0">
+              <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid var(--color-border)", boxShadow: "var(--shadow-card)" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={preview} alt="Analyzed design" className="w-full object-contain block" style={{ maxHeight: 480 }} />
+              </div>
+
+              {/* Palette card */}
+              <div className="p-4 rounded-2xl" style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", boxShadow: "var(--shadow-card)" }}>
+                <p className="section-label mb-3">// Color Palette</p>
+                <div className="flex flex-wrap gap-2">
+                  {result.palette.map((hex, i) => (
+                    <div key={i} title={hex} className="group relative">
+                      <div className="w-9 h-9 rounded-lg" style={{ background: hex }} />
+                      <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 font-mono text-[9px] text-[var(--color-muted)] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">{hex}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Analyze another button */}
+              <button
+                onClick={reset}
+                className="w-full py-2.5 font-body text-[13px] font-semibold rounded-xl transition-all hover:scale-[1.01]"
+                style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", color: "var(--color-muted)" }}
+              >
+                ← Analyze another design
+              </button>
+            </div>
+
+            {/* Right: all result cards */}
+            <div>
+              <ResultsCard result={result} uuid={uuid} />
+            </div>
+          </div>
         )}
 
       </div>

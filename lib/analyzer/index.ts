@@ -1,6 +1,6 @@
 import type { AnalysisMode, AnalysisResult, SharpPreprocessResult } from './types';
 import { analyzeColors } from './colorAnalyzer';
-import { analyzeLayoutFallback } from './layoutAnalyzer';
+import { analyzeLayout, analyzeLayoutFallback } from './layoutAnalyzer';
 import { analyzeHierarchy } from './hierarchyAnalyzer';
 import { analyzeTypography } from './typographyAnalyzer';
 import { buildAnalysisResult } from './scoringEngine';
@@ -49,7 +49,20 @@ export async function runAnalysis(
   await yieldToMain();
 
   onStep?.('Detecting layout…');
-  const layoutResult = analyzeLayoutFallback(canvas);
+  // Use OpenCV if it was preloaded and ready; otherwise use fast fallback
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const cvReady = typeof window !== 'undefined' && (window as any).cv && typeof (window as any).cv.imread === 'function';
+  let layoutResult;
+  if (cvReady) {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      layoutResult = analyzeLayout(canvas, (window as any).cv);
+    } catch {
+      layoutResult = analyzeLayoutFallback(canvas);
+    }
+  } else {
+    layoutResult = analyzeLayoutFallback(canvas);
+  }
   await yieldToMain();
 
   onStep?.('Computing hierarchy…');
