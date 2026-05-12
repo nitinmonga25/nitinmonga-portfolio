@@ -5,11 +5,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const NAV_LINKS = [
-  { label: "About", href: "/about-me/" },
-  { label: "Services", href: "/services/" },
-  { label: "Work", href: "/work/" },
-  { label: "Blog", href: "/blog/" },
-  { label: "Contact", href: "/contact-us/" },
+  { label: "About",    href: "/about-me/"  },
+  { label: "Services", href: "/services/"  },
+  { label: "Work",     href: "/work/"      },
+  { label: "Blog",     href: "/blog/"      },
+  { label: "Tools",    href: "/tools/"     },
+  { label: "Contact",  href: "/contact-us/"},
 ];
 
 export function Navbar() {
