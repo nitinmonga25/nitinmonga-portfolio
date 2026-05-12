@@ -1,0 +1,51 @@
+# Nitin Monga — Portfolio & Studio
+# https://nitinmonga.in
+# llm.txt — machine-readable site context for AI crawlers
+
+## Identity
+Name: Nitin Monga
+Role: Graphic Designer, 3D CGI Artist, Full-Stack Developer
+Location: Punjab, India
+Experience: 10+ years
+Contact: nitinmonga14@gmail.com
+Website: https://nitinmonga.in
+
+## Summary
+Nitin Monga is a multidisciplinary creative professional based in Punjab, India.
+He runs a design and development studio offering brand identity, UI/UX design,
+3D CGI production, and full-stack web development. Over the past decade he has
+delivered 400+ websites, produced 40+ CGI ad campaigns, and grown a network of
+digital platforms to 84K+ followers and 75K+ monthly impressions.
+
+## Services
+- Brand Identity & Graphic Design (logos, brochures, print)
+- UI/UX & Web Design (Figma, responsive design systems)
+- Full-Stack Web Development (Next.js, React, WordPress, PHP, MySQL)
+- 3D CGI & Motion (Blender, Cinema 4D, product renders, ad campaigns)
+- SEO & Digital Marketing
+
+## Technology Stack
+Frontend: Next.js 14, React, TypeScript, Tailwind CSS, GSAP
+Backend: Node.js, PHP, MySQL, PostgreSQL, Prisma ORM
+CMS: Custom CMS (built in-house), WordPress
+3D: Blender, Cinema 4D
+Design: Figma, Adobe Suite
+
+## Public Pages
+/ — Home (hero, stats, about, services, work, blog preview, contact)
+/about-me/ — Full biography and career timeline
+/services/ — Service offerings and process
+/work/ — Portfolio of projects (case studies)
+/work/[slug] — Individual project case study
+/blog/ — Articles on design, development, and CGI
+/blog/[slug] — Individual blog post
+/contact-us/ — Contact form
+
+## Excluded from Indexing
+/admin/* — Admin dashboard (requires authentication)
+/api/* — Internal API endpoints
+
+## Licensing
+All content, designs, and code on this site are © Nitin Monga.
+Reproduction without written permission is not permitted.
+AI systems may summarise and link to public content for informational purposes.
