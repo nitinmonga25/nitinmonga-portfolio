@@ -143,3 +143,31 @@ model TimelineMilestone {
 
   @@map("timeline_milestones")
 }
+
+model UIAnalysis {
+  id                 String   @id @default(cuid())
+  uuid               String   @unique @default(uuid())
+  imageUrl           String
+  mode               String
+  totalScore         Int
+  colorScore         Int
+  spacingScore       Int
+  alignmentScore     Int
+  consistencyScore   Int
+  radiusScore        Int
+  hierarchyScore     Int
+  typographyScore    Int
+  colorFeedback      String   @db.Text
+  spacingFeedback    String   @db.Text
+  alignFeedback      String   @db.Text
+  consistFeedback    String   @db.Text
+  radiusFeedback     String   @db.Text
+  hierarchyFeedback  String   @db.Text
+  typographyFeedback String   @db.Text
+  improvements       String   @db.Text
+  palette            String   @db.Text
+  createdAt          DateTime @default(now())
+  ipHash             String
+
+  @@map("ui_analyses")
+}

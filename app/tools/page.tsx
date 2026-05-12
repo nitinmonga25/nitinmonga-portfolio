@@ -8,6 +8,21 @@ export const metadata: Metadata = {
 
 const TOOLS = [
   {
+    href:        "/tools/ui-analyzer/",
+    label:       "UI Design Analyzer",
+    description: "Upload any UI screenshot and get a professional score across 7 criteria — color, spacing, alignment, hierarchy, typography and more. Free & instant.",
+    tags:        ["Design", "Accessibility", "Dev"],
+    status:      "live",
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+        <rect x="2" y="4" width="24" height="16" rx="3" stroke="#FF3D00" strokeWidth="1.6"/>
+        <path d="M8 22h12M14 20v2" stroke="#FF3D00" strokeWidth="1.4" strokeLinecap="round"/>
+        <path d="M6 12l4-4 4 4 4-5" stroke="#FF3D00" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+        <circle cx="20" cy="8" r="2" fill="#FF3D00"/>
+      </svg>
+    ),
+  },
+  {
     href:        "/tools/color-palette-generator-extractor/",
     label:       "Color Palette Generator & Extractor",
     description: "Pick a base color, choose a harmony — get a full 11-shade Tailwind-style scale. Extract palettes from images. Export as CSS variables, Tailwind config, or SCSS.",
