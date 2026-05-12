@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 const TOOLS = [
   {
-    href:        "/tools/color-palette/",
+    href:        "/tools/color-palette-generator-extractor/",
     label:       "Color Palette Generator & Extractor",
     description: "Pick a base color, choose a harmony — get a full 11-shade Tailwind-style scale. Extract palettes from images. Export as CSS variables, Tailwind config, or SCSS.",
     tags:        ["Design", "CSS", "Tailwind"],
