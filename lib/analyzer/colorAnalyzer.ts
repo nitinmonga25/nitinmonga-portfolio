@@ -50,14 +50,12 @@ function detectHarmony(hslColors: [number, number, number][]): HarmonyType {
 }
 
 export async function analyzeColors(img: HTMLImageElement): Promise<ColorResult> {
-  // colorthief ships both UMD and ESM — handle all possible export shapes
+  // colorthief v3 is a functional async API — no constructor
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const mod = await import('colorthief') as any;
-  const CT  = mod?.default?.default ?? mod?.default ?? mod;
-  const ct  = new CT() as { getColor: (i: HTMLImageElement) => [number,number,number]; getPalette: (i: HTMLImageElement, n: number) => [number,number,number][] };
+  const { getColor, getPalette } = await import('colorthief') as any;
 
-  const rawPalette = ct.getPalette(img, 8) as [number, number, number][];
-  const dominant   = ct.getColor(img) as [number, number, number];
+  const dominant   = await getColor(img)    as [number, number, number];
+  const rawPalette = await getPalette(img, 8) as [number, number, number][];
   const palette    = rawPalette.map(([r, g, b]) => rgbToHex(r, g, b));
 
   // WCAG contrast between lightest and darkest

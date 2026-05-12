@@ -1,6 +1,5 @@
 declare module 'colorthief' {
-  export default class ColorThief {
-    getColor(img: HTMLImageElement, quality?: number): [number, number, number];
-    getPalette(img: HTMLImageElement, colorCount?: number, quality?: number): [number, number, number][];
-  }
+  type RGB = [number, number, number];
+  export function getColor(img: HTMLImageElement | string, quality?: number): Promise<RGB>;
+  export function getPalette(img: HTMLImageElement | string, colorCount?: number, quality?: number): Promise<RGB[]>;
 }
