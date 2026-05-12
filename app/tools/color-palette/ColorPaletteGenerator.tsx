@@ -438,7 +438,7 @@ export function ColorPaletteGenerator() {
             All Tools
           </Link>
           <span style={{ color:"var(--color-border)" }}>/</span>
-          <span className="font-body text-[13px] text-[var(--color-ink)]">Color Palette Generator</span>
+          <span className="font-body text-[13px] text-[var(--color-ink)]">Color Palette Generator & Extractor</span>
         </div>
 
         {/* ── Header ── */}
@@ -446,7 +446,7 @@ export function ColorPaletteGenerator() {
           <div>
             <p className="section-label mb-3">// Design Tools</p>
             <h1 className="font-display font-bold text-[var(--color-ink)] leading-tight" style={{ fontSize:"clamp(26px,4vw,52px)", letterSpacing:"-0.025em" }}>
-              Color Palette<br/><span className="text-[var(--color-accent)]">Generator</span>
+              Color Palette<br/><span className="text-[var(--color-accent)]">Generator & Extractor</span>
             </h1>
             <p className="font-body text-[var(--color-muted)] mt-3 max-w-[440px] leading-relaxed text-[14px] sm:text-[15px]">
               Shade scales, curated palettes, and image color extraction — all in one place.
