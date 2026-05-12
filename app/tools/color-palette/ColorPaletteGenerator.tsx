@@ -577,8 +577,8 @@ export function ColorPaletteGenerator() {
                         <p className="font-mono text-[10px] text-[var(--color-muted)]">{hslToHex(ch,cs,cl).toUpperCase()}</p>
                       </div>
 
-                      {/* Shades — horizontally scrollable on mobile */}
-                      <div className="flex flex-1 gap-1 overflow-x-auto pb-1 sm:pb-0">
+                      {/* Shades */}
+                      <div className="flex flex-1 gap-1 overflow-x-auto sm:overflow-x-visible pb-1 sm:pb-0">
                         {shades.map(({ stop, hex }) => {
                           const cr = contrastRatio(hex,"#ffffff").toFixed(1);
                           const isCopied = copiedHex === hex;
@@ -587,8 +587,8 @@ export function ColorPaletteGenerator() {
                               key={stop}
                               onClick={() => copy(hex, hex.toUpperCase())}
                               title={`${stop}: ${hex.toUpperCase()} · vs white ${cr}:1`}
-                              className="group relative flex-shrink-0 rounded-lg overflow-hidden transition-all duration-150 hover:scale-y-[1.08] hover:z-10 focus:outline-none"
-                              style={{ width:36, minWidth:36, height:64, background:hex }}
+                              className="group relative flex-1 rounded-lg overflow-hidden transition-all duration-150 hover:scale-y-[1.08] hover:z-10 focus:outline-none"
+                              style={{ minWidth:36, height:64, background:hex }}
                             >
                               <span className="absolute bottom-1 left-0 right-0 text-center font-mono text-[8px] opacity-50 group-hover:opacity-0 transition-opacity select-none" style={{ color:textOnBg(hex) }}>
                                 {stop}
