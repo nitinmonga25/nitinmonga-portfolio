@@ -1,51 +1,13 @@
 import type { AnalysisMode, AnalysisResult, SharpPreprocessResult } from './types';
 import { analyzeColors } from './colorAnalyzer';
-import { analyzeLayout, analyzeLayoutFallback } from './layoutAnalyzer';
+import { analyzeLayoutFallback } from './layoutAnalyzer';
 import { analyzeHierarchy } from './hierarchyAnalyzer';
 import { analyzeTypography } from './typographyAnalyzer';
 import { buildAnalysisResult } from './scoringEngine';
 import type { RawScores } from './types';
 
-declare global {
-  interface Window {
-    cv: Record<string, unknown> | undefined;
-    cvLoading: boolean | undefined;
-  }
-}
-
-function loadOpenCV(): Promise<Record<string, unknown>> {
-  return new Promise((resolve, reject) => {
-    if (window.cv && typeof (window.cv as Record<string, unknown>).imread === 'function') {
-      resolve(window.cv as Record<string, unknown>);
-      return;
-    }
-    if (window.cvLoading) {
-      const poll = setInterval(() => {
-        if (window.cv && typeof (window.cv as Record<string, unknown>).imread === 'function') {
-          clearInterval(poll);
-          resolve(window.cv as Record<string, unknown>);
-        }
-      }, 200);
-      setTimeout(() => { clearInterval(poll); reject(new Error('OpenCV timeout')); }, 30000);
-      return;
-    }
-    window.cvLoading = true;
-    const script = document.createElement('script');
-    script.src = 'https://docs.opencv.org/4.8.0/opencv.js';
-    script.async = true;
-    script.onload = () => {
-      const cv = window.cv as Record<string, unknown> & { onRuntimeInitialized?: () => void };
-      if (cv && typeof cv.imread === 'function') {
-        resolve(cv);
-        return;
-      }
-      cv.onRuntimeInitialized = () => resolve(window.cv as Record<string, unknown>);
-      setTimeout(() => reject(new Error('OpenCV WASM init timeout')), 30000);
-    };
-    script.onerror = () => reject(new Error('Failed to load OpenCV.js'));
-    document.body.appendChild(script);
-  });
-}
+// Yield to browser between heavy steps to avoid "Page Unresponsive"
+const yieldToMain = () => new Promise<void>((r) => setTimeout(r, 0));
 
 function loadImage(base64: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -54,6 +16,18 @@ function loadImage(base64: string): Promise<HTMLImageElement> {
     img.onerror = () => reject(new Error('Image load failed'));
     img.src = `data:image/jpeg;base64,${base64}`;
   });
+}
+
+// Downsample large images to keep pixel analysis fast
+function makeCanvas(img: HTMLImageElement, maxPx = 600): HTMLCanvasElement {
+  const scale  = Math.min(1, maxPx / Math.max(img.naturalWidth, img.naturalHeight));
+  const w      = Math.round(img.naturalWidth  * scale);
+  const h      = Math.round(img.naturalHeight * scale);
+  const canvas = document.createElement('canvas');
+  canvas.width  = w;
+  canvas.height = h;
+  canvas.getContext('2d')!.drawImage(img, 0, 0, w, h);
+  return canvas;
 }
 
 export async function runAnalysis(
@@ -65,31 +39,26 @@ export async function runAnalysis(
 
   onStep?.('Loading image…');
   const img = await loadImage(meta.base64);
+  await yieldToMain();
 
-  const canvas = document.createElement('canvas');
-  canvas.width  = img.naturalWidth;
-  canvas.height = img.naturalHeight;
-  const ctx = canvas.getContext('2d')!;
-  ctx.drawImage(img, 0, 0);
+  // Use a downsampled canvas (max 600px) for all pixel-level analysis
+  const canvas = makeCanvas(img, 600);
 
   onStep?.('Analysing colors…');
   const colorResult = await analyzeColors(img);
+  await yieldToMain();
 
   onStep?.('Detecting layout…');
-  let layoutResult;
-  try {
-    const cv = await loadOpenCV();
-    onStep?.('Running shape detection…');
-    layoutResult = analyzeLayout(canvas, cv);
-  } catch {
-    layoutResult = analyzeLayoutFallback(canvas);
-  }
+  const layoutResult = analyzeLayoutFallback(canvas);
+  await yieldToMain();
 
   onStep?.('Computing hierarchy…');
   const hierarchyResult = analyzeHierarchy(canvas, layoutResult.shapes);
+  await yieldToMain();
 
   onStep?.('Analysing typography…');
   const typographyResult = analyzeTypography(canvas);
+  await yieldToMain();
 
   onStep?.('Computing final score…');
 

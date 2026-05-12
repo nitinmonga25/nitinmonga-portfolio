@@ -9,17 +9,17 @@ function detectTextRows(imageData: ImageData): TextRow[] {
   let inRow = false;
   let rowStart = 0;
 
-  for (let y = 0; y < height; y++) {
+  for (let y = 0; y < height; y += 2) {
     let darkSegments = 0;
     let prevDark = false;
-    for (let x = 0; x < width; x++) {
+    for (let x = 0; x < width; x += 2) {
       const i = (y * width + x) * 4;
       const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
       const isDark = brightness < 140;
       if (isDark && !prevDark) darkSegments++;
       prevDark = isDark;
     }
-    const isTextRow = darkSegments > 3 && darkSegments < width / 4;
+    const isTextRow = darkSegments > 2 && darkSegments < width / 8;
     if (isTextRow && !inRow)  { inRow = true; rowStart = y; }
     if (!isTextRow && inRow) {
       const h = y - rowStart;
