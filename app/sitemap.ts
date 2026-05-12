@@ -13,32 +13,36 @@ const STATIC: MetadataRoute.Sitemap = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [projects, posts] = await Promise.all([
-    prisma.project.findMany({
-      where:   { published: true },
-      select:  { slug: true, updatedAt: true },
-      orderBy: { updatedAt: "desc" },
-    }),
-    prisma.blogPost.findMany({
-      where:   { published: true },
-      select:  { slug: true, updatedAt: true },
-      orderBy: { updatedAt: "desc" },
-    }),
-  ]);
+  try {
+    const [projects, posts] = await Promise.all([
+      prisma.project.findMany({
+        where:   { published: true },
+        select:  { slug: true, updatedAt: true },
+        orderBy: { updatedAt: "desc" },
+      }),
+      prisma.blogPost.findMany({
+        where:   { published: true },
+        select:  { slug: true, updatedAt: true },
+        orderBy: { updatedAt: "desc" },
+      }),
+    ]);
 
-  const projectUrls: MetadataRoute.Sitemap = projects.map((p) => ({
-    url:             `${BASE}/work/${p.slug}/`,
-    lastModified:    p.updatedAt,
-    changeFrequency: "monthly",
-    priority:        0.7,
-  }));
+    const projectUrls: MetadataRoute.Sitemap = projects.map((p) => ({
+      url:             `${BASE}/work/${p.slug}/`,
+      lastModified:    p.updatedAt,
+      changeFrequency: "monthly",
+      priority:        0.7,
+    }));
 
-  const postUrls: MetadataRoute.Sitemap = posts.map((p) => ({
-    url:             `${BASE}/blog/${p.slug}/`,
-    lastModified:    p.updatedAt,
-    changeFrequency: "monthly",
-    priority:        0.75,
-  }));
+    const postUrls: MetadataRoute.Sitemap = posts.map((p) => ({
+      url:             `${BASE}/blog/${p.slug}/`,
+      lastModified:    p.updatedAt,
+      changeFrequency: "monthly",
+      priority:        0.75,
+    }));
 
-  return [...STATIC, ...projectUrls, ...postUrls];
+    return [...STATIC, ...projectUrls, ...postUrls];
+  } catch {
+    return STATIC;
+  }
 }
