@@ -162,14 +162,12 @@ export default function ToolsPage() {
                 <Link
                   key={tool.href}
                   href={tool.href}
-                  className="group flex flex-col gap-5 p-6 rounded-2xl transition-all duration-200 hover:-translate-y-1"
+                  className="group flex flex-col gap-5 p-6 rounded-2xl transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.10)]"
                   style={{
-                    background:  "var(--color-surface)",
-                    border:      "1px solid var(--color-border)",
-                    boxShadow:   "var(--shadow-card)",
+                    background: "var(--color-surface)",
+                    border:     "1px solid var(--color-border)",
+                    boxShadow:  "var(--shadow-card)",
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "var(--shadow-card-hover)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "var(--shadow-card)")}
                 >
                   <div className="flex items-start justify-between">
                     <div
