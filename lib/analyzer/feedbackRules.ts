@@ -28,14 +28,14 @@ export const FEEDBACK_RULES = {
     low:    'Alignment issues detected. Elements do not share consistent axes. Use a 12-column grid system.',
   },
   consistency: {
-    high:   'Highly consistent UI — radii, spacing, and colors repeat predictably across all elements.',
-    medium: 'Mostly consistent. Some variation in border-radius or spacing detected. Standardise your design tokens.',
-    low:    'Inconsistency detected across radii, spacing, or colors. Define and reuse a small set of design tokens.',
+    high:   'Highly consistent UI — corner rounding, spacing, and colors repeat predictably across all elements.',
+    medium: 'Mostly consistent. Some variation in corner rounding or spacing detected. Standardise your design tokens.',
+    low:    'Inconsistency detected across corner rounding, spacing, or colors. Define and reuse a small set of design tokens.',
   },
   radius: {
-    high:   'Border radii are consistent and modern. The rounded style reads as polished and cohesive.',
-    medium: 'Border radii vary between elements. Pick one radius scale (e.g., 4px / 8px / 16px) and apply it consistently.',
-    low:    'Inconsistent or absent border radii detected. Decide on a radius style (sharp, soft, or pill) and apply it uniformly.',
+    high:   'Corner rounding is consistent and modern. The rounded style reads as polished and cohesive.',
+    medium: 'Corner rounding varies between elements. Pick one radius scale (e.g., 4px / 8px / 16px) and apply it consistently.',
+    low:    'Inconsistent or absent corner rounding detected. Decide on a style (sharp, soft, or pill) and apply it uniformly.',
   },
   hierarchy: {
     high:   'Strong visual hierarchy — a clear focal point guides the eye naturally through the layout.',

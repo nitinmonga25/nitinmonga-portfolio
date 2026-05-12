@@ -20,7 +20,7 @@ const CRITERIA: { key: keyof AnalysisResult & string; label: string; conf: strin
   { key: "spacing",     label: "Spacing",       conf: "High"   },
   { key: "alignment",   label: "Alignment",     conf: "High"   },
   { key: "consistency", label: "Consistency",   conf: "High"   },
-  { key: "radius",      label: "Border Radius", conf: "Medium" },
+  { key: "radius",      label: "Corner Rounding", conf: "Medium" },
   { key: "hierarchy",   label: "Hierarchy",     conf: "Medium" },
   { key: "typography",  label: "Typography",    conf: "Medium" },
 ];
@@ -382,23 +382,6 @@ function ResultsCard({ result, uuid }: { result: AnalysisResult; uuid: string | 
         </div>
       )}
 
-      {/* CTA */}
-      <div
-        className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl"
-        style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)" }}
-      >
-        <div>
-          <p className="font-display text-[15px] font-bold text-[var(--color-ink)]">
-            {result.totalScore >= 80 ? "Great work! Want to go further?" : result.totalScore >= 70 ? "Almost there — let Nitin polish it" : "Ready to level up your design?"}
-          </p>
-          <p className="font-body text-[13px] text-[var(--color-muted)] mt-0.5">
-            {result.totalScore >= 80 ? "Share your score or start a new project." : "Book a free 15-min review to discuss these improvements."}
-          </p>
-        </div>
-        <Link href="/contact-us/" className="flex-shrink-0 btn-primary text-sm">
-          {result.totalScore >= 80 ? "Start a project" : "Book a free review"}
-        </Link>
-      </div>
     </div>
   );
 }
