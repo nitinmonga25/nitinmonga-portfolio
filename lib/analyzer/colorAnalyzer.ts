@@ -49,17 +49,29 @@ function detectHarmony(hslColors: [number, number, number][]): HarmonyType {
   return 'split-complementary';
 }
 
-export async function analyzeColors(img: HTMLImageElement): Promise<ColorResult> {
-  // colorthief v3 is a functional async API — no constructor
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { getColor, getPalette } = await import('colorthief') as any;
+// colorthief v3 ColorImpl shape
+interface CT3Color {
+  rgb(): { r: number; g: number; b: number };
+  hex(): string;
+  hsl(): { h: number; s: number; l: number };
+}
 
-  const dominant   = await getColor(img)    as [number, number, number];
-  const rawPalette = await getPalette(img, 8) as [number, number, number][];
-  const palette    = rawPalette.map(([r, g, b]) => rgbToHex(r, g, b));
+export async function analyzeColors(img: HTMLImageElement): Promise<ColorResult> {
+  // colorthief v3: functional async API, returns ColorImpl objects (not [r,g,b] tuples)
+  // getPalette(source, options) — colorCount is in the options object
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { getPalette } = await import('colorthief') as any;
+
+  const colors: CT3Color[] = (await getPalette(img, { colorCount: 8 })) ?? [];
+  if (colors.length === 0) throw new Error('colorthief returned empty palette');
+
+  // Extract hex strings and RGB tuples
+  const palette    = colors.map((c) => c.hex());
+  const rgbColors  = colors.map((c) => { const { r, g, b } = c.rgb(); return [r, g, b] as [number,number,number]; });
+  const dominant   = rgbColors[0];
 
   // WCAG contrast between lightest and darkest
-  const byLum = [...rawPalette].sort((a, b) => getRelativeLuminance(...a) - getRelativeLuminance(...b));
+  const byLum  = [...rgbColors].sort((a, b) => getRelativeLuminance(...a) - getRelativeLuminance(...b));
   const lightest = byLum[byLum.length - 1];
   const darkest  = byLum[0];
   const mainContrast = getWCAGContrast(lightest, darkest);
@@ -69,11 +81,11 @@ export async function analyzeColors(img: HTMLImageElement): Promise<ColorResult>
     mainContrast >= 4.5 ? 75  :
     mainContrast >= 3   ? 50  : 20;
 
-  const hslPalette = rawPalette.map(([r, g, b]) => rgbToHsl(r, g, b));
-  const harmonyType = detectHarmony(hslPalette);
+  const hslColors   = rgbColors.map(([r, g, b]) => rgbToHsl(r, g, b));
+  const harmonyType = detectHarmony(hslColors);
   const harmonyScore = harmonyType !== 'chaotic' ? 80 : 35;
 
-  const accentColors = hslPalette.filter(([, s, l]) => s > 0.3 && l > 0.15 && l < 0.85);
+  const accentColors  = hslColors.filter(([, s, l]) => s > 0.3 && l > 0.15 && l < 0.85);
   const overColorized = accentColors.length > 5;
 
   const consistencyScore =
@@ -82,8 +94,7 @@ export async function analyzeColors(img: HTMLImageElement): Promise<ColorResult>
     palette.length <= 7 ? 60 : 35;
 
   const colorScore = Math.round(wcagScore * 0.4 + harmonyScore * 0.35 + consistencyScore * 0.25);
-
-  const isDark = getRelativeLuminance(...dominant) < 0.15;
+  const isDark     = getRelativeLuminance(...dominant) < 0.15;
   const feedbackItems = getColorFeedback(wcagScore, harmonyType, overColorized, mainContrast, isDark);
 
   return {
