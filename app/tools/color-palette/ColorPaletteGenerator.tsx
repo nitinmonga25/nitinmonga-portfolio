@@ -703,8 +703,8 @@ export function ColorPaletteGenerator() {
               </button>
             </div>
 
-            {/* Random generated */}
-            {randomPalettes.length > 0 && (
+            {/* Random generated — only visible when "All" filter is active */}
+            {randomPalettes.length > 0 && moodFilter === "All" && (
               <div className="mb-8">
                 <p className="font-body text-[11px] font-bold uppercase tracking-[3px] text-[var(--color-accent)] mb-4">Generated</p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -718,7 +718,7 @@ export function ColorPaletteGenerator() {
             {/* Curated */}
             <div>
               <p className="font-body text-[11px] font-bold uppercase tracking-[3px] text-[var(--color-muted)] mb-4">
-                Curated — {filteredCurated.length} palettes
+                {moodFilter === "All" ? "Curated" : moodFilter} — {filteredCurated.length} palettes
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                 {filteredCurated.map((p) => (
