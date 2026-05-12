@@ -1,30 +1,50 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-const STATS = [
-  { label: "Total Projects", value: "12", sub: "In portfolio",  color: "#FF3D00" },
-  { label: "Blog Posts",     value: "6",  sub: "Published",     color: "#3B82F6" },
-  { label: "Messages",       value: "24", sub: "Unread: 3",     color: "#10B981" },
-  { label: "Services",       value: "6",  sub: "Active",        color: "#8B5CF6" },
-];
-
-const RECENT_MESSAGES = [
-  { name: "Amandeep Singh",  email: "amandeep@example.com", service: "Web Design",   time: "2 hrs ago",  read: false },
-  { name: "Priya Sharma",    email: "priya@startup.co",     service: "Full-Stack",   time: "5 hrs ago",  read: false },
-  { name: "Rajiv Kumar",     email: "rajiv@brand.in",       service: "3D CGI",       time: "Yesterday",  read: false },
-  { name: "Neha Gupta",      email: "neha@agency.com",      service: "Branding",     time: "2 days ago", read: true  },
-  { name: "Vikram Malhotra", email: "vikram@tech.io",       service: "WordPress",    time: "3 days ago", read: true  },
-];
+interface StatsData {
+  projectCount:    number;
+  postCount:       number;
+  messageCount:    number;
+  unreadCount:     number;
+  recentMessages:  { id: number; name: string; email: string; service: string | null; createdAt: string; read: boolean }[];
+}
 
 const QUICK_LINKS = [
-  { href: "/admin/dashboard/projects", label: "Add Project",  icon: "+" },
-  { href: "/admin/dashboard/blog",     label: "Write Post",   icon: "✎" },
+  { href: "/admin/dashboard/projects", label: "Add Project",   icon: "+" },
+  { href: "/admin/dashboard/blog",     label: "Write Post",    icon: "✎" },
   { href: "/admin/dashboard/messages", label: "View Messages", icon: "✉" },
-  { href: "/admin/dashboard/settings", label: "Settings",     icon: "⚙" },
+  { href: "/admin/dashboard/settings", label: "Settings",      icon: "⚙" },
 ];
 
+function formatTime(iso: string) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 60)   return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24)    return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  if (days === 1)  return "Yesterday";
+  return `${days} days ago`;
+}
+
 export default function DashboardPage() {
+  const [stats, setStats] = useState<StatsData | null>(null);
+
+  useEffect(() => {
+    fetch("/api/admin/stats")
+      .then((r) => r.json())
+      .then((json) => { if (json.ok) setStats(json.data); });
+  }, []);
+
+  const STATS_CONFIG = [
+    { label: "Total Projects", value: stats ? String(stats.projectCount) : "—",  sub: "Published",                                     color: "#FF3D00" },
+    { label: "Blog Posts",     value: stats ? String(stats.postCount)     : "—",  sub: "Published",                                     color: "#3B82F6" },
+    { label: "Messages",       value: stats ? String(stats.messageCount)  : "—",  sub: stats ? `Unread: ${stats.unreadCount}` : "—",    color: "#10B981" },
+    { label: "Services",       value: "6",                                          sub: "Active",                                        color: "#8B5CF6" },
+  ];
+
   return (
     <div className="flex flex-col gap-6 max-w-[1200px]">
       {/* Page title */}
@@ -37,7 +57,7 @@ export default function DashboardPage() {
 
       {/* Stats grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {STATS.map(({ label, value, sub, color }) => (
+        {STATS_CONFIG.map(({ label, value, sub, color }) => (
           <div
             key={label}
             className="p-5 flex flex-col gap-3"
@@ -75,31 +95,38 @@ export default function DashboardPage() {
             </Link>
           </div>
           <div className="flex flex-col divide-y" style={{ borderColor: "rgba(255,255,255,0.04)" }}>
-            {RECENT_MESSAGES.map((msg) => (
-              <div key={msg.email} className="flex items-center gap-3 px-5 py-3.5">
-                {/* Avatar */}
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-display text-xs font-bold text-white"
-                  style={{ background: msg.read ? "rgba(255,255,255,0.08)" : "#FF3D00" }}
-                >
-                  {msg.name.charAt(0)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="font-body text-sm font-medium text-white truncate">{msg.name}</p>
-                    {!msg.read && (
-                      <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[#FF3D00]" />
-                    )}
-                  </div>
-                  <p className="font-body text-xs truncate" style={{ color: "rgba(255,255,255,0.35)" }}>
-                    {msg.service} · {msg.email}
-                  </p>
-                </div>
-                <span className="font-body text-[10px] flex-shrink-0" style={{ color: "rgba(255,255,255,0.25)" }}>
-                  {msg.time}
-                </span>
+            {!stats ? (
+              <div className="flex items-center justify-center h-24">
+                <p className="font-body text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>Loading…</p>
               </div>
-            ))}
+            ) : stats.recentMessages.length === 0 ? (
+              <div className="flex items-center justify-center h-24">
+                <p className="font-body text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>No messages yet.</p>
+              </div>
+            ) : (
+              stats.recentMessages.map((msg) => (
+                <div key={msg.id} className="flex items-center gap-3 px-5 py-3.5">
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-display text-xs font-bold text-white"
+                    style={{ background: msg.read ? "rgba(255,255,255,0.08)" : "#FF3D00" }}
+                  >
+                    {msg.name.charAt(0)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="font-body text-sm font-medium text-white truncate">{msg.name}</p>
+                      {!msg.read && <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[#FF3D00]" />}
+                    </div>
+                    <p className="font-body text-xs truncate" style={{ color: "rgba(255,255,255,0.35)" }}>
+                      {msg.service ?? msg.email}
+                    </p>
+                  </div>
+                  <span className="font-body text-[10px] flex-shrink-0" style={{ color: "rgba(255,255,255,0.25)" }}>
+                    {formatTime(msg.createdAt)}
+                  </span>
+                </div>
+              ))
+            )}
           </div>
         </div>
 

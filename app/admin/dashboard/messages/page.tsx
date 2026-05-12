@@ -40,9 +40,14 @@ export default function MessagesAdminPage() {
 
   async function deleteMsg(id: number) {
     if (!confirm("Delete this message?")) return;
-    await fetch(`/api/admin/messages/${id}`, { method: "DELETE" });
-    setMessages((m) => m.filter((x) => x.id !== id));
-    if (selected?.id === id) setSelected(null);
+    const res  = await fetch(`/api/admin/messages/${id}`, { method: "DELETE" });
+    const json = await res.json();
+    if (json.ok) {
+      setMessages((m) => m.filter((x) => x.id !== id));
+      if (selected?.id === id) setSelected(null);
+    } else {
+      alert("Failed to delete message. Please try again.");
+    }
   }
 
   function open(msg: Message) {
@@ -87,7 +92,7 @@ export default function MessagesAdminPage() {
           {/* List */}
           <div
             className="lg:col-span-2 flex flex-col divide-y"
-            style={{ background: "#1C1C1C", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "16px", overflow: "hidden", divideColor: "rgba(255,255,255,0.04)" }}
+            style={{ background: "#1C1C1C", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "16px", overflow: "hidden" }}
           >
             {messages.map((msg) => (
               <button

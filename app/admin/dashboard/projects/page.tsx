@@ -135,8 +135,13 @@ export default function ProjectsAdminPage() {
 
   async function deleteProject(id: number) {
     if (!confirm("Delete this project?")) return;
-    await fetch(`/api/admin/projects/${id}`, { method: "DELETE" });
-    setProjects((p) => p.filter((x) => x.id !== id));
+    const res  = await fetch(`/api/admin/projects/${id}`, { method: "DELETE" });
+    const json = await res.json();
+    if (json.ok) {
+      setProjects((p) => p.filter((x) => x.id !== id));
+    } else {
+      setError("Failed to delete project. Please try again.");
+    }
   }
 
   return (

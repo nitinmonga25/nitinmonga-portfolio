@@ -7,6 +7,8 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     const body = await req.json();
     const { title, slug, excerpt, content, category, thumbnail, tags, readTime, published } = body;
 
+    const existing = await prisma.blogPost.findUnique({ where: { id }, select: { published: true, publishedAt: true } });
+
     const post = await prisma.blogPost.update({
       where: { id },
       data: {
@@ -19,7 +21,9 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
         tags: tags ? JSON.stringify(tags) : null,
         readTime: readTime ?? 5,
         published: published ?? false,
-        publishedAt: published ? new Date() : null,
+        publishedAt: published
+          ? (existing?.published ? existing.publishedAt : new Date())
+          : null,
       },
     });
 

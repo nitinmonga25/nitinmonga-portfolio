@@ -138,7 +138,7 @@ export function About({ content }: { content?: AboutContent }) {
             {/* 3D scene wrapper */}
             <div
               ref={photoWrapRef}
-              className="relative w-full max-w-sm"
+              className="relative w-full"
               style={{ perspective: "900px", cursor: "crosshair" }}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
@@ -250,7 +250,7 @@ export function About({ content }: { content?: AboutContent }) {
             </div>
 
             {/* Skill tags */}
-            <div className="flex flex-wrap gap-2 mt-8 max-w-sm">
+            <div className="flex flex-wrap gap-2 mt-8">
               {c.chips.map((tag) => (
                 <span
                   key={tag}

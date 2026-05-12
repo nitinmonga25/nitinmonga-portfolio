@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+const PROFILE_KEY = "content.profile";
 
 export default function SettingsAdminPage() {
   const [profile, setProfile] = useState({
@@ -9,12 +11,32 @@ export default function SettingsAdminPage() {
     location: "Punjab, India",
     bio:      "Graphic Designer, 3D Artist & Full-Stack Developer with 10+ years of experience.",
   });
-  const [saved, setSaved] = useState(false);
+  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
 
-  function handleSave(e: React.FormEvent) {
+  useEffect(() => {
+    fetch("/api/admin/content")
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.ok && json.data[PROFILE_KEY]) {
+          setProfile((prev) => ({ ...prev, ...json.data[PROFILE_KEY] }));
+        }
+      });
+  }, []);
+
+  async function handleSave(e: React.FormEvent) {
     e.preventDefault();
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
+    setSaveState("saving");
+    try {
+      const res = await fetch("/api/admin/content", {
+        method:  "PUT",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ key: PROFILE_KEY, value: profile }),
+      });
+      setSaveState(res.ok ? "saved" : "error");
+      if (res.ok) setTimeout(() => setSaveState("idle"), 2500);
+    } catch {
+      setSaveState("error");
+    }
   }
 
   return (
@@ -64,21 +86,17 @@ export default function SettingsAdminPage() {
         <div className="flex items-center gap-4">
           <button
             type="submit"
+            disabled={saveState === "saving"}
             className="px-6 py-3 font-body text-sm font-semibold text-white transition-all"
-            style={{ background: "#FF3D00", borderRadius: "10px", boxShadow: "0 4px 14px rgba(255,61,0,0.3)" }}
+            style={{
+              background:  saveState === "error" ? "#EF4444" : saveState === "saved" ? "#10B981" : "#FF3D00",
+              borderRadius: "10px",
+              boxShadow:   "0 4px 14px rgba(255,61,0,0.3)",
+              opacity:     saveState === "saving" ? 0.7 : 1,
+            }}
           >
-            Save Changes
+            {saveState === "saving" ? "Saving…" : saveState === "saved" ? "Saved ✓" : saveState === "error" ? "Error — retry" : "Save Changes"}
           </button>
-          {saved && (
-            <div className="flex items-center gap-2">
-              <span className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: "rgba(16,185,129,0.2)" }}>
-                <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
-                  <path d="M1.5 4.5l2 2 4-4" stroke="#10B981" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </span>
-              <span className="font-body text-xs text-emerald-400">Saved!</span>
-            </div>
-          )}
         </div>
       </form>
     </div>

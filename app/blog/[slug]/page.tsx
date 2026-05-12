@@ -55,6 +55,8 @@ export default async function BlogPostPage({ params }: Props) {
   const post = await getPost(params.slug);
   if (!post) notFound();
 
+  prisma.blogPost.update({ where: { id: post.id }, data: { views: { increment: 1 } } }).catch(() => {});
+
   const html     = buildHtml(post.content || "");
   const headings = extractHeadings(html);
   const tags: string[] = post.tags ? JSON.parse(post.tags) : [];

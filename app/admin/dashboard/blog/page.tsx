@@ -128,8 +128,13 @@ export default function BlogAdminPage() {
 
   async function deletePost(id: number) {
     if (!confirm("Delete this post?")) return;
-    await fetch(`/api/admin/blog/${id}`, { method: "DELETE" });
-    setPosts((p) => p.filter((x) => x.id !== id));
+    const res  = await fetch(`/api/admin/blog/${id}`, { method: "DELETE" });
+    const json = await res.json();
+    if (json.ok) {
+      setPosts((p) => p.filter((x) => x.id !== id));
+    } else {
+      setError("Failed to delete post. Please try again.");
+    }
   }
 
   return (
