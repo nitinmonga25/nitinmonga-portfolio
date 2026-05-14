@@ -78,6 +78,15 @@ export default function ClientsAdminPage() {
         <p className="font-body text-sm mt-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>
           Manage logos shown in the scrolling clients section on the homepage.
         </p>
+        <div className="mt-3 flex items-start gap-2 px-3 py-2.5 rounded-xl" style={{ background: "rgba(255,61,0,0.08)", border: "1px solid rgba(255,61,0,0.2)" }}>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="flex-shrink-0 mt-0.5" style={{ color: "#FF3D00" }}>
+            <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.3"/>
+            <path d="M7 4v3.5M7 10h.01" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+          </svg>
+          <p className="font-body text-[12px]" style={{ color: "rgba(255,255,255,0.5)" }}>
+            <span style={{ color: "rgba(255,255,255,0.8)", fontWeight: 600 }}>Recommended logo size:</span> PNG or SVG, transparent background, 300&times;120 px or wider at 2&times;. Keep file size under 100 KB.
+          </p>
+        </div>
       </div>
 
       {/* Logo cards */}

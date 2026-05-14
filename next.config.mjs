@@ -2,6 +2,12 @@
 const nextConfig = {
   compress: true,
   poweredByHeader: false,
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "res.cloudinary.com" },
+      { protocol: "https", hostname: "assets.nitinmonga.in" },
+    ],
+  },
   async headers() {
     return [
       {
