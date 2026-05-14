@@ -153,10 +153,10 @@ export function Hero({ content }: { content?: HeroContent }) {
                     Nitin
                   </h1>
                 </div>
-                <div className="overflow-hidden" style={{ lineHeight: "0.88", paddingBottom: "0.35em" }}>
+                <div className="overflow-hidden">
                   <h1
                     className="h-monga font-display font-bold block text-[var(--color-accent)]"
-                    style={{ fontSize: "clamp(62px, 9.5vw, 148px)", letterSpacing: "-0.04em", lineHeight: "0.88" }}
+                    style={{ fontSize: "clamp(62px, 9.5vw, 148px)", letterSpacing: "-0.04em", lineHeight: "0.88", paddingBottom: "0.18em" }}
                     aria-hidden="true"
                   >
                     Monga
