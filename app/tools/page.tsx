@@ -152,8 +152,7 @@ const TAG_COLORS: Record<string, string> = {
 };
 
 export default function ToolsPage() {
-  const live  = TOOLS.filter((t) => t.status === "live");
-  const soon  = TOOLS.filter((t) => t.status === "soon");
+  const live = TOOLS.filter((t) => t.status === "live");
 
   return (
     <div className="bg-[var(--color-bg)] min-h-screen">
@@ -192,7 +191,6 @@ export default function ToolsPage() {
         {/* Live tools */}
         {live.length > 0 && (
           <div className="mb-12">
-            <p className="font-body text-[11px] font-bold uppercase tracking-[3px] text-[var(--color-accent)] mb-5">Available Now</p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {live.map((tool) => (
                 <Link
@@ -253,50 +251,6 @@ export default function ToolsPage() {
             </div>
           </div>
         )}
-
-        {/* Coming soon */}
-        <div>
-          <p className="font-body text-[11px] font-bold uppercase tracking-[3px] text-[var(--color-muted)] mb-5">Coming Soon</p>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {soon.map((tool) => (
-              <div
-                key={tool.label}
-                className="flex flex-col gap-4 p-6 rounded-2xl opacity-60"
-                style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)" }}
-              >
-                <div className="flex items-start justify-between">
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ background: "var(--color-bg)", border: "1px solid var(--color-border)" }}
-                  >
-                    {tool.icon}
-                  </div>
-                  <span
-                    className="font-body text-[10px] font-bold uppercase tracking-[2px] px-2.5 py-1 rounded-full"
-                    style={{ background: "rgba(107,101,96,0.1)", color: "var(--color-muted)" }}
-                  >
-                    Soon
-                  </span>
-                </div>
-                <div>
-                  <h2 className="font-display text-[15px] font-bold text-[var(--color-ink)] mb-1.5">{tool.label}</h2>
-                  <p className="font-body text-[12px] text-[var(--color-muted)] leading-relaxed">{tool.description}</p>
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {tool.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="font-body text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full"
-                      style={{ background: `${TAG_COLORS[tag] ?? "#555"}12`, color: TAG_COLORS[tag] ?? "#555" }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
 
         {/* FAQ */}
         <div className="mt-20">
