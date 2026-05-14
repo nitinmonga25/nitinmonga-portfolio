@@ -708,18 +708,44 @@ export function QRStudioClient() {
 
           {/* Colors */}
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Foreground">
-              <div className="flex items-center gap-2">
-                <input type="color" value={fgColor} onChange={(e) => setFgColor(e.target.value)} className="w-8 h-8 rounded cursor-pointer flex-shrink-0" style={{ border: "1px solid var(--color-border)", padding: 1 }} />
-                <input type="text" value={fgColor} onChange={(e) => { if (/^#[0-9A-Fa-f]{0,6}$/.test(e.target.value)) setFgColor(e.target.value); }} style={{ ...INPUT_STYLE, width: "auto", flex: 1, fontFamily: "monospace", fontSize: 12 }} />
-              </div>
-            </Field>
-            <Field label="Background">
-              <div className="flex items-center gap-2">
-                <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="w-8 h-8 rounded cursor-pointer flex-shrink-0" style={{ border: "1px solid var(--color-border)", padding: 1 }} />
-                <input type="text" value={bgColor} onChange={(e) => { if (/^#[0-9A-Fa-f]{0,6}$/.test(e.target.value)) setBgColor(e.target.value); }} style={{ ...INPUT_STYLE, width: "auto", flex: 1, fontFamily: "monospace", fontSize: 12 }} />
-              </div>
-            </Field>
+            {(
+              [
+                { label: "Foreground", value: fgColor, onChange: setFgColor },
+                { label: "Background", value: bgColor, onChange: setBgColor },
+              ] as const
+            ).map(({ label, value, onChange }) => (
+              <Field key={label} label={label}>
+                <label
+                  className="flex flex-col gap-1.5 cursor-pointer"
+                  title={`Pick ${label.toLowerCase()} color`}
+                >
+                  {/* Swatch — clicking opens native color picker */}
+                  <div
+                    className="w-full h-10 rounded-xl border transition-shadow hover:shadow-md relative overflow-hidden"
+                    style={{ background: value, border: "1px solid var(--color-border)" }}
+                  >
+                    <input
+                      type="color"
+                      value={value}
+                      onChange={(e) => onChange(e.target.value)}
+                      className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                      tabIndex={-1}
+                    />
+                  </div>
+                  {/* Hex input */}
+                  <input
+                    type="text"
+                    value={value}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      if (/^#[0-9A-Fa-f]{0,6}$/.test(v)) onChange(v);
+                    }}
+                    maxLength={7}
+                    style={{ ...INPUT_STYLE, fontFamily: "monospace", fontSize: 13, textAlign: "center", letterSpacing: "0.05em" }}
+                  />
+                </label>
+              </Field>
+            ))}
           </div>
 
           {lowContrast && (
