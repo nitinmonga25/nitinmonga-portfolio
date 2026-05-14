@@ -32,15 +32,39 @@ const PRESETS: Record<string, Preset> = {
 
 // ─── QR Type Config ───────────────────────────────────────────────────────────
 
-const QR_TYPES: { id: QRType; label: string; icon: string }[] = [
-  { id: "url",           label: "Website",       icon: "🌐" },
-  { id: "whatsapp",      label: "WhatsApp",      icon: "💬" },
-  { id: "wifi",          label: "WiFi",          icon: "📶" },
-  { id: "upi",           label: "UPI Pay",       icon: "💳" },
-  { id: "instagram",     label: "Instagram",     icon: "📸" },
-  { id: "google_review", label: "Google Review", icon: "⭐" },
-  { id: "vcard",         label: "Business Card", icon: "👤" },
-  { id: "email",         label: "Email",         icon: "✉️"  },
+const QR_TYPES: { id: QRType; label: string; icon: React.ReactNode }[] = [
+  {
+    id: "url", label: "Website",
+    icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.4"/><path d="M10 2C7.5 5 6 7.5 6 10s1.5 5 4 8M10 2c2.5 3 4 5.5 4 8s-1.5 5-4 8M2 10h16" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>,
+  },
+  {
+    id: "whatsapp", label: "WhatsApp",
+    icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 0 1 6.93 12l.57 3.5-3.6-.7A8 8 0 1 1 10 2z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/><path d="M7 8.5c.5 1 1.5 2.5 3 3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/><path d="M7 8.5c-.2-.5 0-1 .5-1.2l.8-.3c.3-.1.6 0 .7.3l.5 1.2c.1.3 0 .6-.3.8L9 9.4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  },
+  {
+    id: "wifi", label: "WiFi",
+    icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2.5 8A10.5 10.5 0 0 1 17.5 8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/><path d="M5.5 11A6 6 0 0 1 14.5 11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/><path d="M8.5 14A2.5 2.5 0 0 1 11.5 14" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/><circle cx="10" cy="17" r="1" fill="currentColor"/></svg>,
+  },
+  {
+    id: "upi", label: "UPI Pay",
+    icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="5" width="16" height="11" rx="2" stroke="currentColor" strokeWidth="1.4"/><path d="M2 9h16" stroke="currentColor" strokeWidth="1.4"/><path d="M6 13h2M12 13h2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>,
+  },
+  {
+    id: "instagram", label: "Instagram",
+    icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="4" stroke="currentColor" strokeWidth="1.4"/><circle cx="10" cy="10" r="3.5" stroke="currentColor" strokeWidth="1.4"/><circle cx="14" cy="6" r="1" fill="currentColor"/></svg>,
+  },
+  {
+    id: "google_review", label: "Google Review",
+    icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2l2 5.5h5.5l-4.5 3.3 1.7 5.4L10 13l-4.7 3.2 1.7-5.4L2.5 7.5H8z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/></svg>,
+  },
+  {
+    id: "vcard", label: "Business Card",
+    icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="5" width="16" height="11" rx="2" stroke="currentColor" strokeWidth="1.4"/><circle cx="7.5" cy="10" r="2" stroke="currentColor" strokeWidth="1.3"/><path d="M12 8.5h3M12 11.5h2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>,
+  },
+  {
+    id: "email", label: "Email",
+    icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="5" width="16" height="11" rx="2" stroke="currentColor" strokeWidth="1.4"/><path d="M2 7l8 5 8-5" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/></svg>,
+  },
 ];
 
 // ─── Data builder ─────────────────────────────────────────────────────────────
@@ -594,12 +618,27 @@ export function QRStudioClient() {
     { id: "dot",           label: "Circle"      },
   ];
 
-  const MOCKUP_OPTIONS: { id: MockupView; label: string; icon: string }[] = [
-    { id: "none",   label: "None",         icon: "◻" },
-    { id: "card",   label: "Business Card", icon: "💼" },
-    { id: "phone",  label: "Phone",         icon: "📱" },
-    { id: "poster", label: "Poster",        icon: "🖼" },
-    { id: "stand",  label: "Table Stand",   icon: "🗂" },
+  const MOCKUP_OPTIONS: { id: MockupView; label: string; icon: React.ReactNode }[] = [
+    {
+      id: "none", label: "None",
+      icon: <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="currentColor" strokeWidth="1.3"/></svg>,
+    },
+    {
+      id: "card", label: "Business Card",
+      icon: <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.3"/><path d="M4 7h2M4 9h1.5M8 6h2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>,
+    },
+    {
+      id: "phone", label: "Phone",
+      icon: <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="3.5" y="1" width="7" height="12" rx="2" stroke="currentColor" strokeWidth="1.3"/><circle cx="7" cy="11.5" r="0.8" fill="currentColor"/></svg>,
+    },
+    {
+      id: "poster", label: "Poster",
+      icon: <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.3"/><rect x="4" y="3" width="6" height="4" rx="1" stroke="currentColor" strokeWidth="1.1"/><path d="M4 9h6M4 11h4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>,
+    },
+    {
+      id: "stand", label: "Table Stand",
+      icon: <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.3"/><path d="M7 8v3M4.5 11h5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>,
+    },
   ];
 
   return (
@@ -615,14 +654,14 @@ export function QRStudioClient() {
               <button
                 key={t.id}
                 onClick={() => switchType(t.id)}
-                className="flex flex-col items-center gap-1 py-2.5 px-1 rounded-xl transition-all"
+                className="flex flex-col items-center gap-1.5 py-2.5 px-1 rounded-xl transition-all"
                 style={{
                   background:  qrType === t.id ? "var(--color-accent-light)" : "var(--color-bg)",
                   border:      `1px solid ${qrType === t.id ? "var(--color-accent)" : "var(--color-border)"}`,
                   color:       qrType === t.id ? "var(--color-accent)" : "var(--color-muted)",
                 }}
               >
-                <span className="text-xl leading-none">{t.icon}</span>
+                {t.icon}
                 <span className="font-body text-[9px] font-semibold text-center leading-tight">{t.label}</span>
               </button>
             ))}
@@ -685,7 +724,10 @@ export function QRStudioClient() {
 
           {lowContrast && (
             <div className="flex items-start gap-2 px-3 py-2 rounded-xl" style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)" }}>
-              <span className="text-sm flex-shrink-0 mt-0.5">⚠️</span>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="flex-shrink-0 mt-0.5" style={{ color: "#EF4444" }}>
+                <path d="M7 1.5L12.5 11H1.5L7 1.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+                <path d="M7 6v2.5M7 10.5v.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+              </svg>
               <p className="font-body text-[11px]" style={{ color: "#EF4444" }}>Low contrast — QR codes may not scan reliably with this color combination.</p>
             </div>
           )}
@@ -791,7 +833,7 @@ export function QRStudioClient() {
               <button key={m.id} onClick={() => setMockup(m.id)}
                 className="flex items-center gap-1.5 px-3 py-1.5 font-body text-[12px] font-medium rounded-lg transition-all"
                 style={{ background: mockup === m.id ? "var(--color-accent-light)" : "var(--color-bg)", color: mockup === m.id ? "var(--color-accent)" : "var(--color-muted)", border: `1px solid ${mockup === m.id ? "var(--color-accent)" : "var(--color-border)"}` }}>
-                <span>{m.icon}</span> {m.label}
+                {m.icon} {m.label}
               </button>
             ))}
           </div>
