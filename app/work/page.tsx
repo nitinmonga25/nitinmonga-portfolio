@@ -6,7 +6,7 @@ import { WorkGrid } from "@/components/pages/work/WorkGrid";
 import type { WorkHeroContent } from "@/components/pages/work/WorkHero";
 import type { WorkProject } from "@/components/pages/work/WorkGrid";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   const meta = await getContent<{ title: string; description: string }>("meta.work");

@@ -5,7 +5,7 @@ import { BlogPageContent } from "@/components/pages/blog/BlogPageContent";
 import type { BlogHeroContent } from "@/components/pages/blog/BlogHero";
 import type { BlogPostItem } from "@/components/pages/blog/BlogPageContent";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   const meta = await getContent<{ title: string; description: string }>("meta.blog");

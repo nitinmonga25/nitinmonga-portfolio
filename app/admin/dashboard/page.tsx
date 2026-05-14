@@ -30,13 +30,25 @@ function formatTime(iso: string) {
 }
 
 export default function DashboardPage() {
-  const [stats, setStats] = useState<StatsData | null>(null);
+  const [stats, setStats]           = useState<StatsData | null>(null);
+  const [cacheState, setCacheState] = useState<"idle" | "purging" | "done" | "error">("idle");
 
   useEffect(() => {
     fetch("/api/admin/stats")
       .then((r) => r.json())
       .then((json) => { if (json.ok) setStats(json.data); });
   }, []);
+
+  async function handleClearCache() {
+    setCacheState("purging");
+    try {
+      const res = await fetch("/api/admin/revalidate", { method: "POST" });
+      setCacheState(res.ok ? "done" : "error");
+      if (res.ok) setTimeout(() => setCacheState("idle"), 3000);
+    } catch {
+      setCacheState("error");
+    }
+  }
 
   const STATS_CONFIG = [
     { label: "Total Projects", value: stats ? String(stats.projectCount) : "—",  sub: "Published",                                     color: "#FF3D00" },
@@ -162,15 +174,61 @@ export default function DashboardPage() {
             ))}
           </div>
 
+          {/* Clear cache */}
+          <div className="px-4 pb-2">
+            <button
+              onClick={handleClearCache}
+              disabled={cacheState === "purging"}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-150"
+              style={{
+                background: cacheState === "done"    ? "rgba(16,185,129,0.12)"
+                          : cacheState === "error"   ? "rgba(239,68,68,0.12)"
+                          : "rgba(255,255,255,0.04)",
+                border: `1px solid ${
+                  cacheState === "done"  ? "rgba(16,185,129,0.3)"
+                : cacheState === "error" ? "rgba(239,68,68,0.3)"
+                : "rgba(255,255,255,0.06)"}`,
+                opacity: cacheState === "purging" ? 0.6 : 1,
+              }}
+            >
+              <span
+                className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                style={{
+                  background: cacheState === "done"  ? "rgba(16,185,129,0.2)"
+                            : cacheState === "error" ? "rgba(239,68,68,0.2)"
+                            : "rgba(255,61,0,0.15)",
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                  className={cacheState === "purging" ? "animate-spin" : ""}
+                  style={{ color: cacheState === "done" ? "#10B981" : cacheState === "error" ? "#EF4444" : "#FF3D00" }}
+                >
+                  <path d="M12 7A5 5 0 112 7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                  <path d="M12 3v4h-4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </span>
+              <span className="font-body text-sm transition-colors" style={{
+                color: cacheState === "done"  ? "#10B981"
+                     : cacheState === "error" ? "#EF4444"
+                     : "rgba(255,255,255,0.7)",
+              }}>
+                {cacheState === "purging" ? "Purging cache…"
+               : cacheState === "done"    ? "Cache cleared ✓"
+               : cacheState === "error"   ? "Failed — retry"
+               : "Clear Site Cache"}
+              </span>
+            </button>
+          </div>
+
           {/* Site status */}
-          <div className="px-4 pb-4 mt-auto">
+          <div className="px-4 pb-4">
             <div
               className="flex items-center gap-3 px-4 py-3 rounded-xl"
               style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)" }}
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
               <div>
-                <p className="font-body text-xs font-semibold text-emerald-400">Site Online</p>
+                <p className="font-body text-xs font-semibold text-emerald-400">Site Online · ISR Active</p>
                 <p className="font-body text-[10px]" style={{ color: "rgba(255,255,255,0.3)" }}>nitinmonga.in</p>
               </div>
             </div>
