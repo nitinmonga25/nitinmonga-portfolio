@@ -313,6 +313,71 @@ export default function ContentEditorPage() {
               ))}
             </SectionCard>
 
+            {/* Testimonials */}
+            <SectionCard title="Testimonials Section" onSave={() => save("content.home.testimonials")} saveState={saveStates["content.home.testimonials"] ?? "idle"}>
+              {(get<Array<{ name: string; role: string; quote: string; avatar: string; rating: number }>>("content.home.testimonials", [])).map((t, i) => (
+                <div key={i} className="flex flex-col gap-3 p-3 rounded-lg" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <div className="flex items-center justify-between">
+                    <span className="font-body text-[11px] font-semibold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.35)" }}>
+                      Testimonial {i + 1}
+                    </span>
+                    <button
+                      onClick={() => {
+                        const next = get<Array<{ name: string; role: string; quote: string; avatar: string; rating: number }>>("content.home.testimonials", []).filter((_, idx) => idx !== i);
+                        update("content.home.testimonials", next);
+                      }}
+                      className="font-body text-[11px] px-2 py-0.5 rounded text-red-400 hover:bg-red-400/10 transition-colors"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <TextField label="Name" value={t.name} onChange={(v) => {
+                      const next = [...get<Array<{ name: string; role: string; quote: string; avatar: string; rating: number }>>("content.home.testimonials", [])];
+                      next[i] = { ...next[i], name: v };
+                      update("content.home.testimonials", next);
+                    }} />
+                    <TextField label="Role / Company" value={t.role} onChange={(v) => {
+                      const next = [...get<Array<{ name: string; role: string; quote: string; avatar: string; rating: number }>>("content.home.testimonials", [])];
+                      next[i] = { ...next[i], role: v };
+                      update("content.home.testimonials", next);
+                    }} />
+                  </div>
+                  <TextareaField label="Quote" rows={3} value={t.quote} onChange={(v) => {
+                    const next = [...get<Array<{ name: string; role: string; quote: string; avatar: string; rating: number }>>("content.home.testimonials", [])];
+                    next[i] = { ...next[i], quote: v };
+                    update("content.home.testimonials", next);
+                  }} />
+                  <div className="grid grid-cols-[1fr_80px] gap-3">
+                    <TextField label="Avatar URL (optional)" value={t.avatar ?? ""} onChange={(v) => {
+                      const next = [...get<Array<{ name: string; role: string; quote: string; avatar: string; rating: number }>>("content.home.testimonials", [])];
+                      next[i] = { ...next[i], avatar: v };
+                      update("content.home.testimonials", next);
+                    }} />
+                    <TextField label="Rating (1–5)" value={String(t.rating)} onChange={(v) => {
+                      const val = Math.min(5, Math.max(1, Number(v) || 5));
+                      const next = [...get<Array<{ name: string; role: string; quote: string; avatar: string; rating: number }>>("content.home.testimonials", [])];
+                      next[i] = { ...next[i], rating: val };
+                      update("content.home.testimonials", next);
+                    }} />
+                  </div>
+                </div>
+              ))}
+              <button
+                onClick={() => {
+                  const next = [
+                    ...get<Array<{ name: string; role: string; quote: string; avatar: string; rating: number }>>("content.home.testimonials", []),
+                    { name: "", role: "", quote: "", avatar: "", rating: 5 },
+                  ];
+                  update("content.home.testimonials", next);
+                }}
+                className="self-start font-body text-[12px] px-3 py-1.5 rounded-lg transition-colors"
+                style={{ background: "rgba(255,61,0,0.15)", color: "#FF3D00", border: "1px solid rgba(255,61,0,0.3)" }}
+              >
+                + Add Testimonial
+              </button>
+            </SectionCard>
+
             {/* Contact */}
             <SectionCard title="Contact Section" onSave={() => save("content.home.contact")} saveState={saveStates["content.home.contact"] ?? "idle"}>
               <TextField
