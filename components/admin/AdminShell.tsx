@@ -9,6 +9,7 @@ const NAV = [
   { href: "/admin/dashboard/content",  label: "Content",    icon: "edit"     },
   { href: "/admin/dashboard/projects", label: "Projects",   icon: "folder"   },
   { href: "/admin/dashboard/blog",     label: "Blog",       icon: "file"     },
+  { href: "/admin/dashboard/clients",  label: "Clients",    icon: "users"    },
   { href: "/admin/dashboard/messages", label: "Messages",   icon: "mail"     },
   { href: "/admin/dashboard/services", label: "Services",   icon: "layers"   },
   { href: "/admin/dashboard/settings", label: "Settings",   icon: "settings" },
@@ -45,6 +46,13 @@ const ICONS: Record<string, React.ReactNode> = {
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
       <rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.3"/>
       <path d="M1 5l7 5 7-5" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+    </svg>
+  ),
+  users: (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <circle cx="6" cy="5" r="2.5" stroke="currentColor" strokeWidth="1.3"/>
+      <path d="M1 13c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+      <path d="M11 7a2.5 2.5 0 100-5M15 13a4 4 0 00-4-4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
     </svg>
   ),
   layers: (
