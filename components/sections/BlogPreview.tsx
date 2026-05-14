@@ -12,6 +12,7 @@ export interface BlogPostPreview {
   excerpt: string;
   date: string;
   readTime: string;
+  thumbnail?: string;
 }
 
 const DEFAULT_POSTS: BlogPostPreview[] = [
@@ -74,18 +75,26 @@ export function BlogPreview({ posts }: { posts?: BlogPostPreview[] }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {data.map(({ slug, category, title, excerpt, date, readTime }) => (
+          {data.map(({ slug, category, title, excerpt, date, readTime, thumbnail }) => (
             <Link
               key={slug}
               href={`/blog/${slug}/`}
               className="blog-card group flex flex-col bg-[var(--color-surface)] border-[1.5px] border-[var(--color-border)] rounded-[8px] overflow-hidden hover:border-[var(--color-accent)] transition-all duration-300"
             >
-              {/* Thumbnail placeholder */}
+              {/* Thumbnail */}
               <div className="h-44 bg-[var(--color-accent-light)] relative overflow-hidden flex items-center justify-center">
-                <svg width="44" height="44" viewBox="0 0 44 44" fill="none" className="opacity-25" aria-hidden="true">
-                  <rect x="6" y="10" width="32" height="24" rx="2" stroke="var(--color-accent-dark)" strokeWidth="2"/>
-                  <path d="M6 16h32M14 10v6M30 10v6" stroke="var(--color-accent-dark)" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
+                {thumbnail ? (
+                  <img
+                    src={thumbnail}
+                    alt={title}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                ) : (
+                  <svg width="44" height="44" viewBox="0 0 44 44" fill="none" className="opacity-25" aria-hidden="true">
+                    <rect x="6" y="10" width="32" height="24" rx="2" stroke="var(--color-accent-dark)" strokeWidth="2"/>
+                    <path d="M6 16h32M14 10v6M30 10v6" stroke="var(--color-accent-dark)" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                )}
                 <span className="absolute top-3 left-3 font-body text-[11px] font-600 uppercase tracking-[2px] bg-[var(--color-accent)] text-white px-2.5 py-1 rounded-full">
                   {category}
                 </span>

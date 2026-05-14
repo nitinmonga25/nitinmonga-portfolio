@@ -9,6 +9,7 @@ import { Services }    from "@/components/sections/Services";
 import { Work }        from "@/components/sections/Work";
 import type { WorkProject } from "@/components/sections/Work";
 import { BlogPreview } from "@/components/sections/BlogPreview";
+import type { BlogPostPreview } from "@/components/sections/BlogPreview";
 import { Distributions } from "@/components/sections/Distributions";
 import { ClientLogos }   from "@/components/sections/ClientLogos";
 import type { ClientLogo } from "@/components/sections/ClientLogos";
@@ -21,7 +22,7 @@ import type { ContactContent } from "@/components/sections/Contact";
 import type { TestimonialItem } from "@/components/sections/Testimonials";
 
 export default async function HomePage() {
-  const [hero, stats, about, services, testimonials, contact, clients, rawProjects] = await Promise.all([
+  const [hero, stats, about, services, testimonials, contact, clients, rawProjects, rawPosts] = await Promise.all([
     getContent<HeroContent>("content.home.hero"),
     getContent<StatItem[]>("content.home.stats"),
     getContent<AboutContent>("content.home.about"),
@@ -34,6 +35,12 @@ export default async function HomePage() {
       orderBy: { order: "asc" },
       select:  { title: true, slug: true, category: true, tags: true, thumbnail: true },
     }).catch(() => []),
+    prisma.blogPost.findMany({
+      where:   { published: true },
+      orderBy: { publishedAt: "desc" },
+      take:    3,
+      select:  { slug: true, category: true, title: true, excerpt: true, publishedAt: true, readTime: true, thumbnail: true },
+    }).catch(() => []),
   ]);
 
   const projects: WorkProject[] = rawProjects.map((p) => ({
@@ -41,6 +48,18 @@ export default async function HomePage() {
     slug:      p.slug,
     category:  p.category,
     tags:      p.tags ? (JSON.parse(p.tags) as string[]) : [],
+    thumbnail: p.thumbnail || undefined,
+  }));
+
+  const blogPosts: BlogPostPreview[] = rawPosts.map((p) => ({
+    slug:      p.slug,
+    category:  p.category,
+    title:     p.title,
+    excerpt:   p.excerpt ?? "",
+    date:      p.publishedAt
+      ? new Date(p.publishedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
+      : "",
+    readTime:  p.readTime ? `${p.readTime} min` : "",
     thumbnail: p.thumbnail || undefined,
   }));
 
@@ -54,7 +73,7 @@ export default async function HomePage() {
       <Work projects={projects.length > 0 ? projects : undefined} />
       <ClientLogos logos={clients ?? []} />
       <Testimonials content={testimonials} />
-      <BlogPreview />
+      <BlogPreview posts={blogPosts.length > 0 ? blogPosts : undefined} />
       <Contact content={contact} />
     </>
   );
