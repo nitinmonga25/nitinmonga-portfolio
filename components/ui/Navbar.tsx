@@ -72,7 +72,7 @@ export function Navbar() {
 
           {/* CTA + Hamburger */}
           <div className="flex items-center gap-4">
-            <Link href="/contact-us/" className="hidden md:inline-flex btn-primary text-sm py-2.5 px-5">
+            <Link href="/contact-us/" className={`btn-primary text-sm py-2.5 px-5 ${menuOpen ? "hidden" : "hidden md:inline-flex"}`}>
               Hire Me
             </Link>
             <button
