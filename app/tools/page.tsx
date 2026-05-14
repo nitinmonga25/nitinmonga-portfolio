@@ -7,8 +7,8 @@ export const revalidate = 3600;
 export async function generateMetadata(): Promise<Metadata> {
   const meta = await getContent<{ title: string; description: string }>("meta.tools");
   return {
-    title:       meta.title       || "Free Design & Dev Tools",
-    description: meta.description || "Free tools for designers and developers — color palette generator, UI analyzer, and more. Built by Nitin Monga.",
+    title:       meta?.title       || "Free Design & Dev Tools",
+    description: meta?.description || "Free tools for designers and developers — color palette generator, UI analyzer, and more. Built by Nitin Monga.",
   };
 }
 

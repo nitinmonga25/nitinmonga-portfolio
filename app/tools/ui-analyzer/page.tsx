@@ -6,8 +6,8 @@ export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const meta = await getContent<{ title: string; description: string }>("meta.tools-ui-analyzer");
-  const title       = meta.title       || "UI Analyzer — Free Design Score Tool";
-  const description = meta.description || "Upload any UI screenshot and get a professional score for spacing, colors, alignment, hierarchy, typography, and more. Free, instant, no login required.";
+  const title       = meta?.title       || "UI Analyzer — Free Design Score Tool";
+  const description = meta?.description || "Upload any UI screenshot and get a professional score for spacing, colors, alignment, hierarchy, typography, and more. Free, instant, no login required.";
   return {
     title,
     description,

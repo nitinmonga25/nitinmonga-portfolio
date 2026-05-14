@@ -6,8 +6,8 @@ export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const meta = await getContent<{ title: string; description: string }>("meta.tools-color-palette");
-  const title       = meta.title       || "Color Palette Generator & Extractor — Free Tool";
-  const description = meta.description || "Generate professional color palettes with 11-shade Tailwind-style scales. Extract colors from any image. Export as CSS variables, Tailwind config, or SCSS. Free tool by Nitin Monga.";
+  const title       = meta?.title       || "Color Palette Generator & Extractor — Free Tool";
+  const description = meta?.description || "Generate professional color palettes with 11-shade Tailwind-style scales. Extract colors from any image. Export as CSS variables, Tailwind config, or SCSS. Free tool by Nitin Monga.";
   return {
     title,
     description,
