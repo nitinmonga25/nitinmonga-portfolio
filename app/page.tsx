@@ -7,6 +7,7 @@ import { About }       from "@/components/sections/About";
 import { Services }    from "@/components/sections/Services";
 import { Work }        from "@/components/sections/Work";
 import { BlogPreview } from "@/components/sections/BlogPreview";
+import { Distributions } from "@/components/sections/Distributions";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Contact }     from "@/components/sections/Contact";
 import type { HeroContent } from "@/components/sections/Hero";
@@ -29,6 +30,7 @@ export default async function HomePage() {
     <>
       <Hero content={hero} />
       <Stats content={stats} />
+      <Distributions />
       <About content={about} />
       <Services content={services} />
       <Work />
