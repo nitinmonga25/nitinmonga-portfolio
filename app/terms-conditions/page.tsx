@@ -15,7 +15,7 @@ export default function TermsPage() {
     <main className="bg-[var(--color-bg)] min-h-screen">
       {/* Hero */}
       <section className="py-20 border-b border-[var(--color-border)]">
-        <div className="max-w-[800px] mx-auto px-6 lg:px-12">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
           <p className="section-label mb-4">// Legal</p>
           <h1
             className="font-display font-bold text-[var(--color-ink)] mb-4"
@@ -31,7 +31,7 @@ export default function TermsPage() {
 
       {/* Content */}
       <section className="py-16">
-        <div className="max-w-[800px] mx-auto px-6 lg:px-12 space-y-10">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12 space-y-10">
 
           <Block title="1. Acceptance of Terms">
             By accessing or using this website (nitinmonga.in), you agree to be
