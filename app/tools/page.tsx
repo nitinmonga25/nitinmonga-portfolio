@@ -192,21 +192,6 @@ export default function ToolsPage() {
           </p>
         </div>
 
-        {/* Why these tools */}
-        <div className="mb-14 grid sm:grid-cols-3 gap-5">
-          {[
-            { icon: "⚡", title: "Instant, no login", desc: "Every tool runs in your browser — no account, no waiting, no email required. Open a tool and start working." },
-            { icon: "🎯", title: "Built for real work", desc: "These aren't demos. Each tool solves a specific problem I run into while designing and building products every day." },
-            { icon: "🔓", title: "Free forever", desc: "No freemium tiers, no export limits, no watermarks. The output is yours to use in any personal or commercial project." },
-          ].map(({ icon, title, desc }) => (
-            <div key={title} className="p-5 rounded-2xl" style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)" }}>
-              <p className="text-2xl mb-3">{icon}</p>
-              <h3 className="font-display text-[15px] font-bold text-[var(--color-ink)] mb-2">{title}</h3>
-              <p className="font-body text-[13px] text-[var(--color-muted)] leading-relaxed">{desc}</p>
-            </div>
-          ))}
-        </div>
-
         {/* Live tools */}
         {live.length > 0 && (
           <div className="mb-12">
@@ -270,6 +255,21 @@ export default function ToolsPage() {
             </div>
           </div>
         )}
+
+        {/* Why these tools */}
+        <div className="mb-14 grid sm:grid-cols-3 gap-5">
+          {[
+            { icon: "⚡", title: "Instant, no login", desc: "Every tool runs in your browser — no account, no waiting, no email required. Open a tool and start working." },
+            { icon: "🎯", title: "Built for real work", desc: "These aren't demos. Each tool solves a specific problem I run into while designing and building products every day." },
+            { icon: "🔓", title: "Free forever", desc: "No freemium tiers, no export limits, no watermarks. The output is yours to use in any personal or commercial project." },
+          ].map(({ icon, title, desc }) => (
+            <div key={title} className="p-5 rounded-2xl" style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)" }}>
+              <p className="text-2xl mb-3">{icon}</p>
+              <h3 className="font-display text-[15px] font-bold text-[var(--color-ink)] mb-2">{title}</h3>
+              <p className="font-body text-[13px] text-[var(--color-muted)] leading-relaxed">{desc}</p>
+            </div>
+          ))}
+        </div>
 
         {/* FAQ */}
         <div className="mt-20">
