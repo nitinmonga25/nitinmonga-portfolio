@@ -6,7 +6,7 @@ export default function BlogPostLayout({ children }: { children: React.ReactNode
       {/* Paste your Auto Ads script src here */}
       <Script
         async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5308405517093129"
         crossOrigin="anonymous"
         strategy="afterInteractive"
       />
