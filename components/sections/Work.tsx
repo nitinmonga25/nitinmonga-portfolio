@@ -6,10 +6,11 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export interface WorkProject {
-  title: string;
-  slug: string;
-  category: string;
-  tags: string[];
+  title:      string;
+  slug:       string;
+  category:   string;
+  tags:       string[];
+  thumbnail?: string;
 }
 
 const DEFAULT_PROJECTS: WorkProject[] = [
@@ -102,7 +103,7 @@ export function Work({ projects }: { projects?: WorkProject[] }) {
 
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filtered.map(({ title, slug, category, tags }) => (
+          {filtered.map(({ title, slug, category, tags, thumbnail }) => (
             <div
               key={slug}
               className="project-card group relative bg-[var(--color-surface)] border-[1.5px] border-[var(--color-border)] rounded-[8px] overflow-hidden"
@@ -110,11 +111,20 @@ export function Work({ projects }: { projects?: WorkProject[] }) {
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
             >
-              {/* Thumbnail placeholder */}
+              {/* Thumbnail */}
               <div className="h-48 bg-[var(--color-accent-light)] relative overflow-hidden flex items-center justify-center">
-                <div className="w-14 h-14 rounded-full border-2 border-[var(--color-accent)]/30 flex items-center justify-center">
-                  <div className="w-5 h-5 rounded-full bg-[var(--color-accent)]/20" />
-                </div>
+                {thumbnail ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={thumbnail}
+                    alt={title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="w-14 h-14 rounded-full border-2 border-[var(--color-accent)]/30 flex items-center justify-center">
+                    <div className="w-5 h-5 rounded-full bg-[var(--color-accent)]/20" />
+                  </div>
+                )}
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-[var(--color-accent)]/8 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                   <Link

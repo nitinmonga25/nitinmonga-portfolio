@@ -32,15 +32,16 @@ export default async function HomePage() {
     prisma.project.findMany({
       where:   { published: true },
       orderBy: { order: "asc" },
-      select:  { title: true, slug: true, category: true, tags: true },
+      select:  { title: true, slug: true, category: true, tags: true, thumbnail: true },
     }).catch(() => []),
   ]);
 
   const projects: WorkProject[] = rawProjects.map((p) => ({
-    title:    p.title,
-    slug:     p.slug,
-    category: p.category,
-    tags:     p.tags ? (JSON.parse(p.tags) as string[]) : [],
+    title:     p.title,
+    slug:      p.slug,
+    category:  p.category,
+    tags:      p.tags ? (JSON.parse(p.tags) as string[]) : [],
+    thumbnail: p.thumbnail || undefined,
   }));
 
   return (
