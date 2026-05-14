@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
 import { ColorPaletteGenerator } from "./ColorPaletteGenerator";
+import { getContent } from "@/lib/content";
 
-export const metadata: Metadata = {
-  title: "Color Palette Generator & Extractor — Free Tool",
-  description: "Generate professional color palettes with 11-shade Tailwind-style scales. Extract colors from any image. Export as CSS variables, Tailwind config, or SCSS. Free tool by Nitin Monga.",
-  openGraph: {
-    title: "Color Palette Generator & Extractor — Free Tool by Nitin Monga",
-    description: "Pick a base color, choose a harmony, extract colors from images — export a complete design system in seconds.",
-  },
-};
+export const revalidate = 3600;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const meta = await getContent<{ title: string; description: string }>("meta.tools-color-palette");
+  const title       = meta.title       || "Color Palette Generator & Extractor — Free Tool";
+  const description = meta.description || "Generate professional color palettes with 11-shade Tailwind-style scales. Extract colors from any image. Export as CSS variables, Tailwind config, or SCSS. Free tool by Nitin Monga.";
+  return {
+    title,
+    description,
+    openGraph: { title, description },
+  };
+}
 
 const FAQ_SCHEMA = {
   "@context": "https://schema.org",

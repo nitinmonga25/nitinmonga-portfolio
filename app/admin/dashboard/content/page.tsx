@@ -688,7 +688,7 @@ export default function ContentEditorPage() {
         {/* META / SEO */}
         {activeTab === "meta" && (
           <>
-            {["home", "about", "services", "work", "blog", "contact"].map((page) => (
+            {["home", "about", "services", "work", "blog", "contact", "tools", "tools-ui-analyzer", "tools-color-palette"].map((page) => (
               <SectionCard
                 key={page}
                 title={`${page.charAt(0).toUpperCase() + page.slice(1)} Page Meta`}

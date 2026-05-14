@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
 import { UIAnalyzerClient } from "./UIAnalyzerClient";
+import { getContent } from "@/lib/content";
 
-export const metadata: Metadata = {
-  title: "UI Analyzer — Free Design Score Tool",
-  description: "Upload any UI screenshot and get a professional score for spacing, colors, alignment, hierarchy, typography, and more. Free, instant, no login required.",
-  openGraph: {
-    title: "UI Analyzer — Free Design Score Tool by Nitin Monga",
-    description: "Get a professional scored analysis of any UI screenshot across 7 design criteria. Free and instant.",
-  },
-};
+export const revalidate = 3600;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const meta = await getContent<{ title: string; description: string }>("meta.tools-ui-analyzer");
+  const title       = meta.title       || "UI Analyzer — Free Design Score Tool";
+  const description = meta.description || "Upload any UI screenshot and get a professional score for spacing, colors, alignment, hierarchy, typography, and more. Free, instant, no login required.";
+  return {
+    title,
+    description,
+    openGraph: { title, description },
+  };
+}
 
 const FAQ_SCHEMA = {
   "@context": "https://schema.org",
