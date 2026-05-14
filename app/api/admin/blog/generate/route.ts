@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
 const FORBIDDEN_WORDS = [
   "delve", "leverage", "revolutionize", "game-changer", "cutting-edge",
   "multifaceted", "nuanced", "paramount", "pivotal", "seamless", "robust",
@@ -38,6 +36,8 @@ Aim for 800 to 1200 words total.
 "readTime" should be a number (minutes to read, roughly 200 words per minute).`;
 
 export async function POST(req: Request) {
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
   try {
     const { title, category } = await req.json();
 
