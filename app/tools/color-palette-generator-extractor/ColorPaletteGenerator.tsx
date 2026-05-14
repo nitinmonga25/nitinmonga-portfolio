@@ -3,6 +3,69 @@
 import { useState, useEffect, useRef, useCallback, DragEvent } from "react";
 import Link from "next/link";
 
+// ─── FAQ ──────────────────────────────────────────────────────────────────────
+
+const COLOR_PALETTE_FAQS = [
+  {
+    q: "Is the Color Palette Generator free to use?",
+    a: "Yes — completely free with no account, no watermarks, and no limits on how many palettes you generate or export.",
+  },
+  {
+    q: "What is a color harmony?",
+    a: "A color harmony is a set of rules for combining colors in a visually pleasing way. Complementary pairs opposite hues for high contrast. Analogous groups neighboring hues for a calm, cohesive feel. Triadic uses three equally spaced hues for a vibrant, balanced look. Split-complementary is a softer alternative to complementary. Monochromatic uses a single hue at different lightness levels.",
+  },
+  {
+    q: "What is the 11-shade scale?",
+    a: "Each base color is expanded into 11 shades (50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950) — exactly matching the structure used by Tailwind CSS. This gives you a full range from near-white to near-black, ready to use in any design system.",
+  },
+  {
+    q: "How do I extract colors from an image?",
+    a: "Switch to the 'Extract from Image' tab, then drop or upload any JPG, PNG, or WebP image. The tool samples the image pixels and returns the most dominant distinct colors in the image.",
+  },
+  {
+    q: "What export formats are available?",
+    a: "You can copy your palette as CSS custom properties (--color-primary-500: #hex), a Tailwind CSS config object (ready to paste into tailwind.config.js), or SCSS variables ($color-primary-500: #hex). Each format is one-click copy.",
+  },
+  {
+    q: "Can I use the generated colors in commercial projects?",
+    a: "Yes — the generated colors are yours to use in any personal or commercial project without attribution.",
+  },
+  {
+    q: "What is the difference between HEX, RGB, and HSL?",
+    a: "HEX (#FF3D00) is the most common format for web — it's compact and universally supported. RGB (rgb(255, 61, 0)) is useful when you need to manipulate color channels in CSS or JavaScript. HSL (hsl(14, 100%, 50%)) is the most human-readable — Hue (0–360°), Saturation (%), and Lightness (%) — great for making programmatic adjustments like lightening or darkening.",
+  },
+];
+
+function ColorPaletteFAQ() {
+  const [open, setOpen] = useState<number | null>(null);
+  return (
+    <div className="flex flex-col gap-2">
+      {COLOR_PALETTE_FAQS.map(({ q, a }, i) => (
+        <div key={i} style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "14px" }}>
+          <button
+            className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left"
+            onClick={() => setOpen(open === i ? null : i)}
+          >
+            <span className="font-body text-[14px] font-semibold text-[var(--color-ink)]">{q}</span>
+            <svg
+              width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"
+              className="flex-shrink-0 transition-transform duration-200"
+              style={{ transform: open === i ? "rotate(180deg)" : "rotate(0deg)", color: "var(--color-accent)" }}
+            >
+              <path d="M3 6l5 5 5-5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          {open === i && (
+            <div className="px-5 pb-4">
+              <p className="font-body text-[13px] text-[var(--color-muted)] leading-relaxed">{a}</p>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ─── Color Math ───────────────────────────────────────────────────────────────
 
 function hexToHsl(hex: string): [number, number, number] {
@@ -887,6 +950,31 @@ export function ColorPaletteGenerator() {
           </>
         )}
 
+      </div>
+
+      {/* ── How It Works ─────────────────────────────────────────────────── */}
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-12 mt-20">
+        <p className="section-label mb-3">// How It Works</p>
+        <h2 className="font-display font-bold text-[var(--color-ink)] text-[22px] mb-6">Generate a palette in seconds</h2>
+        <div className="grid sm:grid-cols-3 gap-5 mb-16">
+          {[
+            { step: "01", title: "Pick a base color", desc: "Use the color picker or type any HEX value. The tool builds a full 11-shade scale from near-white to near-black — just like Tailwind's built-in palettes." },
+            { step: "02", title: "Choose a harmony", desc: "Select Complementary, Analogous, Triadic, Split-Complementary, or Monochromatic. Each generates a complete multi-color system built on color theory." },
+            { step: "03", title: "Export your system", desc: "Copy as CSS custom properties, a Tailwind config object, or SCSS variables. One click — paste directly into your project." },
+          ].map(({ step, title, desc }) => (
+            <div key={step} className="p-5 rounded-2xl" style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)" }}>
+              <p className="font-mono text-[11px] font-bold mb-3" style={{ color: "#FF3D00" }}>{step}</p>
+              <h3 className="font-display text-[15px] font-bold text-[var(--color-ink)] mb-2">{title}</h3>
+              <p className="font-body text-[13px] text-[var(--color-muted)] leading-relaxed">{desc}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* ── FAQ ────────────────────────────────────────────────────────── */}
+        <p className="section-label mb-3">// FAQ</p>
+        <h2 className="font-display font-bold text-[var(--color-ink)] text-[22px] mb-6">Frequently asked questions</h2>
+        <ColorPaletteFAQ />
+        <div className="pb-20" />
       </div>
 
       <Toast msg={toast} />

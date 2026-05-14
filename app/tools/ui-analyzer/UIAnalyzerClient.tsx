@@ -5,6 +5,75 @@ import Link from "next/link";
 import { runAnalysis } from "@/lib/analyzer";
 import type { AnalysisMode, AnalysisResult } from "@/lib/analyzer/types";
 
+// ─── FAQ Data ─────────────────────────────────────────────────────────────────
+
+const UI_ANALYZER_FAQS = [
+  {
+    q: "Is the UI Design Analyzer completely free?",
+    a: "Yes — 100% free with no account required. Upload your screenshot, get your score, and share it. There are no hidden tiers or paywalls.",
+  },
+  {
+    q: "What file formats are supported?",
+    a: "JPG, PNG, and WebP files up to 10MB. For best results use a full-page or component screenshot at 1x or 2x resolution — avoid heavily compressed thumbnails.",
+  },
+  {
+    q: "How is the overall score calculated?",
+    a: "Seven criteria are scored independently (color, spacing, alignment, consistency, hierarchy, typography, and corner rounding) and then blended using mode-specific weights. A dashboard layout, for example, puts more weight on alignment and consistency than a poster design would.",
+  },
+  {
+    q: "What is a good UI design score?",
+    a: "90–100 is S-grade (publication ready). 80–89 is A-grade (professional quality). 70–79 is B-grade (good with minor fixes). Below 60 means there are foundational issues worth addressing before shipping.",
+  },
+  {
+    q: "What is the difference between the four analysis modes?",
+    a: "Each mode adjusts the scoring weights for what matters most in that context. Web UI weights spacing and alignment heavily. Mobile emphasises touch target spacing. Poster prioritises color and hierarchy. Dashboard focuses on alignment and information density.",
+  },
+  {
+    q: "Can I analyze a mobile app screenshot?",
+    a: "Absolutely — select the Mobile mode before uploading. The analyzer will apply weights tuned for mobile UI patterns, including tighter spacing tolerances and touch-target hierarchy.",
+  },
+  {
+    q: "Are my uploaded images stored?",
+    a: "Images are uploaded to Cloudinary for processing and a thumbnail is saved with the analysis result so you can share it. No images are sold or used for training data.",
+  },
+  {
+    q: "How accurate is the analysis compared to a human designer?",
+    a: "The tool is strong at objective, measurable signals — contrast ratios, alignment grids, spacing consistency. Subjective qualities like brand feel or emotional resonance are beyond any automated tool. Think of it as a fast second opinion, not a replacement for design review.",
+  },
+];
+
+// ─── FAQ Accordion ────────────────────────────────────────────────────────────
+
+function FAQList({ items }: { items: { q: string; a: string }[] }) {
+  const [open, setOpen] = useState<number | null>(null);
+  return (
+    <div className="flex flex-col gap-2">
+      {items.map(({ q, a }, i) => (
+        <div key={i} style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "14px" }}>
+          <button
+            className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left"
+            onClick={() => setOpen(open === i ? null : i)}
+          >
+            <span className="font-body text-[14px] font-semibold text-[var(--color-ink)]">{q}</span>
+            <svg
+              width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"
+              className="flex-shrink-0 transition-transform duration-200"
+              style={{ transform: open === i ? "rotate(180deg)" : "rotate(0deg)", color: "var(--color-accent)" }}
+            >
+              <path d="M3 6l5 5 5-5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          {open === i && (
+            <div className="px-5 pb-4">
+              <p className="font-body text-[13px] text-[var(--color-muted)] leading-relaxed">{a}</p>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const MODES: { id: AnalysisMode; label: string; icon: string }[] = [
@@ -588,6 +657,42 @@ export function UIAnalyzerClient({ initialResult, initialUuid }: {
 
         {/* ── Scanning animation ──────────────────────────────────────────── */}
         {showScan && <ScanningOverlay preview={preview!} step={step} />}
+
+        {/* ── How Scoring Works ───────────────────────────────────────────── */}
+        {showForm && (
+          <div className="mt-16">
+            <p className="section-label mb-3">// How It Works</p>
+            <h2 className="font-display font-bold text-[var(--color-ink)] text-[22px] mb-6">What the analyzer checks</h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[
+                { label: "Color Usage", score: "15%", desc: "Evaluates palette harmony, WCAG contrast ratios, and whether colors are over-used or under-used across the design." },
+                { label: "Spacing",     score: "18%", desc: "Checks padding, margin consistency, and breathing room between elements — tight spacing is one of the most common UI mistakes." },
+                { label: "Alignment",   score: "18%", desc: "Detects misaligned elements, off-grid layouts, and inconsistent edge margins that break visual order." },
+                { label: "Consistency", score: "15%", desc: "Measures whether corner radii, font sizes, and spacing values follow a consistent system throughout." },
+                { label: "Hierarchy",   score: "14%", desc: "Assesses whether the design clearly guides the eye — primary, secondary, and tertiary information should each have distinct visual weight." },
+                { label: "Typography",  score: "12%", desc: "Looks at font-size variety, line-height, and whether text scales are logical (e.g., a proper heading/body ratio)." },
+                { label: "Corner Rounding", score: "8%", desc: "Checks that border-radius values are consistent and appropriate for the design style — mixing sharp and pill shapes reads as unpolished." },
+              ].map(({ label, score, desc }) => (
+                <div key={label} className="p-4 rounded-xl" style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)" }}>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="font-body text-[13px] font-bold text-[var(--color-ink)]">{label}</p>
+                    <span className="font-mono text-[11px] px-2 py-0.5 rounded-full" style={{ background: "rgba(255,61,0,0.1)", color: "#FF3D00" }}>{score} weight</span>
+                  </div>
+                  <p className="font-body text-[12px] text-[var(--color-muted)] leading-relaxed">{desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── FAQ ─────────────────────────────────────────────────────────── */}
+        {showForm && (
+          <div className="mt-16">
+            <p className="section-label mb-3">// FAQ</p>
+            <h2 className="font-display font-bold text-[var(--color-ink)] text-[22px] mb-6">Frequently asked questions</h2>
+            <FAQList items={UI_ANALYZER_FAQS} />
+          </div>
+        )}
 
         {/* ── Results: 2-column layout ────────────────────────────────────── */}
         {showResults && preview && (

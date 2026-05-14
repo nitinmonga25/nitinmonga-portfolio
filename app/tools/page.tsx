@@ -233,6 +233,21 @@ export default function ToolsPage() {
           </div>
         )}
 
+        {/* Why these tools */}
+        <div className="mb-14 grid sm:grid-cols-3 gap-5">
+          {[
+            { icon: "⚡", title: "Instant, no login", desc: "Every tool runs in your browser — no account, no waiting, no email required. Open a tool and start working." },
+            { icon: "🎯", title: "Built for real work", desc: "These aren't demos. Each tool solves a specific problem I run into while designing and building products every day." },
+            { icon: "🔓", title: "Free forever", desc: "No freemium tiers, no export limits, no watermarks. The output is yours to use in any personal or commercial project." },
+          ].map(({ icon, title, desc }) => (
+            <div key={title} className="p-5 rounded-2xl" style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)" }}>
+              <p className="text-2xl mb-3">{icon}</p>
+              <h3 className="font-display text-[15px] font-bold text-[var(--color-ink)] mb-2">{title}</h3>
+              <p className="font-body text-[13px] text-[var(--color-muted)] leading-relaxed">{desc}</p>
+            </div>
+          ))}
+        </div>
+
         {/* Coming soon */}
         <div>
           <p className="font-body text-[11px] font-bold uppercase tracking-[3px] text-[var(--color-muted)] mb-5">Coming Soon</p>
@@ -276,6 +291,48 @@ export default function ToolsPage() {
             ))}
           </div>
         </div>
+
+      </div>
+
+      {/* FAQ */}
+      <div className="mt-20">
+        <p className="section-label mb-3">// FAQ</p>
+        <h2 className="font-display font-bold text-[var(--color-ink)] text-[22px] mb-6">Frequently asked questions</h2>
+        <div className="flex flex-col gap-3 max-w-[760px]">
+          {[
+            {
+              q: "Are all tools completely free?",
+              a: "Yes. Every tool on this page is free with no account required, no export limits, and no watermarks. The output is yours to use in personal and commercial projects.",
+            },
+            {
+              q: "Do I need to sign up or create an account?",
+              a: "No account needed. Open any tool and start using it immediately. Some tools save a shareable result link — that's the only data stored.",
+            },
+            {
+              q: "Can I use the tool outputs in client work?",
+              a: "Absolutely. Color palettes, analysis reports, and any generated assets are free to use in commercial and client projects without attribution.",
+            },
+            {
+              q: "How often are new tools added?",
+              a: "New tools are added whenever a recurring problem in my own workflow doesn't have a good free solution. Check back or follow on social media for announcements.",
+            },
+            {
+              q: "Can I suggest a tool?",
+              a: "Yes — reach out through the contact form on the main site. If it's a problem I encounter too, it'll likely get built.",
+            },
+          ].map(({ q, a }, i) => (
+            <details key={i} className="group" style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "14px" }}>
+              <summary className="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer list-none font-body text-[14px] font-semibold text-[var(--color-ink)]">
+                {q}
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="flex-shrink-0" style={{ color: "var(--color-accent)" }}>
+                  <path d="M3 6l5 5 5-5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </summary>
+              <p className="px-5 pb-4 font-body text-[13px] text-[var(--color-muted)] leading-relaxed">{a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
 
       </div>
     </div>
