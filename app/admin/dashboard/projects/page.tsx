@@ -22,6 +22,7 @@ interface Project {
   longDesc:    string;
   category:    string;
   thumbnail:   string;
+  images:      string | null;
   tags:        string | null;
   techStack:   string | null;
   liveUrl:     string | null;
@@ -37,6 +38,7 @@ const EMPTY_FORM = (): Omit<Project, "id"> => ({
   longDesc:    "",
   category:    "Web Design",
   thumbnail:   "",
+  images:      null,
   tags:        "",
   techStack:   "",
   liveUrl:     "",
@@ -87,6 +89,7 @@ export default function ProjectsAdminPage() {
       longDesc:    p.longDesc ?? "",
       category:    p.category,
       thumbnail:   p.thumbnail,
+      images:      p.images ?? null,
       tags:        p.tags ?? "",
       techStack:   p.techStack ?? "",
       liveUrl:     p.liveUrl ?? "",
@@ -110,9 +113,14 @@ export default function ProjectsAdminPage() {
     setSaving(true);
     setError("");
 
+    const galleryImages: string[] = form.images
+      ? (JSON.parse(form.images) as string[]).filter(Boolean)
+      : [];
+
     const payload = {
       ...form,
       slug:      form.slug || slugify(form.title),
+      images:    galleryImages,
       tags:      form.tags      ? form.tags.split(",").map((t) => t.trim()).filter(Boolean) : [],
       techStack: form.techStack ? form.techStack.split(",").map((t) => t.trim()).filter(Boolean) : [],
     };
@@ -255,6 +263,77 @@ export default function ProjectsAdminPage() {
                 onChange={(url) => f("thumbnail", url)}
                 folder="nitinmonga/projects"
               />
+
+              {/* Gallery Images */}
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <label className="font-body text-[11px] font-semibold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.4)" }}>
+                    Gallery Images
+                    <span className="ml-2 normal-case tracking-normal font-normal" style={{ color: "rgba(255,255,255,0.25)" }}>
+                      — shown as carousel on case study page
+                    </span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const current: string[] = form.images ? JSON.parse(form.images) : [];
+                      f("images", JSON.stringify([...current, ""]));
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 font-body text-xs font-semibold rounded-lg transition-colors"
+                    style={{ background: "rgba(255,61,0,0.12)", color: "#FF3D00", border: "1px solid rgba(255,61,0,0.25)" }}
+                  >
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+                    Add Image
+                  </button>
+                </div>
+
+                {(() => {
+                  const imgs: string[] = form.images ? JSON.parse(form.images) : [];
+                  if (imgs.length === 0) return (
+                    <div
+                      className="flex items-center justify-center py-8 rounded-xl font-body text-xs"
+                      style={{ background: "rgba(255,255,255,0.03)", border: "2px dashed rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.2)" }}
+                    >
+                      No gallery images yet — click &quot;Add Image&quot; to upload
+                    </div>
+                  );
+                  return (
+                    <div className="flex flex-col gap-3">
+                      {imgs.map((src, idx) => (
+                        <div key={idx} className="flex items-start gap-3 p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                          <span className="font-mono text-[10px] pt-1 flex-shrink-0" style={{ color: "rgba(255,255,255,0.2)" }}>#{idx + 1}</span>
+                          <div className="flex-1">
+                            <ImageUpload
+                              label=""
+                              value={src}
+                              onChange={(url) => {
+                                const updated = [...imgs];
+                                updated[idx] = url;
+                                f("images", JSON.stringify(updated));
+                              }}
+                              folder="nitinmonga/projects/gallery"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = imgs.filter((_, i) => i !== idx);
+                              f("images", updated.length ? JSON.stringify(updated) : null);
+                            }}
+                            className="flex-shrink-0 p-1.5 rounded-lg transition-colors hover:bg-red-500/20 mt-1"
+                            style={{ color: "rgba(255,80,80,0.6)" }}
+                            title="Remove image"
+                          >
+                            <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                              <path d="M2 3h9M5 3V2h3v1M4 3l.5 8h4L9 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
+              </div>
 
               {/* Title + Slug */}
               <div className="flex flex-col gap-1.5">

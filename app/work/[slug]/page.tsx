@@ -4,9 +4,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { ReadingProgress } from "@/components/pages/blog/ReadingProgress";
-import { TableOfContents } from "@/components/pages/blog/TableOfContents";
-import { SocialShareBar } from "@/components/pages/blog/SocialShareBar";
+import { ReadingProgress }  from "@/components/pages/blog/ReadingProgress";
+import { TableOfContents }  from "@/components/pages/blog/TableOfContents";
+import { SocialShareBar }   from "@/components/pages/blog/SocialShareBar";
+import { ProjectGallery }   from "@/components/pages/work/ProjectGallery";
 
 interface Props { params: { slug: string } }
 
@@ -215,14 +216,7 @@ export default async function CaseStudyPage({ params }: Props) {
             {images.length > 0 && (
               <div className="mt-12 pt-8" style={{ borderTop: "1px solid var(--color-border)" }}>
                 <p className="section-label mb-6">// Gallery</p>
-                <div className="grid sm:grid-cols-2 gap-5">
-                  {images.map((src, i) => (
-                    <div key={i} className="rounded-[12px] overflow-hidden border border-[var(--color-border)] aspect-video">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={src} alt={`${project.title} — image ${i + 1}`} className="w-full h-full object-cover" />
-                    </div>
-                  ))}
-                </div>
+                <ProjectGallery images={images} title={project.title} />
               </div>
             )}
 
