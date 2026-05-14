@@ -12,7 +12,6 @@ const MODES: { id: AnalysisMode; label: string; icon: string }[] = [
   { id: "mobile",   label: "Mobile",    icon: "M8 2h8a2 2 0 012 2v16a2 2 0 01-2 2H8a2 2 0 01-2-2V4a2 2 0 012-2zM12 18h.01" },
   { id: "poster",   label: "Poster",    icon: "M4 2h16v20H4zM8 7h8M8 11h8M8 15h5" },
   { id: "dashboard",label: "Dashboard", icon: "M2 2h9v9H2zM13 2h9v9h-9zM2 13h9v9H2zM13 13h9v9h-9z" },
-  { id: "logo",     label: "Logo",      icon: "M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" },
 ];
 
 const CRITERIA: { key: keyof AnalysisResult & string; label: string; conf: string }[] = [
@@ -234,16 +233,6 @@ function generateShareCard(result: AnalysisResult): string {
 // ─── Results Card ─────────────────────────────────────────────────────────────
 
 function ResultsCard({ result, uuid }: { result: AnalysisResult; uuid: string | null }) {
-  const [copiedLink, setCopiedLink] = useState(false);
-
-  function copyLink() {
-    if (!uuid) return;
-    navigator.clipboard.writeText(`https://nitinmonga.in/tools/ui-analyzer/${uuid}`).then(() => {
-      setCopiedLink(true);
-      setTimeout(() => setCopiedLink(false), 2000);
-    });
-  }
-
   function downloadShare() {
     const url = generateShareCard(result);
     const a = document.createElement("a");
@@ -283,16 +272,6 @@ function ResultsCard({ result, uuid }: { result: AnalysisResult; uuid: string | 
         </div>
 
         <div className="flex gap-2 flex-shrink-0 flex-wrap justify-center">
-          {uuid && (
-            <button
-              onClick={copyLink}
-              className="flex items-center gap-1.5 px-3 py-2 font-body text-[12px] font-semibold rounded-xl transition-all hover:scale-105"
-              style={{ background: "var(--color-bg)", border: "1px solid var(--color-border)", color: "var(--color-ink)" }}
-            >
-              <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M6 2H2v10h10V8M8 2h4v4M8 6l4-4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
-              {copiedLink ? "Copied!" : "Copy Link"}
-            </button>
-          )}
           <button
             onClick={downloadShare}
             className="flex items-center gap-1.5 px-3 py-2 font-body text-[12px] font-semibold rounded-xl transition-all hover:scale-105 text-white"

@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 const PROFILE_KEY = "content.profile";
+const FAVICON_KEY = "meta.favicon";
 
 export default function SettingsAdminPage() {
   const [profile, setProfile] = useState({
@@ -12,16 +14,38 @@ export default function SettingsAdminPage() {
     bio:      "Graphic Designer, 3D Artist & Full-Stack Developer with 10+ years of experience.",
   });
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [faviconUrl, setFaviconUrl] = useState("");
+  const [faviconSaveState, setFaviconSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
 
   useEffect(() => {
     fetch("/api/admin/content")
       .then((r) => r.json())
       .then((json) => {
-        if (json.ok && json.data[PROFILE_KEY]) {
-          setProfile((prev) => ({ ...prev, ...json.data[PROFILE_KEY] }));
+        if (json.ok) {
+          if (json.data[PROFILE_KEY]) {
+            setProfile((prev) => ({ ...prev, ...json.data[PROFILE_KEY] }));
+          }
+          if (json.data[FAVICON_KEY]) {
+            setFaviconUrl(json.data[FAVICON_KEY] as string);
+          }
         }
       });
   }, []);
+
+  async function handleFaviconSave() {
+    setFaviconSaveState("saving");
+    try {
+      const res = await fetch("/api/admin/content", {
+        method:  "PUT",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ key: FAVICON_KEY, value: faviconUrl }),
+      });
+      setFaviconSaveState(res.ok ? "saved" : "error");
+      if (res.ok) setTimeout(() => setFaviconSaveState("idle"), 2500);
+    } catch {
+      setFaviconSaveState("error");
+    }
+  }
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
@@ -68,6 +92,33 @@ export default function SettingsAdminPage() {
               onChange={(e) => setProfile((p) => ({ ...p, bio: e.target.value }))}
             />
           </Field>
+        </Section>
+
+        {/* Favicon */}
+        <Section title="Favicon">
+          <ImageUpload
+            value={faviconUrl}
+            onChange={setFaviconUrl}
+            folder="nitinmonga/favicon"
+            label="Site Favicon"
+          />
+          <p className="font-body text-[11px]" style={{ color: "rgba(255,255,255,0.3)" }}>
+            Recommended: 32×32 or 64×64 PNG/ICO. Changes take effect after next build or page reload.
+          </p>
+          <button
+            type="button"
+            onClick={handleFaviconSave}
+            disabled={faviconSaveState === "saving"}
+            className="self-start px-5 py-2.5 font-body text-sm font-semibold text-white transition-all"
+            style={{
+              background:   faviconSaveState === "error" ? "#EF4444" : faviconSaveState === "saved" ? "#10B981" : "#FF3D00",
+              borderRadius: "10px",
+              boxShadow:    "0 4px 14px rgba(255,61,0,0.3)",
+              opacity:      faviconSaveState === "saving" ? 0.7 : 1,
+            }}
+          >
+            {faviconSaveState === "saving" ? "Saving…" : faviconSaveState === "saved" ? "Saved ✓" : faviconSaveState === "error" ? "Error — retry" : "Save Favicon"}
+          </button>
         </Section>
 
         {/* Admin Password */}

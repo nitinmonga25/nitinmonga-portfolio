@@ -1,4 +1,4 @@
-export type AnalysisMode = 'web_ui' | 'mobile' | 'poster' | 'dashboard' | 'logo';
+export type AnalysisMode = 'web_ui' | 'mobile' | 'poster' | 'dashboard';
 
 export type HarmonyType =
   | 'monochromatic'

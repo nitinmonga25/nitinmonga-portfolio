@@ -17,10 +17,6 @@ const WEIGHTS: Record<AnalysisMode, Record<keyof RawScores, number>> = {
     color: 0.12, spacing: 0.18, alignment: 0.22,
     consistency: 0.18, radius: 0.06, hierarchy: 0.12, typography: 0.12,
   },
-  logo: {
-    color: 0.30, spacing: 0.05, alignment: 0.10,
-    consistency: 0.15, radius: 0.10, hierarchy: 0.25, typography: 0.05,
-  },
 };
 
 const GRADE_MAP: { min: number; grade: string; label: string }[] = [
