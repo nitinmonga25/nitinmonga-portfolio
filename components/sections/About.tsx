@@ -200,7 +200,6 @@ export function About({ content }: { content?: AboutContent }) {
                 className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden border border-[var(--color-border)]"
                 style={{
                   background: c.photo ? "transparent" : "var(--color-gold-light)",
-                  transformStyle: "preserve-3d",
                   willChange: "transform",
                   zIndex: 1,
                 }}
