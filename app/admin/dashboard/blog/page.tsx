@@ -52,9 +52,11 @@ export default function BlogAdminPage() {
   const [saving,  setSaving]  = useState(false);
   const [error,   setError]   = useState("");
 
-  const [panel,  setPanel]  = useState<"closed" | "new" | "edit">("closed");
-  const [form,   setForm]   = useState<Omit<BlogPost, "id" | "publishedAt" | "createdAt" | "views">>(EMPTY_FORM());
-  const [editId, setEditId] = useState<number | null>(null);
+  const [panel,      setPanel]      = useState<"closed" | "new" | "edit">("closed");
+  const [form,       setForm]       = useState<Omit<BlogPost, "id" | "publishedAt" | "createdAt" | "views">>(EMPTY_FORM());
+  const [editId,     setEditId]     = useState<number | null>(null);
+  const [generating, setGenerating] = useState(false);
+  const [genError,   setGenError]   = useState("");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -97,6 +99,33 @@ export default function BlogAdminPage() {
 
   function f(key: keyof typeof form, value: unknown) {
     setForm((prev) => ({ ...prev, [key]: value }));
+  }
+
+  async function generateContent() {
+    if (!form.title.trim()) { setGenError("Enter a title first"); return; }
+    setGenerating(true);
+    setGenError("");
+    try {
+      const res  = await fetch("/api/admin/blog/generate", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ title: form.title, category: form.category }),
+      });
+      const json = await res.json();
+      if (!json.ok) throw new Error(json.error);
+      const { content, excerpt, tags, readTime } = json.data;
+      setForm((prev) => ({
+        ...prev,
+        content:  content  || prev.content,
+        excerpt:  excerpt  || prev.excerpt,
+        tags:     tags     || prev.tags,
+        readTime: readTime || prev.readTime,
+      }));
+    } catch (e) {
+      setGenError(e instanceof Error ? e.message : "Generation failed");
+    } finally {
+      setGenerating(false);
+    }
   }
 
   async function save() {
@@ -256,6 +285,49 @@ export default function BlogAdminPage() {
                   className="font-body text-sm px-3 py-2.5 rounded-lg outline-none"
                   style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff" }}
                 />
+              </div>
+
+              {/* AI Generate */}
+              <div className="flex flex-col gap-2">
+                <button
+                  type="button"
+                  onClick={generateContent}
+                  disabled={generating || !form.title.trim()}
+                  className="flex items-center justify-center gap-2 w-full py-2.5 font-body text-sm font-semibold rounded-lg transition-all"
+                  style={{
+                    background: generating
+                      ? "rgba(139,92,246,0.4)"
+                      : !form.title.trim()
+                      ? "rgba(139,92,246,0.2)"
+                      : "rgba(139,92,246,0.85)",
+                    border: "1px solid rgba(139,92,246,0.5)",
+                    color: !form.title.trim() ? "rgba(255,255,255,0.3)" : "#fff",
+                    cursor: !form.title.trim() ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {generating ? (
+                    <>
+                      <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3" />
+                        <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                      </svg>
+                      Researching and writing… this takes 20-40s
+                    </>
+                  ) : (
+                    <>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                      </svg>
+                      Generate Article with AI
+                    </>
+                  )}
+                </button>
+                {genError && <p className="font-body text-xs text-red-400">{genError}</p>}
+                {!generating && form.content && (
+                  <p className="font-body text-[11px]" style={{ color: "rgba(255,255,255,0.25)" }}>
+                    Content generated. Review and edit below before publishing.
+                  </p>
+                )}
               </div>
 
               {/* Slug */}
