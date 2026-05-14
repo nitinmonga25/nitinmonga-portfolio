@@ -238,12 +238,9 @@ type PBPhase = "idle" | "playing" | "relaunching" | "over";
 interface PBBumper { x: number; y: number; r: number; hex: string; glow: string; hit: number }
 
 const PB_BUMPERS_CFG = [
-  { rx: 0.50, ry: 0.15, r: 20, hex: "#FF3D00", glow: "255,61,0"    },
-  { rx: 0.22, ry: 0.26, r: 18, hex: "#06B6D4", glow: "6,182,212"   },
-  { rx: 0.78, ry: 0.26, r: 18, hex: "#10B981", glow: "16,185,129"  },
-  { rx: 0.35, ry: 0.44, r: 16, hex: "#8B5CF6", glow: "139,92,246"  },
-  { rx: 0.65, ry: 0.44, r: 16, hex: "#F59E0B", glow: "245,158,11"  },
-  { rx: 0.50, ry: 0.35, r: 13, hex: "#FF3D00", glow: "255,61,0"    },
+  { rx: 0.50, ry: 0.18, r: 20, hex: "#FF3D00", glow: "255,61,0"   },
+  { rx: 0.22, ry: 0.38, r: 18, hex: "#06B6D4", glow: "6,182,212"  },
+  { rx: 0.78, ry: 0.38, r: 18, hex: "#10B981", glow: "16,185,129" },
 ];
 
 function fillRR(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
