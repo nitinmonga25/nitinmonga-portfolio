@@ -10,6 +10,9 @@ const STATIC: MetadataRoute.Sitemap = [
   { url: `${BASE}/work/`,       lastModified: new Date(), changeFrequency: "weekly",  priority: 0.9 },
   { url: `${BASE}/blog/`,       lastModified: new Date(), changeFrequency: "daily",   priority: 0.9 },
   { url: `${BASE}/contact-us/`, lastModified: new Date(), changeFrequency: "yearly",  priority: 0.6 },
+  { url: `${BASE}/tools/`,      lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
+  { url: `${BASE}/tools/ui-analyzer/`,                          lastModified: new Date(), changeFrequency: "monthly", priority: 0.75 },
+  { url: `${BASE}/tools/color-palette-generator-extractor/`,    lastModified: new Date(), changeFrequency: "monthly", priority: 0.75 },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

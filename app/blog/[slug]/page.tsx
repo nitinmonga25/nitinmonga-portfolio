@@ -66,8 +66,33 @@ export default async function BlogPostPage({ params }: Props) {
     ? new Date(post.publishedAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })
     : "";
 
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.seoTitle ?? post.title,
+    description: post.seoDesc ?? post.excerpt,
+    author: { "@type": "Person", name: "Nitin Monga", url: "https://nitinmonga.in/about-me/" },
+    publisher: { "@type": "Person", name: "Nitin Monga", url: "https://nitinmonga.in/" },
+    datePublished: post.publishedAt?.toISOString(),
+    dateModified:  post.updatedAt?.toISOString(),
+    ...(post.thumbnail ? { image: post.thumbnail } : {}),
+    mainEntityOfPage: { "@type": "WebPage", "@id": `https://nitinmonga.in/blog/${post.slug}/` },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home",  item: "https://nitinmonga.in/" },
+      { "@type": "ListItem", position: 2, name: "Blog",  item: "https://nitinmonga.in/blog/" },
+      { "@type": "ListItem", position: 3, name: post.title, item: `https://nitinmonga.in/blog/${post.slug}/` },
+    ],
+  };
+
   return (
     <div className="bg-[var(--color-bg)] min-h-screen">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <ReadingProgress />
       <SocialShareBar title={post.title} />
 

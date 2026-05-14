@@ -37,30 +37,18 @@ const COLOR_PALETTE_FAQS = [
 ];
 
 function ColorPaletteFAQ() {
-  const [open, setOpen] = useState<number | null>(null);
   return (
     <div className="flex flex-col gap-2">
       {COLOR_PALETTE_FAQS.map(({ q, a }, i) => (
-        <div key={i} style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "14px" }}>
-          <button
-            className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left"
-            onClick={() => setOpen(open === i ? null : i)}
-          >
-            <span className="font-body text-[14px] font-semibold text-[var(--color-ink)]">{q}</span>
-            <svg
-              width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"
-              className="flex-shrink-0 transition-transform duration-200"
-              style={{ transform: open === i ? "rotate(180deg)" : "rotate(0deg)", color: "var(--color-accent)" }}
-            >
+        <details key={i} style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "14px" }}>
+          <summary className="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer list-none font-body text-[14px] font-semibold text-[var(--color-ink)]">
+            {q}
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="flex-shrink-0" style={{ color: "var(--color-accent)" }}>
               <path d="M3 6l5 5 5-5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-          </button>
-          {open === i && (
-            <div className="px-5 pb-4">
-              <p className="font-body text-[13px] text-[var(--color-muted)] leading-relaxed">{a}</p>
-            </div>
-          )}
-        </div>
+          </summary>
+          <p className="px-5 pb-4 font-body text-[13px] text-[var(--color-muted)] leading-relaxed">{a}</p>
+        </details>
       ))}
     </div>
   );

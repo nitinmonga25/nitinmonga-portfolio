@@ -61,6 +61,31 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+const WEBSITE_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Nitin Monga",
+  url: "https://nitinmonga.in",
+  description: "Graphic Designer, 3D Artist & Full-Stack Developer from Punjab, India.",
+  author: { "@type": "Person", name: "Nitin Monga" },
+};
+
+const PERSON_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Nitin Monga",
+  url: "https://nitinmonga.in",
+  image: "https://assets.nitinmonga.in/og-default.jpg",
+  jobTitle: "Graphic Designer, 3D Artist & Full-Stack Developer",
+  worksFor: { "@type": "Organization", name: "Xdecoders" },
+  address: { "@type": "PostalAddress", addressRegion: "Punjab", addressCountry: "IN" },
+  sameAs: [
+    "https://www.instagram.com/nitinmonga",
+    "https://www.linkedin.com/in/nitinmonga",
+    "https://www.youtube.com/@nitinmonga",
+  ],
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
@@ -68,6 +93,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={bricolage.variable}
     >
       <body className="antialiased" suppressHydrationWarning>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_SCHEMA) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_SCHEMA) }} />
         <SiteLayout>{children}</SiteLayout>
         <FooterWrapper><Footer /></FooterWrapper>
       </body>
