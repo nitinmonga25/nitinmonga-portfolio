@@ -1,5 +1,10 @@
 import type { DetectedShape, LayoutResult } from './types';
-import { getSpacingFeedback, getAlignmentFeedback, getConsistencyFeedback, getRadiusFeedback } from './feedbackRules';
+import {
+  getSpacingFeedback,
+  getAlignmentFeedback,
+  getConsistencyFeedback,
+  getRadiusFeedback,
+} from './feedbackRules';
 
 function stdDev(arr: number[]): number {
   if (arr.length < 2) return 0;
@@ -162,24 +167,63 @@ export function analyzeLayout(canvas: HTMLCanvasElement, cv: Record<string, unkn
   };
 }
 
-// Fallback when OpenCV not available
+// Fallback when OpenCV WASM is not ready — pure canvas pixel heuristics.
+// Returns the same 4-item feedbackItems structure as analyzeLayout so the
+// spacing/alignment/consistency/radius slots are always populated correctly.
 export function analyzeLayoutFallback(canvas: HTMLCanvasElement): LayoutResult {
   const ctx = canvas.getContext('2d')!;
   const { width, height } = canvas;
   const data = ctx.getImageData(0, 0, width, height).data;
-  // Simple edge-count heuristic
-  let edges = 0;
-  for (let y = 1; y < height - 1; y += 4)
-    for (let x = 1; x < width - 1; x += 4) {
-      const i = (y * width + x) * 4;
-      const j = ((y + 1) * width + x) * 4;
-      const diff = Math.abs(data[i] - data[j]) + Math.abs(data[i+1] - data[j+1]) + Math.abs(data[i+2] - data[j+2]);
-      if (diff > 30) edges++;
+
+  let hEdges = 0; // horizontal edge transitions (row-to-row)
+  let vEdges = 0; // vertical edge transitions (col-to-col)
+  let totalSamples = 0;
+
+  // Sample every 3rd pixel to keep it fast
+  for (let y = 1; y < height - 1; y += 3) {
+    for (let x = 1; x < width - 1; x += 3) {
+      const i     = (y * width + x) * 4;
+      const below = ((y + 1) * width + x) * 4;
+      const right = (y * width + (x + 1)) * 4;
+      const dH = Math.abs(data[i] - data[below]) + Math.abs(data[i+1] - data[below+1]) + Math.abs(data[i+2] - data[below+2]);
+      const dV = Math.abs(data[i] - data[right])  + Math.abs(data[i+1] - data[right+1])  + Math.abs(data[i+2] - data[right+2]);
+      if (dH > 25) hEdges++;
+      if (dV > 25) vEdges++;
+      totalSamples++;
     }
-  const edgeDensity = edges / (width * height / 16);
-  const base = edgeDensity > 0.15 ? 72 : edgeDensity > 0.08 ? 78 : 65;
+  }
+
+  const edgeDensity  = (hEdges + vEdges) / (totalSamples * 2 + 1);
+  // Balance between horizontal and vertical edges — a good grid UI has both
+  const hvBalance    = Math.min(hEdges, vEdges) / (Math.max(hEdges, vEdges) + 1);
+
+  // Spacing: moderate edge density = structured layout; too sparse or too dense = issues
+  let spacingScore: number;
+  if      (edgeDensity < 0.04) spacingScore = 60;
+  else if (edgeDensity < 0.09) spacingScore = 70;
+  else if (edgeDensity < 0.16) spacingScore = 78;
+  else if (edgeDensity < 0.25) spacingScore = 68;
+  else                         spacingScore = 55;
+
+  // Alignment: good H/V balance = grid-aligned content
+  let alignmentScore = spacingScore - 5;
+  if (hvBalance > 0.6) alignmentScore = Math.min(88, alignmentScore + 12);
+  else if (hvBalance > 0.4) alignmentScore = Math.min(80, alignmentScore + 6);
+
+  const consistencyScore = Math.round((spacingScore + alignmentScore) / 2) - 3;
+  const radiusScore      = 65; // not detectable without shape contours
+
   return {
-    shapes: [], spacingScore: base, alignmentScore: base, radiusScore: 65, consistencyScore: base,
-    feedbackItems: ['Layout analysis used fallback mode — OpenCV unavailable. Scores are estimated.'],
+    shapes: [],
+    spacingScore,
+    alignmentScore,
+    radiusScore,
+    consistencyScore,
+    feedbackItems: [
+      ...getSpacingFeedback(spacingScore),
+      ...getAlignmentFeedback(alignmentScore),
+      ...getConsistencyFeedback(consistencyScore),
+      ...getRadiusFeedback(radiusScore),
+    ],
   };
 }

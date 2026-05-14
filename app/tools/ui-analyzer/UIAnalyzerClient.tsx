@@ -439,16 +439,22 @@ export function UIAnalyzerClient({ initialResult, initialUuid }: {
   const [error,     setError]     = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
 
-  // Silently preload OpenCV.js as soon as a file is selected — it may be ready by analysis time
+  // Preload OpenCV.js as soon as a file is selected.
+  // Module.onRuntimeInitialized must be set BEFORE the script loads so the
+  // WASM compilation callback is captured — without it cv.imread is never defined.
   useEffect(() => {
     if (!file || typeof window === "undefined") return;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const w = window as any;
-    if (w.cv || w.cvLoading) return;
+    if (w.cvReady || w.cvLoading) return;
     w.cvLoading = true;
+    // Hook the WASM init callback before injecting the script
+    if (!w.Module) w.Module = {};
+    w.Module.onRuntimeInitialized = () => { w.cvReady = true; };
     const s = document.createElement("script");
     s.src = "https://docs.opencv.org/4.8.0/opencv.js";
     s.async = true;
+    s.onerror = () => { w.cvLoading = false; }; // allow retry if CDN fails
     document.body.appendChild(s);
   }, [file]);
 

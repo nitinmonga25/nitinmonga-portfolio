@@ -49,14 +49,15 @@ export async function runAnalysis(
   await yieldToMain();
 
   onStep?.('Detecting layout…');
-  // Use OpenCV if it was preloaded and ready; otherwise use fast fallback
+  // cvReady is set by Module.onRuntimeInitialized in UIAnalyzerClient — this
+  // confirms the WASM runtime finished, not just that the script tag loaded.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const cvReady = typeof window !== 'undefined' && (window as any).cv && typeof (window as any).cv.imread === 'function';
+  const w = typeof window !== 'undefined' ? (window as any) : null;
+  const cvReady = w?.cvReady === true && w?.cv && typeof w.cv.imread === 'function';
   let layoutResult;
   if (cvReady) {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      layoutResult = analyzeLayout(canvas, (window as any).cv);
+      layoutResult = analyzeLayout(canvas, w.cv);
     } catch {
       layoutResult = analyzeLayoutFallback(canvas);
     }
