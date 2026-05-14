@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { bricolage } from "@/lib/fonts";
 import { SiteLayout } from "@/components/ui/SiteLayout";
 import { Footer } from "@/components/ui/Footer";
 import { FooterWrapper } from "@/components/ui/FooterWrapper";
 import { prisma } from "@/lib/prisma";
 import "./globals.css";
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 async function getFaviconUrl(): Promise<string> {
   try {
@@ -93,6 +96,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={bricolage.variable}
     >
       <body className="antialiased" suppressHydrationWarning>
+        {GA_ID && (
+          <>
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+            <Script id="gtag-init" strategy="afterInteractive">{`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GA_ID}');
+            `}</Script>
+          </>
+        )}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_SCHEMA) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_SCHEMA) }} />
         <SiteLayout>{children}</SiteLayout>
