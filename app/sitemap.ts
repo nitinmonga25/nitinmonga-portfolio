@@ -13,6 +13,7 @@ const STATIC: MetadataRoute.Sitemap = [
   { url: `${BASE}/tools/`,      lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
   { url: `${BASE}/tools/ui-analyzer/`,                          lastModified: new Date(), changeFrequency: "monthly", priority: 0.75 },
   { url: `${BASE}/tools/color-palette-generator-extractor/`,    lastModified: new Date(), changeFrequency: "monthly", priority: 0.75 },
+  { url: `${BASE}/tools/qr-studio/`,                             lastModified: new Date(), changeFrequency: "monthly", priority: 0.75 },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

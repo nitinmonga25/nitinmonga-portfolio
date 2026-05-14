@@ -43,6 +43,24 @@ const TOOLS = [
     ),
   },
   {
+    href:        "/tools/qr-studio/",
+    label:       "Brand QR Studio",
+    description: "Generate beautifully styled QR codes for websites, WiFi, UPI, WhatsApp, Instagram, vCards and more. 7 design presets, custom colors, logo support, mockup previews, PNG & SVG export.",
+    tags:        ["Design", "Branding", "Utility"],
+    status:      "live",
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+        <rect x="3" y="3" width="9" height="9" rx="2" stroke="#FF3D00" strokeWidth="1.6"/>
+        <rect x="16" y="3" width="9" height="9" rx="2" stroke="#FF3D00" strokeWidth="1.6"/>
+        <rect x="3" y="16" width="9" height="9" rx="2" stroke="#FF3D00" strokeWidth="1.6"/>
+        <rect x="5" y="5" width="5" height="5" rx="1" fill="#FF3D00" opacity="0.4"/>
+        <rect x="18" y="5" width="5" height="5" rx="1" fill="#FF3D00" opacity="0.4"/>
+        <rect x="5" y="18" width="5" height="5" rx="1" fill="#FF3D00" opacity="0.4"/>
+        <path d="M19 16h2v2h-2zM23 16h2v2h-2zM19 20h2v2h-2zM21 22h4v3h-4zM23 18h2v4" stroke="#FF3D00" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    ),
+  },
+  {
     href:        "#",
     label:       "CSS Gradient Generator",
     description: "Build linear, radial and conic gradients visually. Copy CSS or Tailwind output instantly.",
@@ -149,6 +167,7 @@ const TAG_COLORS: Record<string, string> = {
   Utility:       "#6366F1",
   SEO:           "#F59E0B",
   Accessibility: "#8B5CF6",
+  Branding:      "#EC4899",
 };
 
 export default function ToolsPage() {
