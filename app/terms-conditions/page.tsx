@@ -1,11 +1,25 @@
 export const revalidate = 86400;
 
 import type { Metadata } from "next";
+import { SITE_URL, OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions",
   description: "Terms and conditions for using nitinmonga.in and its services.",
+  alternates: { canonical: `${SITE_URL}/terms-conditions/` },
   robots: { index: true, follow: true },
+  openGraph: {
+    title:       "Terms & Conditions — Nitin Monga",
+    description: "Terms and conditions for using nitinmonga.in and its services.",
+    url:         `${SITE_URL}/terms-conditions/`,
+    images:      [{ url: OG_IMAGE, width: 1200, height: 630 }],
+  },
+  twitter: {
+    card:        "summary_large_image",
+    title:       "Terms & Conditions — Nitin Monga",
+    description: "Terms and conditions for using nitinmonga.in and its services.",
+    images:      [OG_IMAGE],
+  },
 };
 
 const LAST_UPDATED = "14 May 2025";

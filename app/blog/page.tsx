@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_URL, OG_IMAGE } from "@/lib/seo";
 import { getContent } from "@/lib/content";
 import { prisma } from "@/lib/prisma";
 import { BlogPageContent } from "@/components/pages/blog/BlogPageContent";
@@ -9,7 +10,23 @@ export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   const meta = await getContent<{ title: string; description: string }>("meta.blog");
-  return { title: meta.title, description: meta.description };
+  return {
+    title:       meta.title,
+    description: meta.description,
+    alternates:  { canonical: `${SITE_URL}/blog/` },
+    openGraph: {
+      title:       meta.title,
+      description: meta.description,
+      url:         `${SITE_URL}/blog/`,
+      images:      [{ url: OG_IMAGE, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card:        "summary_large_image",
+      title:       meta.title,
+      description: meta.description,
+      images:      [OG_IMAGE],
+    },
+  };
 }
 
 export default async function BlogPage() {

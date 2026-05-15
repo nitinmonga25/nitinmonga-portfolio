@@ -1,11 +1,25 @@
 export const revalidate = 86400;
 
 import type { Metadata } from "next";
+import { SITE_URL, OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "Privacy policy for nitinmonga.in — how your data is collected and used.",
+  alternates: { canonical: `${SITE_URL}/privacy-policy/` },
   robots: { index: true, follow: true },
+  openGraph: {
+    title:       "Privacy Policy — Nitin Monga",
+    description: "Privacy policy for nitinmonga.in — how your data is collected and used.",
+    url:         `${SITE_URL}/privacy-policy/`,
+    images:      [{ url: OG_IMAGE, width: 1200, height: 630 }],
+  },
+  twitter: {
+    card:        "summary_large_image",
+    title:       "Privacy Policy — Nitin Monga",
+    description: "Privacy policy for nitinmonga.in — how your data is collected and used.",
+    images:      [OG_IMAGE],
+  },
 };
 
 const LAST_UPDATED = "14 May 2025";

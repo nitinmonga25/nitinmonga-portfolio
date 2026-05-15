@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma }    from "@/lib/prisma";
 import { parseTags } from "@/lib/parseTags";
+import { SITE_URL, OG_IMAGE } from "@/lib/seo";
 import { ReadingProgress }  from "@/components/pages/blog/ReadingProgress";
 import { TableOfContents }  from "@/components/pages/blog/TableOfContents";
 import { SocialShareBar }   from "@/components/pages/blog/SocialShareBar";
@@ -39,13 +40,22 @@ async function getProject(slug: string) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = await getProject(params.slug);
   if (!project) return { title: "Project Not Found" };
+  const ogImage = project.thumbnail || OG_IMAGE;
   return {
-    title: `${project.title} — Case Study`,
+    title:       `${project.title} — Case Study`,
     description: project.description,
+    alternates:  { canonical: `${SITE_URL}/work/${project.slug}/` },
     openGraph: {
-      title: project.title,
+      title:       project.title,
       description: project.description,
-      ...(project.thumbnail ? { images: [{ url: project.thumbnail }] } : {}),
+      url:         `${SITE_URL}/work/${project.slug}/`,
+      images:      [{ url: ogImage, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card:        "summary_large_image",
+      title:       project.title,
+      description: project.description,
+      images:      [ogImage],
     },
   };
 }

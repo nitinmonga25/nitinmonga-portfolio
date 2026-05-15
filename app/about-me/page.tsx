@@ -1,6 +1,7 @@
 export const revalidate = 86400;
 
 import type { Metadata } from "next";
+import { SITE_URL, OG_IMAGE } from "@/lib/seo";
 import { getContent } from "@/lib/content";
 import { AboutHero }     from "@/components/pages/about/AboutHero";
 import { AboutBio }      from "@/components/pages/about/AboutBio";
@@ -13,7 +14,23 @@ import type { AboutTimelineContent } from "@/components/pages/about/AboutTimelin
 
 export async function generateMetadata(): Promise<Metadata> {
   const meta = await getContent<{ title: string; description: string }>("meta.about");
-  return { title: meta.title, description: meta.description };
+  return {
+    title:       meta.title,
+    description: meta.description,
+    alternates:  { canonical: `${SITE_URL}/about-me/` },
+    openGraph: {
+      title:       meta.title,
+      description: meta.description,
+      url:         `${SITE_URL}/about-me/`,
+      images:      [{ url: OG_IMAGE, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card:        "summary_large_image",
+      title:       meta.title,
+      description: meta.description,
+      images:      [OG_IMAGE],
+    },
+  };
 }
 
 export default async function AboutPage() {

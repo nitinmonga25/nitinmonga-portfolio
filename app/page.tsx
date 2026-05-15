@@ -1,7 +1,21 @@
 export const revalidate = 300;
 
+import type { Metadata } from "next";
+import { SITE_URL, OG_IMAGE } from "@/lib/seo";
 import { getContent } from "@/lib/content";
 import { parseTags }  from "@/lib/parseTags";
+
+export const metadata: Metadata = {
+  alternates: { canonical: `${SITE_URL}/` },
+  openGraph: {
+    url:    `${SITE_URL}/`,
+    images: [{ url: OG_IMAGE, width: 1200, height: 630 }],
+  },
+  twitter: {
+    card:   "summary_large_image",
+    images: [OG_IMAGE],
+  },
+};
 import { prisma }     from "@/lib/prisma";
 import { Hero }        from "@/components/sections/Hero";
 import { Stats }       from "@/components/sections/Stats";

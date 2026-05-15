@@ -27,15 +27,6 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description:
       "Nitin Monga — Graphic Designer, 3D Artist & Full-Stack Developer from Punjab, India. 10+ years building websites, CGI ads, and digital platforms.",
-    keywords: [
-      "Nitin Monga",
-      "graphic designer Punjab",
-      "full stack developer India",
-      "Next.js developer",
-      "WordPress developer",
-      "3D CGI artist",
-      "web design Punjab",
-    ],
     authors: [{ name: "Nitin Monga", url: "https://nitinmonga.in" }],
     creator: "Nitin Monga",
     icons: { icon: faviconUrl },

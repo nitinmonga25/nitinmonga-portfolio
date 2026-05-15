@@ -6,6 +6,7 @@ import Link from "next/link";
 import { marked } from "marked";
 import { prisma }    from "@/lib/prisma";
 import { parseTags } from "@/lib/parseTags";
+import { SITE_URL, OG_IMAGE } from "@/lib/seo";
 import { ReadingProgress } from "@/components/pages/blog/ReadingProgress";
 import { TableOfContents } from "@/components/pages/blog/TableOfContents";
 import { SocialShareBar } from "@/components/pages/blog/SocialShareBar";
@@ -43,13 +44,22 @@ async function getPost(slug: string) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPost(params.slug);
   if (!post) return { title: "Post Not Found" };
+  const ogImage = post.thumbnail || OG_IMAGE;
   return {
     title:       post.seoTitle ?? post.title,
     description: post.seoDesc  ?? post.excerpt,
+    alternates:  { canonical: `${SITE_URL}/blog/${post.slug}/` },
     openGraph: {
       title:       post.title,
-      description: post.excerpt,
-      ...(post.thumbnail ? { images: [{ url: post.thumbnail }] } : {}),
+      description: post.excerpt ?? "",
+      url:         `${SITE_URL}/blog/${post.slug}/`,
+      images:      [{ url: ogImage, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card:        "summary_large_image",
+      title:       post.title,
+      description: post.excerpt ?? "",
+      images:      [ogImage],
     },
   };
 }

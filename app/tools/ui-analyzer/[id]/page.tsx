@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { SITE_URL, OG_IMAGE } from "@/lib/seo";
 import { UIAnalyzerClient } from "../UIAnalyzerClient";
 import type { AnalysisResult, AnalysisMode } from "@/lib/analyzer/types";
 
@@ -11,9 +12,24 @@ interface Props { params: { id: string } }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const record = await prisma.uIAnalysis.findUnique({ where: { uuid: params.id } }).catch(() => null);
   if (!record) return { title: "Result not found" };
+  const title       = `UI Score ${record.totalScore}/100 — ${record.mode.replace("_", " ")} · Nitin Monga`;
+  const description = `This UI scored ${record.totalScore}/100 across color, spacing, alignment, hierarchy and more. Analyzed with the free UI Analyzer tool.`;
   return {
-    title: `UI Score ${record.totalScore}/100 — ${record.mode.replace("_", " ")} · Nitin Monga`,
-    description: `This UI scored ${record.totalScore}/100 across color, spacing, alignment, hierarchy and more. Analyzed with the free UI Analyzer tool.`,
+    title,
+    description,
+    alternates: { canonical: `${SITE_URL}/tools/ui-analyzer/${params.id}/` },
+    openGraph: {
+      title,
+      description,
+      url:    `${SITE_URL}/tools/ui-analyzer/${params.id}/`,
+      images: [{ url: OG_IMAGE, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card:  "summary_large_image",
+      title,
+      description,
+      images: [OG_IMAGE],
+    },
   };
 }
 

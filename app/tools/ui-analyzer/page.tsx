@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_URL, OG_IMAGE } from "@/lib/seo";
 import { UIAnalyzerClient } from "./UIAnalyzerClient";
 import { getContent } from "@/lib/content";
 
@@ -11,7 +12,19 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
-    openGraph: { title, description },
+    alternates: { canonical: `${SITE_URL}/tools/ui-analyzer/` },
+    openGraph: {
+      title,
+      description,
+      url:    `${SITE_URL}/tools/ui-analyzer/`,
+      images: [{ url: OG_IMAGE, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card:  "summary_large_image",
+      title,
+      description,
+      images: [OG_IMAGE],
+    },
   };
 }
 
