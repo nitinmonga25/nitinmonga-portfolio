@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
-import { SITE_URL, OG_IMAGE } from "@/lib/seo";
+import { SITE_URL, resolveOg } from "@/lib/seo";
 import { UIAnalyzerClient } from "./UIAnalyzerClient";
 import { getContent } from "@/lib/content";
 
 export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const meta = await getContent<{ title: string; description: string }>("meta.tools-ui-analyzer");
+  const meta = await getContent<{ title: string; description: string; ogImage?: string }>("meta.tools-ui-analyzer");
   const title       = meta?.title       || "UI Analyzer — Free Design Score Tool";
   const description = meta?.description || "Upload any UI screenshot and get a professional score for spacing, colors, alignment, hierarchy, typography, and more. Free, instant, no login required.";
+  const ogImage     = resolveOg(meta?.ogImage);
   return {
     title,
     description,
@@ -17,13 +18,13 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       url:    `${SITE_URL}/tools/ui-analyzer/`,
-      images: [{ url: OG_IMAGE, width: 1200, height: 630 }],
+      images: [{ url: ogImage, width: 1200, height: 630 }],
     },
     twitter: {
       card:  "summary_large_image",
       title,
       description,
-      images: [OG_IMAGE],
+      images: [ogImage],
     },
   };
 }

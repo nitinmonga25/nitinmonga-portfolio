@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SITE_URL, OG_IMAGE } from "@/lib/seo";
+import { SITE_URL, resolveOg } from "@/lib/seo";
 import { getContent } from "@/lib/content";
 
 export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const meta = await getContent<{ title: string; description: string }>("meta.tools");
+  const meta = await getContent<{ title: string; description: string; ogImage?: string }>("meta.tools");
   const title       = meta?.title       || "Free Design & Dev Tools";
   const description = meta?.description || "Free tools for designers and developers — color palette generator, UI analyzer, and more. Built by Nitin Monga.";
+  const ogImage     = resolveOg(meta?.ogImage);
   return {
     title,
     description,
@@ -17,13 +18,13 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       url:    `${SITE_URL}/tools/`,
-      images: [{ url: OG_IMAGE, width: 1200, height: 630 }],
+      images: [{ url: ogImage, width: 1200, height: 630 }],
     },
     twitter: {
       card:  "summary_large_image",
       title,
       description,
-      images: [OG_IMAGE],
+      images: [ogImage],
     },
   };
 }

@@ -1,21 +1,25 @@
 export const revalidate = 300;
 
 import type { Metadata } from "next";
-import { SITE_URL, OG_IMAGE } from "@/lib/seo";
+import { SITE_URL, resolveOg } from "@/lib/seo";
 import { getContent } from "@/lib/content";
 import { parseTags }  from "@/lib/parseTags";
 
-export const metadata: Metadata = {
-  alternates: { canonical: `${SITE_URL}/` },
-  openGraph: {
-    url:    `${SITE_URL}/`,
-    images: [{ url: OG_IMAGE, width: 1200, height: 630 }],
-  },
-  twitter: {
-    card:   "summary_large_image",
-    images: [OG_IMAGE],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const meta = await getContent<{ title?: string; description?: string; ogImage?: string }>("meta.home");
+  const ogImage = resolveOg(meta?.ogImage);
+  return {
+    alternates: { canonical: `${SITE_URL}/` },
+    openGraph: {
+      url:    `${SITE_URL}/`,
+      images: [{ url: ogImage, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card:   "summary_large_image",
+      images: [ogImage],
+    },
+  };
+}
 import { prisma }     from "@/lib/prisma";
 import { Hero }        from "@/components/sections/Hero";
 import { Stats }       from "@/components/sections/Stats";

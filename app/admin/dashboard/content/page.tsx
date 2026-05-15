@@ -688,24 +688,45 @@ export default function ContentEditorPage() {
         {/* META / SEO */}
         {activeTab === "meta" && (
           <>
-            {["home", "about", "services", "work", "blog", "contact", "tools", "tools-ui-analyzer", "tools-color-palette"].map((page) => (
+            {[
+              { id: "home",                label: "Home" },
+              { id: "about",               label: "About Me" },
+              { id: "services",            label: "Services" },
+              { id: "work",                label: "Work" },
+              { id: "blog",                label: "Blog" },
+              { id: "contact",             label: "Contact" },
+              { id: "tools",               label: "Tools Hub" },
+              { id: "tools-ui-analyzer",   label: "UI Analyzer" },
+              { id: "tools-color-palette", label: "Color Palette" },
+              { id: "tools-qr-studio",     label: "QR Studio" },
+            ].map(({ id, label }) => (
               <SectionCard
-                key={page}
-                title={`${page.charAt(0).toUpperCase() + page.slice(1)} Page Meta`}
-                onSave={() => save(`meta.${page}`)}
-                saveState={saveStates[`meta.${page}`] ?? "idle"}
+                key={id}
+                title={`${label} — Meta / SEO`}
+                onSave={() => save(`meta.${id}`)}
+                saveState={saveStates[`meta.${id}`] ?? "idle"}
               >
                 <TextField
                   label="Page Title"
-                  value={get<{ title: string; description: string }>(`meta.${page}`, { title: "", description: "" }).title}
-                  onChange={(v) => update(`meta.${page}`, { ...get(`meta.${page}`, {}), title: v })}
+                  value={get<{ title: string }>(`meta.${id}`, { title: "" }).title}
+                  onChange={(v) => update(`meta.${id}`, { ...get(`meta.${id}`, {}), title: v })}
                 />
                 <TextareaField
                   label="Meta Description"
                   rows={2}
-                  value={get<{ description: string }>(`meta.${page}`, { description: "" }).description}
-                  onChange={(v) => update(`meta.${page}`, { ...get(`meta.${page}`, {}), description: v })}
+                  value={get<{ description: string }>(`meta.${id}`, { description: "" }).description}
+                  onChange={(v) => update(`meta.${id}`, { ...get(`meta.${id}`, {}), description: v })}
                 />
+                <ImageUpload
+                  label="OG / Social Share Image (1200 × 630 recommended)"
+                  folder="nitinmonga/og"
+                  value={get<{ ogImage?: string }>(`meta.${id}`, {}).ogImage ?? ""}
+                  onChange={(v) => update(`meta.${id}`, { ...get(`meta.${id}`, {}), ogImage: v })}
+                />
+                <p className="font-body text-[11px]" style={{ color: "rgba(255,255,255,0.3)" }}>
+                  Used as og:image and twitter:image when this page is shared on WhatsApp, LinkedIn, Twitter, etc.
+                  Falls back to the site default if left empty.
+                </p>
               </SectionCard>
             ))}
           </>

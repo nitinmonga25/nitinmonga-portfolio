@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SITE_URL, OG_IMAGE } from "@/lib/seo";
+import { SITE_URL, resolveOg } from "@/lib/seo";
 import { getContent } from "@/lib/content";
 import { parseTags }  from "@/lib/parseTags";
 import { prisma } from "@/lib/prisma";
@@ -11,7 +11,8 @@ import type { WorkProject } from "@/components/pages/work/WorkGrid";
 export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const meta = await getContent<{ title: string; description: string }>("meta.work");
+  const meta = await getContent<{ title: string; description: string; ogImage?: string }>("meta.work");
+  const ogImage = resolveOg(meta?.ogImage);
   return {
     title:       meta.title,
     description: meta.description,
@@ -20,13 +21,13 @@ export async function generateMetadata(): Promise<Metadata> {
       title:       meta.title,
       description: meta.description,
       url:         `${SITE_URL}/work/`,
-      images:      [{ url: OG_IMAGE, width: 1200, height: 630 }],
+      images:      [{ url: ogImage, width: 1200, height: 630 }],
     },
     twitter: {
       card:        "summary_large_image",
       title:       meta.title,
       description: meta.description,
-      images:      [OG_IMAGE],
+      images:      [ogImage],
     },
   };
 }

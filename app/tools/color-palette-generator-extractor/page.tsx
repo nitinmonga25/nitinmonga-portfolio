@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
-import { SITE_URL, OG_IMAGE } from "@/lib/seo";
+import { SITE_URL, resolveOg } from "@/lib/seo";
 import { ColorPaletteGenerator } from "./ColorPaletteGenerator";
 import { getContent } from "@/lib/content";
 
 export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const meta = await getContent<{ title: string; description: string }>("meta.tools-color-palette");
+  const meta = await getContent<{ title: string; description: string; ogImage?: string }>("meta.tools-color-palette");
   const title       = meta?.title       || "Color Palette Generator & Extractor — Free Tool";
   const description = meta?.description || "Generate professional color palettes with 11-shade Tailwind-style scales. Extract colors from any image. Export as CSS variables, Tailwind config, or SCSS. Free tool by Nitin Monga.";
+  const ogImage     = resolveOg(meta?.ogImage);
   return {
     title,
     description,
@@ -17,13 +18,13 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       url:    `${SITE_URL}/tools/color-palette-generator-extractor/`,
-      images: [{ url: OG_IMAGE, width: 1200, height: 630 }],
+      images: [{ url: ogImage, width: 1200, height: 630 }],
     },
     twitter: {
       card:  "summary_large_image",
       title,
       description,
-      images: [OG_IMAGE],
+      images: [ogImage],
     },
   };
 }

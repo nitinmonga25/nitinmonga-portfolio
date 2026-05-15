@@ -1,26 +1,33 @@
 export const revalidate = 3600;
 
 import type { Metadata } from "next";
-import { SITE_URL, OG_IMAGE } from "@/lib/seo";
+import { SITE_URL, resolveOg } from "@/lib/seo";
+import { getContent } from "@/lib/content";
 import { QRStudioClient } from "./QRStudioClient";
 
-export const metadata: Metadata = {
-  title:       "Brand QR Studio — Free Styled QR Code Generator",
-  description: "Generate beautiful branded QR codes for websites, WiFi, UPI, WhatsApp, Instagram, vCards and more. 7 style presets, custom colors, logo support, PNG & SVG export. Free, instant, no login.",
-  alternates:  { canonical: `${SITE_URL}/tools/qr-studio/` },
-  openGraph: {
-    title:       "Brand QR Studio — Free Styled QR Code Generator",
-    description: "Create stylish QR codes with Minimal, Luxury, Neon, Tech, Gradient, Glassmorphism & Modern Business presets. Free & instant.",
-    url:         `${SITE_URL}/tools/qr-studio/`,
-    images:      [{ url: OG_IMAGE, width: 1200, height: 630 }],
-  },
-  twitter: {
-    card:        "summary_large_image",
-    title:       "Brand QR Studio — Free Styled QR Code Generator",
-    description: "Create stylish QR codes with Minimal, Luxury, Neon, Tech, Gradient, Glassmorphism & Modern Business presets. Free & instant.",
-    images:      [OG_IMAGE],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const meta = await getContent<{ title: string; description: string; ogImage?: string }>("meta.tools-qr-studio");
+  const title       = meta?.title       || "Brand QR Studio — Free Styled QR Code Generator";
+  const description = meta?.description || "Generate beautiful branded QR codes for websites, WiFi, UPI, WhatsApp, Instagram, vCards and more. 7 style presets, custom colors, logo support, PNG & SVG export. Free, instant, no login.";
+  const ogImage     = resolveOg(meta?.ogImage);
+  return {
+    title,
+    description,
+    alternates: { canonical: `${SITE_URL}/tools/qr-studio/` },
+    openGraph: {
+      title,
+      description,
+      url:    `${SITE_URL}/tools/qr-studio/`,
+      images: [{ url: ogImage, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card:  "summary_large_image",
+      title,
+      description,
+      images: [ogImage],
+    },
+  };
+}
 
 const FAQ = [
   {

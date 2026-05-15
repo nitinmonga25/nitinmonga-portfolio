@@ -1,7 +1,7 @@
 export const revalidate = 86400;
 
 import type { Metadata } from "next";
-import { SITE_URL, OG_IMAGE } from "@/lib/seo";
+import { SITE_URL, resolveOg } from "@/lib/seo";
 import { getContent } from "@/lib/content";
 import { ServicesHero }    from "@/components/pages/services/ServicesHero";
 import { ServicesGrid }    from "@/components/pages/services/ServicesGrid";
@@ -13,7 +13,8 @@ import type { ServicesFaqContent }     from "@/components/pages/services/Service
 import type { ServiceCard }            from "@/components/pages/services/ServicesGrid";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const meta = await getContent<{ title: string; description: string }>("meta.services");
+  const meta = await getContent<{ title: string; description: string; ogImage?: string }>("meta.services");
+  const ogImage = resolveOg(meta?.ogImage);
   return {
     title:       meta.title,
     description: meta.description,
@@ -22,13 +23,13 @@ export async function generateMetadata(): Promise<Metadata> {
       title:       meta.title,
       description: meta.description,
       url:         `${SITE_URL}/services/`,
-      images:      [{ url: OG_IMAGE, width: 1200, height: 630 }],
+      images:      [{ url: ogImage, width: 1200, height: 630 }],
     },
     twitter: {
       card:        "summary_large_image",
       title:       meta.title,
       description: meta.description,
-      images:      [OG_IMAGE],
+      images:      [ogImage],
     },
   };
 }
