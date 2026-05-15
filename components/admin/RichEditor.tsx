@@ -27,23 +27,25 @@ const IframeNode = Node.create({
   renderHTML({ HTMLAttributes }) {
     return [
       "div",
-      { class: "embed-wrapper", style: "position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin:1rem 0;" },
+      { class: "embed-wrapper" },
       ["iframe", mergeAttributes(HTMLAttributes, {
-        style: "position:absolute;top:0;left:0;width:100%;height:100%;border:0;",
         allowfullscreen: "true",
         loading: "lazy",
+        scrolling: "no",
       })],
     ];
   },
   addNodeView() {
     return ({ node }) => {
       const wrapper = document.createElement("div");
-      wrapper.style.cssText = "position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin:1rem 0;background:rgba(255,255,255,0.05);border-radius:8px;";
+      wrapper.className = "embed-wrapper";
+      wrapper.style.cssText = "max-width:50%;margin:1.5rem auto;border-radius:12px;overflow:hidden;background:rgba(0,0,0,0.04);";
       const iframe = document.createElement("iframe");
       iframe.src = node.attrs.src ?? "";
-      iframe.style.cssText = "position:absolute;top:0;left:0;width:100%;height:100%;border:0;";
+      iframe.style.cssText = "width:100%;height:560px;border:0;display:block;";
       iframe.setAttribute("allowfullscreen", "true");
       iframe.setAttribute("loading", "lazy");
+      iframe.setAttribute("scrolling", "no");
       wrapper.appendChild(iframe);
       return { dom: wrapper };
     };

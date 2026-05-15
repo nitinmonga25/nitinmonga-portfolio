@@ -22,12 +22,13 @@ const DEFAULT_PROJECTS: WorkProject[] = [
   { title: "Full-Stack Web Application", slug: "full-stack-web-app", category: "Next.js Dev", tags: ["Next.js", "TypeScript", "Tailwind"] },
 ];
 
-const FILTERS = ["All", "Web Design", "Next.js Dev", "Branding", "3D"];
-
 export function Work({ projects }: { projects?: WorkProject[] }) {
   const sectionRef = useRef<HTMLElement>(null);
   const [activeFilter, setActiveFilter] = useState("All");
   const data = projects ?? DEFAULT_PROJECTS;
+
+  // Only show categories that have at least one project
+  const FILTERS = ["All", ...Array.from(new Set(data.map((p) => p.category)))];
 
   const filtered =
     activeFilter === "All"

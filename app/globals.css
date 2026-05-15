@@ -271,6 +271,25 @@ body {
 .prose-nm th { background: var(--color-accent-light); color: var(--color-ink); font-weight: 700; padding: 10px 14px; text-align: left; border: 1px solid var(--color-border); }
 .prose-nm td { padding: 9px 14px; border: 1px solid var(--color-border); color: var(--color-muted); }
 
+/* Embedded iframes (Instagram, YouTube, etc.) — 50% width, centred, no scroll */
+.embed-wrapper {
+  max-width: 50%;
+  margin: 1.5rem auto;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--color-border);
+}
+.embed-wrapper iframe {
+  display: block;
+  width: 100%;
+  height: 560px;
+  border: 0;
+}
+/* On small screens fall back to full width */
+@media (max-width: 640px) {
+  .embed-wrapper { max-width: 100%; }
+}
+
 /* Drop cap — first letter of first paragraph */
 .drop-cap > p:first-of-type::first-letter {
   font-family: var(--font-display);

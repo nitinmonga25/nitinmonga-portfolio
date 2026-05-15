@@ -14,12 +14,13 @@ export interface WorkProject {
   thumbnail?: string | null;
 }
 
-const FILTERS = ["All", "Web Design", "Next.js Dev", "Branding", "3D", "WordPress", "Full-Stack"];
-
 export function WorkGrid({ projects = [] }: { projects?: WorkProject[] }) {
   const ref = useRef<HTMLElement>(null);
   const [activeFilter, setActiveFilter] = useState("All");
   const data = projects;
+
+  // Only show categories that have at least one project
+  const FILTERS = ["All", ...Array.from(new Set(data.map((p) => p.category)))];
 
   const filtered = activeFilter === "All" ? data : data.filter((p) => p.category === activeFilter);
 
