@@ -100,6 +100,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       className={bricolage.variable}
     >
       <body className="antialiased" suppressHydrationWarning>
+        <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5308405517093129"
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+        />
         {GA_ID && (
           <>
             <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
