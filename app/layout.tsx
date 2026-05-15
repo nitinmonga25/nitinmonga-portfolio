@@ -99,12 +99,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       lang="en"
       className={bricolage.variable}
     >
+      <head>
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5308405517093129" crossOrigin="anonymous" />
+      </head>
       <body className="antialiased" suppressHydrationWarning>
-        <Script
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5308405517093129"
-          strategy="afterInteractive"
-          crossOrigin="anonymous"
-        />
         {GA_ID && (
           <>
             <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
