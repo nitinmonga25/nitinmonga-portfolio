@@ -3,7 +3,8 @@ export const revalidate = 3600;
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { prisma }    from "@/lib/prisma";
+import { parseTags } from "@/lib/parseTags";
 import { ReadingProgress }  from "@/components/pages/blog/ReadingProgress";
 import { TableOfContents }  from "@/components/pages/blog/TableOfContents";
 import { SocialShareBar }   from "@/components/pages/blog/SocialShareBar";
@@ -53,8 +54,8 @@ export default async function CaseStudyPage({ params }: Props) {
   const project = await getProject(params.slug);
   if (!project) notFound();
 
-  const tags: string[]   = project.tags      ? JSON.parse(project.tags)      : [];
-  const tech: string[]   = project.techStack ? JSON.parse(project.techStack) : [];
+  const tags: string[]   = parseTags(project.tags);
+  const tech: string[]   = parseTags(project.techStack);
   const images: string[] = project.images    ? JSON.parse(project.images)    : [];
 
   const bodyHtml   = project.longDesc ? injectHeadingIds(project.longDesc) : "";

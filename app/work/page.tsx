@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getContent } from "@/lib/content";
+import { parseTags }  from "@/lib/parseTags";
 import { prisma } from "@/lib/prisma";
 import { WorkHero } from "@/components/pages/work/WorkHero";
 import { WorkGrid } from "@/components/pages/work/WorkGrid";
@@ -27,7 +28,7 @@ export default async function WorkPage() {
     title:     p.title,
     slug:      p.slug,
     category:  p.category,
-    tags:      p.tags ? JSON.parse(p.tags) : [],
+    tags:      parseTags(p.tags),
     thumbnail: p.thumbnail || null,
     year:      new Date(p.createdAt).getFullYear().toString(),
   }));

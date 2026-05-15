@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { RichEditor } from "@/components/admin/RichEditor";
+import { tagsToInput } from "@/lib/parseTags";
 
 const CATEGORIES = ["Web Design", "Branding", "3D CGI", "Full-Stack", "WordPress"];
 
@@ -90,8 +91,8 @@ export default function ProjectsAdminPage() {
       category:    p.category,
       thumbnail:   p.thumbnail,
       images:      p.images ?? null,
-      tags:        p.tags ?? "",
-      techStack:   p.techStack ?? "",
+      tags:        tagsToInput(p.tags),
+      techStack:   tagsToInput(p.techStack),
       liveUrl:     p.liveUrl ?? "",
       featured:    p.featured,
       published:   p.published,

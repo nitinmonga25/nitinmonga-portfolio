@@ -4,7 +4,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { marked } from "marked";
-import { prisma } from "@/lib/prisma";
+import { prisma }    from "@/lib/prisma";
+import { parseTags } from "@/lib/parseTags";
 import { ReadingProgress } from "@/components/pages/blog/ReadingProgress";
 import { TableOfContents } from "@/components/pages/blog/TableOfContents";
 import { SocialShareBar } from "@/components/pages/blog/SocialShareBar";
@@ -61,7 +62,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   const html     = buildHtml(post.content || "");
   const headings = extractHeadings(html);
-  const tags: string[] = post.tags ? JSON.parse(post.tags) : [];
+  const tags: string[] = parseTags(post.tags);
   const date = post.publishedAt
     ? new Date(post.publishedAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })
     : "";

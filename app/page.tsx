@@ -1,6 +1,7 @@
 export const revalidate = 300;
 
 import { getContent } from "@/lib/content";
+import { parseTags }  from "@/lib/parseTags";
 import { prisma }     from "@/lib/prisma";
 import { Hero }        from "@/components/sections/Hero";
 import { Stats }       from "@/components/sections/Stats";
@@ -47,7 +48,7 @@ export default async function HomePage() {
     title:     p.title,
     slug:      p.slug,
     category:  p.category,
-    tags:      p.tags ? (JSON.parse(p.tags) as string[]) : [],
+    tags:      parseTags(p.tags),
     thumbnail: p.thumbnail || undefined,
   }));
 

@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { RichEditor } from "@/components/admin/RichEditor";
+import { tagsToInput } from "@/lib/parseTags";
 
 const CATEGORIES = ["Design", "Dev", "3D Design", "Business", "SEO"];
 
@@ -86,7 +87,7 @@ export default function BlogAdminPage() {
       content:   p.content,
       category:  p.category,
       thumbnail: p.thumbnail ?? "",
-      tags:      p.tags ?? "",
+      tags:      tagsToInput(p.tags),
       readTime:  p.readTime,
       published: p.published,
     });
