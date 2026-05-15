@@ -7,16 +7,24 @@ import { parseTags }  from "@/lib/parseTags";
 
 export async function generateMetadata(): Promise<Metadata> {
   const meta = await getContent<{ title?: string; description?: string; ogImage?: string }>("meta.home");
-  const ogImage = resolveOg(meta?.ogImage);
+  const title       = meta?.title       || "Nitin Monga — Graphic Designer & Full-Stack Developer | Punjab India";
+  const description = meta?.description || "Nitin Monga — Graphic Designer, 3D Artist & Full-Stack Developer from Punjab, India. 10+ years building websites, CGI ads, and digital platforms.";
+  const ogImage     = resolveOg(meta?.ogImage);
   return {
+    title,
+    description,
     alternates: { canonical: `${SITE_URL}/` },
     openGraph: {
+      title,
+      description,
       url:    `${SITE_URL}/`,
       images: [{ url: ogImage, width: 1200, height: 630 }],
     },
     twitter: {
-      card:   "summary_large_image",
-      images: [ogImage],
+      card:        "summary_large_image",
+      title,
+      description,
+      images:      [ogImage],
     },
   };
 }
