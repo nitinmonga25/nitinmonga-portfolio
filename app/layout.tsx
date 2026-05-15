@@ -18,6 +18,17 @@ async function getFaviconUrl(): Promise<string> {
   }
 }
 
+async function getHomeOgImage(): Promise<string> {
+  try {
+    const row = await prisma.siteSetting.findUnique({ where: { key: "meta.home" } });
+    if (row?.value) {
+      const parsed = JSON.parse(row.value) as { ogImage?: string };
+      if (parsed.ogImage?.trim()) return parsed.ogImage.trim();
+    }
+  } catch { /* fall through */ }
+  return "https://assets.nitinmonga.in/og-default.jpg";
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const faviconUrl = await getFaviconUrl();
   return {
@@ -64,23 +75,25 @@ const WEBSITE_SCHEMA = {
   author: { "@type": "Person", name: "Nitin Monga" },
 };
 
-const PERSON_SCHEMA = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Nitin Monga",
-  url: "https://nitinmonga.in",
-  image: "https://assets.nitinmonga.in/og-default.jpg",
-  jobTitle: "Graphic Designer, 3D Artist & Full-Stack Developer",
-  worksFor: { "@type": "Organization", name: "Xdecoders" },
-  address: { "@type": "PostalAddress", addressRegion: "Punjab", addressCountry: "IN" },
-  sameAs: [
-    "https://www.instagram.com/nitinmonga",
-    "https://www.linkedin.com/in/nitinmonga",
-    "https://www.youtube.com/@nitinmonga",
-  ],
-};
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const personImage = await getHomeOgImage();
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const PERSON_SCHEMA = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Nitin Monga",
+    url: "https://nitinmonga.in",
+    image: personImage,
+    jobTitle: "Graphic Designer, 3D Artist & Full-Stack Developer",
+    address: { "@type": "PostalAddress", addressRegion: "Punjab", addressCountry: "IN" },
+    sameAs: [
+      "https://www.behance.net/nitinmonga",
+      "https://www.instagram.com/nitinmonga14",
+      "https://www.linkedin.com/in/nitinmonga14/",
+      "https://www.youtube.com/tutorialsbynitin",
+    ],
+  };
+
   return (
     <html
       lang="en"
