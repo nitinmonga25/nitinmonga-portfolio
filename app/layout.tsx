@@ -62,7 +62,7 @@ export async function generateMetadata(): Promise<Metadata> {
       follow: true,
       googleBot: { index: true, follow: true, "max-image-preview": "large" },
     },
-    // verification: { google: "PASTE_SEARCH_CONSOLE_TOKEN_HERE" },
+    verification: { google: "F7cU_MyLqzatqQrisaAvWLdY5-2yIaInuK1b_Y6fCis" },
   };
 }
 
