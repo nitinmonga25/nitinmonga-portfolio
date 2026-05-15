@@ -8,16 +8,18 @@ const CHARS = "!@#$%&X?4▲0◆█▓░";
 
 function useScramble(target: string, running: boolean) {
   const [text, setText] = useState(target);
-  const frame = useRef(0);
-  const raf   = useRef<ReturnType<typeof requestAnimationFrame>>();
+  const step  = useRef(0);
+  const timer = useRef<ReturnType<typeof setInterval>>();
 
   useEffect(() => {
     if (!running) { setText(target); return; }
-    frame.current = 0;
-    const totalFrames = 18;
-    function tick() {
-      frame.current++;
-      const progress = frame.current / totalFrames;
+    step.current = 0;
+    const STEPS    = 12;   // total steps
+    const INTERVAL = 80;   // ms between steps — 80 × 12 = ~1 second
+
+    timer.current = setInterval(() => {
+      step.current++;
+      const progress = step.current / STEPS;
       setText(
         target
           .split("")
@@ -28,14 +30,13 @@ function useScramble(target: string, running: boolean) {
           )
           .join("")
       );
-      if (frame.current < totalFrames) {
-        raf.current = requestAnimationFrame(tick);
-      } else {
+      if (step.current >= STEPS) {
+        clearInterval(timer.current);
         setText(target);
       }
-    }
-    raf.current = requestAnimationFrame(tick);
-    return () => { if (raf.current) cancelAnimationFrame(raf.current); };
+    }, INTERVAL);
+
+    return () => clearInterval(timer.current);
   }, [target, running]);
 
   return text;
